@@ -14,6 +14,6 @@ Python utilities for conversion of bitmap image (in [PNG format](http://www.libp
 
 Project mirrors:
 
-[github Dnyarri](https://github.com/Dnyarri/)
+[github Dnyarri](https://github.com/Dnyarri/POVmosaic)
 
-[gitflic Dnyarri](https://gitflic.ru/project/dnyarri/)
+[gitflic Dnyarri](https://gitflic.ru/project/dnyarri/povmosaic)

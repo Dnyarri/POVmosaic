@@ -14,6 +14,6 @@
 
 Во избежание санкций проект зеркалится:
 
-[github Dnyarri](https://github.com/Dnyarri/)
+[github Dnyarri](https://github.com/Dnyarri/POVmosaic)
 
-[gitflic Dnyarri](https://gitflic.ru/project/dnyarri/)
+[gitflic Dnyarri](https://gitflic.ru/project/dnyarri/povmosaic)

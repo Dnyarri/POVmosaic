@@ -7,8 +7,8 @@
 # 2024  Replaced Pillow I/O with PyPNG from: https://gitlab.com/drj11/pypng
 #
 #       Project moved to:
-#       https://github.com/Dnyarri/img2mesh
-#       https://gitflic.ru/project/dnyarri/img2mesh
+#       https://github.com/Dnyarri/POVmosaic
+#       https://gitflic.ru/project/dnyarri/povmosaic
 #
 
 import time
