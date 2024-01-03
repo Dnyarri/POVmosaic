@@ -14,6 +14,6 @@
 
 Во избежание санкций проект зеркалится:
 
-[github Dnyarri](https://github.com/Dnyarri/img2mesh)
+[github Dnyarri](https://github.com/Dnyarri/)
 
-[gitflic Dnyarri](https://gitflic.ru/project/dnyarri/img2mesh)
+[gitflic Dnyarri](https://gitflic.ru/project/dnyarri/)

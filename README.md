@@ -14,6 +14,6 @@ Python utilities for conversion of bitmap image (in [PNG format](http://www.libp
 
 Project mirrors:
 
-[github Dnyarri](https://github.com/Dnyarri/img2mesh)
+[github Dnyarri](https://github.com/Dnyarri/)
 
-[gitflic Dnyarri](https://gitflic.ru/project/dnyarri/img2mesh)
+[gitflic Dnyarri](https://gitflic.ru/project/dnyarri/)
