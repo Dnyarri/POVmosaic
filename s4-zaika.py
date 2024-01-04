@@ -7,7 +7,8 @@
 # 2024  Replaced Pillow I/O with PyPNG from: https://gitlab.com/drj11/pypng
 # 2024  Complete internal rewriting. Versions from now on:
 #
-# s4-zaika 01.000
+# 01.000    s4-zaika.py Initial release
+# 01.001    Alpha support with pseudo-dithering
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -15,6 +16,7 @@
 #
 
 import time
+import random
 import png
 from tkinter import filedialog
 
@@ -129,16 +131,19 @@ for y in range(0, Y, 1):
 
     for x in range(0, X, 1):
 
-        r = src(x,y,0)/maxcolors; g = src(x,y,1)/maxcolors; b = src(x,y,2)/maxcolors    # Normalize colors to 0..1.0
-        resultfile.write('object {thingie ')    # Opening object "thingie" to modify
-        resultfile.write(f'translate <{x}, {y}, 0>')
-        resultfile.write(' pigment {')
-        resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
-        resultfile.write('}')
-        resultfile.write(' finish {')
-        resultfile.write('thingie_finish')
-        resultfile.write('}')
-        resultfile.write('}\n')                 # Closing object "thingie" after modifications
+        r = src(x,y,0)/maxcolors; g = src(x,y,1)/maxcolors; b = src(x,y,2)/maxcolors; a = src(x,y,3)/maxcolors    # Normalize colors to 0..1.0
+        # альфа = 0 - прозрачныйб альфа = maxcolors - непрозрачный
+        possibility = random.random()
+        if (a > possibility):
+            resultfile.write('object {thingie ')    # Opening object "thingie" to modify
+            resultfile.write(f'translate <{x}, {y}, 0>')
+            resultfile.write(' pigment {')
+            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
+            resultfile.write('}')
+            resultfile.write(' finish {')
+            resultfile.write('thingie_finish')
+            resultfile.write('}')
+            resultfile.write('}\n')                 # Closing object "thingie" after modifications
 
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates
 resultfile.write('\n// Object transforms to fit 1, 1, 1 cube at 0, 0, 0 coordinates\n')
