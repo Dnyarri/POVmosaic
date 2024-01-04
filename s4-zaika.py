@@ -2,11 +2,14 @@
 # Program for conversion of image into a set of tightly packed spheres, colored according to source image pixels
 # (c) Ilya Razmanov (ilyarazmanov@gmail.com)
 # History:
-# 2007  Initial AmphiSoft POV Sphere Mosaic
+# 2007  Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
 # 2023  Rewritten to Python
 # 2024  Replaced Pillow I/O with PyPNG from: https://gitlab.com/drj11/pypng
+# 2024  Complete internal rewriting. Versions from now on:
 #
-#       Project moved to:
+# s4-zaika 01.000
+#
+#       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
 #       https://gitflic.ru/project/dnyarri/povmosaic
 #
@@ -27,7 +30,7 @@ X,Y,pixels,info = source.asRGBA() # Opening image, iDAT comes to "pixels" as byt
 totalpixels = X*Y               # Total number OF pixels, not PIXEL NUMBER
 rowlength = X*(info['planes'])  # Row length
 Z = (info['planes'])            # Maximum CHANNEL NUMBER
-imagedata = tuple((pixels))     # Attempt to fix all bytearrays
+imagedata = tuple((pixels))     # Attempt to fix all bytearrays as tuple
 
 if (info['bitdepth'] == 8):
     maxcolors = 255             # Maximal value for 8-bit channel
@@ -127,7 +130,7 @@ for y in range(0, Y, 1):
     for x in range(0, X, 1):
 
         r = src(x,y,0)/maxcolors; g = src(x,y,1)/maxcolors; b = src(x,y,2)/maxcolors    # Normalize colors to 0..1.0
-        resultfile.write('object {thingie ')            # Opening object "thingie"
+        resultfile.write('object {thingie ')    # Opening object "thingie" to modify
         resultfile.write(f'translate <{x}, {y}, 0>')
         resultfile.write(' pigment {')
         resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
@@ -135,7 +138,7 @@ for y in range(0, Y, 1):
         resultfile.write(' finish {')
         resultfile.write('thingie_finish')
         resultfile.write('}')
-        resultfile.write('}\n')                           # Closing object "thingie"
+        resultfile.write('}\n')                 # Closing object "thingie" after modifications
 
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates
 resultfile.write('\n// Object transforms to fit 1, 1, 1 cube at 0, 0, 0 coordinates\n')
