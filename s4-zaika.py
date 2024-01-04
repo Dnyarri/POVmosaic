@@ -119,7 +119,7 @@ resultfile.write('#declare thingie = sphere { <0, 0, 0>, 0.5}\n') # Sphere size 
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
 resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n\n')
 
-# Object made of thingies
+# Object "thething" made of thingies
 
 resultfile.write('#declare thething = union {\n')  # Opening object "thething"
 
@@ -131,11 +131,11 @@ for y in range(0, Y, 1):
 
     for x in range(0, X, 1):
 
-        r = src(x,y,0)/maxcolors; g = src(x,y,1)/maxcolors; b = src(x,y,2)/maxcolors; a = src(x,y,3)/maxcolors    # Normalize colors to 0..1.0
-        # альфа = 0 - прозрачныйб альфа = maxcolors - непрозрачный
-        possibility = random.random()
-        if (a > possibility):
-            resultfile.write('object {thingie ')    # Opening object "thingie" to modify
+        r = src(x,y,0)/maxcolors; g = src(x,y,1)/maxcolors; b = src(x,y,2)/maxcolors    # Normalize colors to 0..1.0
+        a = src(x,y,3)/maxcolors        # a = 0 - transparent, a = 1.0 - opaque
+        possibility = random.random()   # to be used for alpha dithering
+        if (a > possibility):           # whether to draw thingie in place of partially transparent pixel or not
+            resultfile.write('object {thingie ')    # Opening object "thingie" to draw
             resultfile.write(f'translate <{x}, {y}, 0>')
             resultfile.write(' pigment {')
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
