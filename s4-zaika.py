@@ -9,6 +9,7 @@
 #
 # 01.000    s4-zaika.py Initial release
 # 01.001    Alpha support with pseudo-dithering
+# 01.002    Some randomization added
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -118,6 +119,7 @@ resultfile.write('#include "colors.inc"\n\n')
 resultfile.write('#declare thingie = sphere { <0, 0, 0>, 0.5}\n') # Sphere size 1.0
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
 resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n\n')
+resultfile.write('#declare displace_factor = .5;   // z-Displace multiplier for all thingies\n\n')
 
 # Object "thething" made of thingies
 
@@ -132,11 +134,14 @@ for y in range(0, Y, 1):
     for x in range(0, X, 1):
 
         r = src(x,y,0)/maxcolors; g = src(x,y,1)/maxcolors; b = src(x,y,2)/maxcolors    # Normalize colors to 0..1.0
-        a = src(x,y,3)/maxcolors        # a = 0 - transparent, a = 1.0 - opaque
-        possibility = random.random()   # to be used for alpha dithering
-        if (a > possibility):           # whether to draw thingie in place of partially transparent pixel or not
+        a = src(x,y,3)/maxcolors            # a = 0 - transparent, a = 1.0 - opaque
+        # Yntensity = 0.2989*r + 0.587*g + 0,114*b # какая-то хуйня с типом, откуда-то лезет тупля
+        tobeornottobe = random.random()     # to be used for alpha dithering
+        zdisplacement = random.random()     # to be used for thingie z-displacement
+
+        if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie ')    # Opening object "thingie" to draw
-            resultfile.write(f'translate <{x}, {y}, 0>')
+            resultfile.write(f'translate <{x}, {y}, displace_factor*{zdisplacement}>')
             resultfile.write(' pigment {')
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
             resultfile.write('}')
