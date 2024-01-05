@@ -168,7 +168,7 @@ resultfile.write(', camera_height-zsize_factor))) // Supposed to fit object \n  
 
 # Light 1
 resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <3, 2, 2>}\n\n')
-# Light 1
+# Light 2
 resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-2, -3, 1.5>}\n\n')
 resultfile.write('// - END -')
 # Close output

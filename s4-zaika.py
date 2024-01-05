@@ -169,8 +169,10 @@ resultfile.write('camera {\n   // orthographic\n    location <0.0, 0.0, camera_h
 resultfile.write(f'{0.5 * proportions}')
 resultfile.write(', camera_height-0.5))) // Supposed to fit object \n    look_at <0.0, 0.0, 0.0>\n}\n\n')
 
-# Light
-resultfile.write('light_source {0*x\n   color rgb <1,1,1>\n   translate <20, 20, 20>}\n\n')
-
+# Light 1
+resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <3, 2, 2>}\n\n')
+# Light 2
+resultfile.write('/* light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-2, -3, 1.5>} */\n\n')
+resultfile.write('// - END -')
 # Close output
 resultfile.close()
