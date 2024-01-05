@@ -10,6 +10,7 @@
 # 01.000    s4-zaika.py Initial release
 # 01.001    Alpha support with pseudo-dithering
 # 01.002    Some randomization added
+# 01.003    Bugfix; z-displacement includes both brightness and random
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -61,7 +62,7 @@ def src(x, y, z):  # Analog src from FM, force repeate edge instead of out of ra
     cy = max(0,cy); cy = min((Y-1),cy)
 
     position = (cx*Z) + z   # Here is the main magic of turning two x, z into one array position
-    channelvalue = (((imagedata[cy])[position]))
+    channelvalue = int(((imagedata[cy])[position]))
     
     return channelvalue
 # end of src function
@@ -75,7 +76,7 @@ def srcY(x, y):  # Converting to greyscale, returns Y, force repeate edge instea
     if (info['planes'] < 3):    # supposedly L and LA
         Yntensity = src(x, y, 0)
     else:                       # supposedly RGB and RGBA
-        Yntensity = 0.2989*src(x, y, 0) + 0.587*src(x, y, 1) + 0,114*src(x, y, 2)
+        Yntensity = int(0.2989*src(x, y, 0) + 0.587*src(x, y, 1) + 0.114*src(x, y, 2))
     
     return Yntensity
 # end of srcY function
@@ -119,7 +120,7 @@ resultfile.write('#include "colors.inc"\n\n')
 resultfile.write('#declare thingie = sphere { <0, 0, 0>, 0.5}\n') # Sphere size 1.0
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
 resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n\n')
-resultfile.write('#declare displace_factor = .5;   // z-Displace multiplier for all thingies\n\n')
+resultfile.write('#declare displace_factor = 0.5;   // z-Displace multiplier for all thingies\n\n')
 
 # Object "thething" made of thingies
 
@@ -133,11 +134,11 @@ for y in range(0, Y, 1):
 
     for x in range(0, X, 1):
 
-        r = src(x,y,0)/maxcolors; g = src(x,y,1)/maxcolors; b = src(x,y,2)/maxcolors    # Normalize colors to 0..1.0
-        a = src(x,y,3)/maxcolors            # a = 0 - transparent, a = 1.0 - opaque
-        # Yntensity = 0.2989*r + 0.587*g + 0,114*b # какая-то хуйня с типом, откуда-то лезет тупля
+        r = float(src(x,y,0))/maxcolors; g = float(src(x,y,1))/maxcolors; b = float(src(x,y,2))/maxcolors    # Normalize colors to 0..1.0
+        a = float(src(x,y,3))/maxcolors            # a = 0 - transparent, a = 1.0 - opaque
+        yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b)
         tobeornottobe = random.random()     # to be used for alpha dithering
-        zdisplacement = random.random()     # to be used for thingie z-displacement
+        zdisplacement = yarkost * random.random()     # to be used for thingie z-displacement
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie ')    # Opening object "thingie" to draw
