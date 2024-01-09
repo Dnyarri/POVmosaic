@@ -7,7 +7,7 @@
 # 2024  Complete internal rewriting. Versions from now on:
 #
 # 01.000    b4-zaika.py Initial release
-# 01.001    Changed box size to source brightness minus 5% randomized
+# 01.001    Changed box z-size to source brightness minus 5% randomized
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
