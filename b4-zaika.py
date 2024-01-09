@@ -7,6 +7,7 @@
 # 2024  Complete internal rewriting. Versions from now on:
 #
 # 01.000    b4-zaika.py Initial release
+# 01.001    Changed box size to source brightness minus 5% randomized
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -133,9 +134,9 @@ for y in range(0, Y, 1):
         r = float(src(x,y,0))/maxcolors; g = float(src(x,y,1))/maxcolors; b = float(src(x,y,2))/maxcolors    # Normalize colors to 0..1.0
         a = float(src(x,y,3))/maxcolors     # a = 0 - transparent, a = 1.0 - opaque
         tobeornottobe = random.random()     # to be used for alpha dithering
-        yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b)
+        yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
         zsize = yarkost                     # to be used for thingie z-displacement
-        # zsize = zsize * random.random()     # adding random to z-displacement, keeping 0..1 range
+        zsize = zsize - 0.05*yarkost*random.random()     # adding random to z-displacement, keeping 0..1 range
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie ')    # Opening object "thingie" to draw
@@ -167,9 +168,9 @@ resultfile.write(f'{0.5 * proportions}')
 resultfile.write(', camera_height-zsize_factor))) // Supposed to fit object \n    look_at <0.0, 0.0, 0.0>\n}\n\n')
 
 # Light 1
-resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <3, 2, 2>}\n\n')
+resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <4, 2, 3>}\n\n')
 # Light 2
-resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-2, -3, 1.5>}\n\n')
+resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-3, -4, 2>}\n\n')
 resultfile.write('// - END -')
 # Close output
 resultfile.close()
