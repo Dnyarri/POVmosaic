@@ -105,7 +105,7 @@ resultfile.write('global_settings\n')
 resultfile.write('{\n')
 resultfile.write('  max_trace_level 3\n')
 resultfile.write('  adc_bailout 0.01\n')
-resultfile.write('  ambient_light <.5,.5,.5>\n')
+resultfile.write('  ambient_light <0.5,0.5,0.5>\n')
 resultfile.write('  assumed_gamma 1.0\n')
 resultfile.write('}\n\n')
 
@@ -114,9 +114,10 @@ resultfile.write('#include "colors.inc"\n\n')
 
 # Thingie element
 
+resultfile.write('// Thingie and related parameters\n')
 resultfile.write('#declare thingie = box { <-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}\n') # Box size 1.0
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
-resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n\n')
+resultfile.write('#declare color_factor = 1.5;  // Color multiplier for all channels\n')
 resultfile.write('#declare zsize_factor = 1.0;  // z-Scale multiplier for all thingies\n\n')
 
 # Object "thething" made of thingies
@@ -127,7 +128,7 @@ resultfile.write('#declare thething = union {\n')  # Opening object "thething"
 
 for y in range(0, Y, 1):
 
-    resultfile.write(f'\n\n // Row {y}\n')
+    resultfile.write(f'\n\n// Row {y}\n')
 
     for x in range(0, X, 1):
 
@@ -168,9 +169,9 @@ resultfile.write(f'{0.5 * proportions}')
 resultfile.write(', camera_height-zsize_factor))) // Supposed to fit object \n    look_at <0.0, 0.0, 0.0>\n}\n\n')
 
 # Light 1
-resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <4, 2, 3>}\n\n')
+resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <4, 2, 3>\n}\n\n')
 # Light 2
-resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-3, -4, 2>}\n\n')
+resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-3, -4, 2>\n}\n\n')
 resultfile.write('// - END -')
 # Close output
 resultfile.close()
