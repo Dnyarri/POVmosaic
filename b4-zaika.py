@@ -136,8 +136,9 @@ for y in range(0, Y, 1):
         a = float(src(x,y,3))/maxcolors     # a = 0 - transparent, a = 1.0 - opaque
         tobeornottobe = random.random()     # to be used for alpha dithering
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
-        zsize = yarkost                     # to be used for thingie z-displacement
-        zsize = zsize - 0.05*yarkost*random.random()     # adding random to z-displacement, keeping 0..1 range
+        zsize = 1.0                         # original cube. All edits below may be commented out
+        zsize = yarkost * zsize             # edited for thingie z-scaling according to source brighness
+        zsize = zsize - 0.05*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie ')    # Opening object "thingie" to draw
