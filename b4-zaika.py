@@ -8,6 +8,7 @@
 #
 # 01.000    b4-zaika.py Initial release
 # 01.001    Changed box z-size to source brightness minus 5% randomized
+# 01.002    Changed internal structure to easily implement "brickwall" packing and some global scene variable
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -115,14 +116,24 @@ resultfile.write('#include "colors.inc"\n\n')
 # Thingie element
 
 resultfile.write('// Thingie and related parameters\n')
-resultfile.write('#declare thingie = box { <-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}\n') # Box size 1.0
+resultfile.write('#declare thingie = box { <-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}  // Box size 1.0\n') # Box size 1.0
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
+resultfile.write('// Global modifiers for all thingies in the scene\n')
 resultfile.write('#declare color_factor = 1.5;  // Color multiplier for all channels\n')
-resultfile.write('#declare zsize_factor = 1.0;  // z-Scale multiplier for all thingies\n\n')
+resultfile.write('#declare zsize_factor = 1.0;  // z-Size multiplier for all thingies\n')
+resultfile.write('#declare xysize = 1.0;  // x,y-Size for all thingies\n\n')
 
 # Object "thething" made of thingies
 
 resultfile.write('#declare thething = union {\n')  # Opening object "thething"
+
+# Internal strings for changing packing
+
+translatestring = 'translate <0, 0, 0>'
+oddtranslatestring = 'translate <0, 0, 0>'  # no offset
+eventranslatestring = 'translate <0, 0, 0>' # no offset for square packing
+# Below is 0.5 offset for "brick" packing
+# eventranslatestring = 'translate <0.5, 0, 0>' # 0.5 offset, uncomment it for "brick" packing
 
 # Now going to cycle through image and build onject
 
@@ -130,19 +141,25 @@ for y in range(0, Y, 1):
 
     resultfile.write(f'\n\n// Row {y}\n')
 
+    if (((y+1)%2)==0):
+        translatestring = eventranslatestring
+    else:
+        translatestring = oddtranslatestring
+
     for x in range(0, X, 1):
 
         r = float(src(x,y,0))/maxcolors; g = float(src(x,y,1))/maxcolors; b = float(src(x,y,2))/maxcolors    # Normalize colors to 0..1.0
         a = float(src(x,y,3))/maxcolors     # a = 0 - transparent, a = 1.0 - opaque
         tobeornottobe = random.random()     # to be used for alpha dithering
+        zsize = 1.0                         # original cube. Edits below may be commented out
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
-        zsize = 1.0                         # original cube. All edits below may be commented out
         zsize = yarkost * zsize             # edited for thingie z-scaling according to source brighness
         zsize = zsize - 0.05*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie ')    # Opening object "thingie" to draw
-            resultfile.write(f'scale <1,1,{zsize}> translate <{x}, {y}, 0>')
+            resultfile.write(translatestring)
+            resultfile.write(f' scale <xysize,xysize,{zsize}> translate <{x}, {y}, 0>')
             resultfile.write(' pigment {')
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
             resultfile.write('}')
@@ -172,7 +189,7 @@ resultfile.write(', camera_height-zsize_factor))) // Supposed to fit object \n  
 # Light 1
 resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <4, 2, 3>\n}\n\n')
 # Light 2
-resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-3, -4, 2>\n}\n\n')
+resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-2, 6, 7>\n}\n\n')
 resultfile.write('// - END -')
 # Close output
 resultfile.close()
