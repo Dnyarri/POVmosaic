@@ -11,6 +11,9 @@
 # 01.002    Changed internal structure to easily implement "brickwall" packing and some global scene variable
 # 01.003    Minor code generalization and POV output optimization
 #
+# 01.004    b4-zaikaS.py Naming convention change.
+#           Boxes are rotated according to brighness minus random.
+#
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
 #       https://gitflic.ru/project/dnyarri/povmosaic
@@ -160,8 +163,9 @@ for y in range(0, Y, 1):
 
         if (a > tobeornottobe):             # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie')     # Opening object "thingie" to draw
+            resultfile.write(f' scale <xysize,xysize,{zsize}>')
             resultfile.write(translatestring)
-            resultfile.write(f'scale <xysize,xysize,{zsize}> translate <{x}, {y}, 0>')
+            resultfile.write(f'translate <{x}, {y}, 0>')
             resultfile.write(' pigment {')
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
             resultfile.write('}')

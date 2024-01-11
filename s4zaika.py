@@ -121,9 +121,11 @@ resultfile.write('#declare thingie = sphere { <0, 0, 0>, 0.5}\n') # Sphere size 
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
 resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n\n')
 resultfile.write('#declare displace_factor = 0.5;   // z-Displace multiplier for all thingies\n\n')
+resultfile.write('#declare xyzsize = 1.0;  // x,y,z-Size value for all thingie, Default 1.0\n\n')
 
 # Object "thething" made of thingies
 
+resultfile.write('\n// Object thething made out of thingies\n')
 resultfile.write('#declare thething = union {\n')  # Opening object "thething"
 
 # Now going to cycle through image and build onject
@@ -144,7 +146,8 @@ for y in range(0, Y, 1):
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie ')    # Opening object "thingie" to draw
-            resultfile.write(f'translate <{x}, {y}, displace_factor*{zdisplacement}>')
+            resultfile.write('scale <xyzsize,xyzsize,xyzsize>')
+            resultfile.write(f' translate <{x}, {y}, displace_factor*{zdisplacement}>')
             resultfile.write(' pigment {')
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
             resultfile.write('}')
@@ -174,7 +177,7 @@ resultfile.write(', camera_height-0.5))) // Supposed to fit object \n    look_at
 # Light 1
 resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <4, 2, 3>}\n\n')
 # Light 2
-resultfile.write('/* light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-3, -4, 2>} */\n\n')
+resultfile.write('/* light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-2, 6, 7>} */\n\n')
 resultfile.write('// - END -')
 # Close output
 resultfile.close()
