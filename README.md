@@ -6,8 +6,9 @@ Python utilities for conversion of bitmap image (in [PNG format](http://www.libp
 
 *Brief programs description*
 
-- **s4-zaika** - converts every single pixel into solid sphere. Spheres packed into square grid. Sphere height over source plane depends on source brightness and random, adding some releif.
-- **b4-zaika** - converts every single pixel into solid box. Boxes packed into square grid. Box height is controlled by source brightness, adding some releif (like rough heightfiled).
+- **s4zaika** - converts every single pixel into solid sphere. **S**pheres are packed into square grid (C<sub>**4**</sub> symmetry). Sphere height over source plane depends on source brightness and random, adding some releif to avoid monotonous shadow pattern.
+- **b4zaikaS** - converts every single pixel into solid box. **B**oxes are packed into square grid (C<sub>**4**</sub> symmetry) and **s**caled so that box height is controlled by source brightness, adding some releif (like rough heightfiled).
+- **b4zaikaR** - converts every single pixel into solid box. **B**oxes are packed into square grid (C<sub>**4**</sub> symmetry) and **r**otated randomly.
 
 *Dependencies:* Tkinter, PyPNG
 
