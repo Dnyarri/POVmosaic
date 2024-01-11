@@ -122,19 +122,20 @@ resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specula
 resultfile.write('// Global modifiers for all thingies in the scene\n')
 resultfile.write('#declare color_factor = 1.5;  // Color multiplier for all channels\n')
 resultfile.write('#declare zsize_factor = 1.0;  // z-Size multiplier for all thingies\n')
-resultfile.write('#declare xysize = 1.0;  // x,y-Size for all thingies\n\n')
+resultfile.write('#declare xysize = 1.0;  // x,y-Size value for all thingies\n\n')
 
 # Object "thething" made of thingies
 
+resultfile.write('\n// Object thething made out of thingies\n')
 resultfile.write('#declare thething = union {\n')  # Opening object "thething"
 
-# Internal strings for changing packing
+# Internal strings for packing change
 
 translatestring = ' '
 oddtranslatestring = ' '  # no offset
 eventranslatestring = ' ' # no offset for square packing
-# Below is 0.5 offset for "brick" packing
-eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 offset, uncomment it for "brick" packing
+# Below is 0.5 offset for "brick" packing, commented out by default
+# eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 offset, uncomment it for "brick" packing
 
 # Now going to cycle through image and build onject
 
