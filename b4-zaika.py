@@ -9,6 +9,7 @@
 # 01.000    b4-zaika.py Initial release
 # 01.001    Changed box z-size to source brightness minus 5% randomized
 # 01.002    Changed internal structure to easily implement "brickwall" packing and some global scene variable
+# 01.003    Minor code generalization and POV output optimization
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -129,11 +130,11 @@ resultfile.write('#declare thething = union {\n')  # Opening object "thething"
 
 # Internal strings for changing packing
 
-translatestring = 'translate <0, 0, 0>'
-oddtranslatestring = 'translate <0, 0, 0>'  # no offset
-eventranslatestring = 'translate <0, 0, 0>' # no offset for square packing
+translatestring = ' '
+oddtranslatestring = ' '  # no offset
+eventranslatestring = ' ' # no offset for square packing
 # Below is 0.5 offset for "brick" packing
-# eventranslatestring = 'translate <0.5, 0, 0>' # 0.5 offset, uncomment it for "brick" packing
+eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 offset, uncomment it for "brick" packing
 
 # Now going to cycle through image and build onject
 
@@ -156,17 +157,17 @@ for y in range(0, Y, 1):
         zsize = yarkost * zsize             # edited for thingie z-scaling according to source brighness
         zsize = zsize - 0.05*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
 
-        if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
-            resultfile.write('object {thingie ')    # Opening object "thingie" to draw
+        if (a > tobeornottobe):             # whether to draw thingie in place of partially transparent pixel or not
+            resultfile.write('object {thingie')     # Opening object "thingie" to draw
             resultfile.write(translatestring)
-            resultfile.write(f' scale <xysize,xysize,{zsize}> translate <{x}, {y}, 0>')
+            resultfile.write(f'scale <xysize,xysize,{zsize}> translate <{x}, {y}, 0>')
             resultfile.write(' pigment {')
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
             resultfile.write('}')
             resultfile.write(' finish {')
             resultfile.write('thingie_finish')
             resultfile.write('}')
-            resultfile.write('}\n')                 # Closing object "thingie" after modifications
+            resultfile.write('}\n')         # Closing object "thingie" after modifications
 
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates
 resultfile.write('\n// Object transforms to fit 1, 1, 1 cube at 0, 0, 0 coordinates\n')
