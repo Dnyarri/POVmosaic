@@ -1,13 +1,17 @@
-# POV Sphere Mosaic, square pattern
-# Program for conversion of image into a set of tightly packed rectangular boxes, colored according to source image pixels
+# POV Pox Mosaic, square pattern, rotated boxes artwork
+# Program for conversion of image into a set of tightly packed rectangular boxes,
+# colored according to source image pixels, rotated randomly for artistic appearance
 # (c) Ilya Razmanov (ilyarazmanov@gmail.com)
+#
+# Input: PNG
+# Output: POVRay
+#
 # History:
 # 2007  Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
 # 2023  Rewritten to Python. I/O with PyPNG from: https://gitlab.com/drj11/pypng
 # 2024  Complete internal rewriting. Versions from now on:
 #
-# 01.000    b4zaikaR.py Initial release.
-#           Boxes are rotated randomly.
+# 01.000    b4zaikaR.py Initial release. Boxes are rotated randomly.
 #           Odd shift implemented, giving C2 "brickwall" packing output instead of C4.
 #           Default packing set to C4.
 #
