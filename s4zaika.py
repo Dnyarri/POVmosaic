@@ -1,6 +1,11 @@
 # POV Sphere Mosaic, square pattern
-# Program for conversion of image into a set of tightly packed spheres, colored according to source image pixels
+# Program for conversion of image into a C4 symmetry set of tightly packed spheres,
+# colored according to source image pixels
 # (c) Ilya Razmanov (ilyarazmanov@gmail.com)
+#
+# Input: PNG
+# Output: POVRay
+#
 # History:
 # 2007  Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
 # 2023  Rewritten to Python
@@ -11,7 +16,8 @@
 # 01.001    Alpha support with pseudo-dithering
 # 01.002    Some randomization added
 # 01.003    Bugfix; z-displacement includes both brightness and random
-# 01.004    Odd shift implemented, giving C2 "pentafive" output similar to "brickwall" of b4-zaika.
+# 01.004    s4zaika.py Naming convention change. Odd shift implemented, giving C2 "pentafive" output
+#           similar to "brickwall" of b4-zaika.
 #           Default output set to C4.
 #
 #       Project mirrors:
