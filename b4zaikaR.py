@@ -8,6 +8,8 @@
 #
 # 01.000    b4zaikaR.py Initial release.
 #           Boxes are rotated randomly.
+#           Odd shift implemented, giving C2 "brickwall" packing output instead of C4.
+#           Default packing set to C4.
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic

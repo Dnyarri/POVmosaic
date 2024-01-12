@@ -11,6 +11,8 @@
 # 01.001    Alpha support with pseudo-dithering
 # 01.002    Some randomization added
 # 01.003    Bugfix; z-displacement includes both brightness and random
+# 01.004    Odd shift implemented, giving C2 "pentafive" output similar to "brickwall" of b4-zaika.
+#           Default output set to C4.
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -128,11 +130,24 @@ resultfile.write('#declare xyzsize = 1.0;  // x,y,z-Size value for all thingie, 
 resultfile.write('\n// Object thething made out of thingies\n')
 resultfile.write('#declare thething = union {\n')  # Opening object "thething"
 
+# Internal strings for packing change
+
+translatestring = ' '
+oddtranslatestring = ' '  # no offset
+eventranslatestring = ' ' # no offset for kartefour packing
+# Below is 0.5 offset for pentafive packing, commented out by default
+# eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 offset for pentafive packing
+
 # Now going to cycle through image and build onject
 
 for y in range(0, Y, 1):
 
     resultfile.write(f'\n\n // Row {y}\n')
+
+    if (((y+1)%2)==0):
+        translatestring = eventranslatestring
+    else:
+        translatestring = oddtranslatestring
 
     for x in range(0, X, 1):
 
@@ -147,7 +162,8 @@ for y in range(0, Y, 1):
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie ')    # Opening object "thingie" to draw
             resultfile.write('scale <xyzsize,xyzsize,xyzsize>')
-            resultfile.write(f' translate <{x}, {y}, displace_factor*{zdisplacement}>')
+            resultfile.write(translatestring)
+            resultfile.write(f'translate <{x}, {y}, displace_factor*{zdisplacement}>')
             resultfile.write(' pigment {')
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
             resultfile.write('}')

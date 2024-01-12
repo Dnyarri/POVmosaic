@@ -8,11 +8,12 @@
 #
 # 01.000    b4-zaika.py Initial release
 # 01.001    Changed box z-size to source brightness minus 5% randomized
-# 01.002    Changed internal structure to easily implement "brickwall" packing and some global scene variable
+# 01.002    Changed internal structure to easily implement "brickwall" C2 packing and some global scene variables
 # 01.003    Minor code generalization and POV output optimization
 #
 # 01.004    b4-zaikaS.py Naming convention change.
-#           Boxes are rotated according to brighness minus random.
+#           Boxes are scaled according to brighness minus random.
+#           Default packing set to C4.
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
