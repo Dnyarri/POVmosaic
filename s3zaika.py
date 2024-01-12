@@ -192,7 +192,8 @@ proportions = max(X,Y)/X
 resultfile.write('#declare camera_height = 3.0;\n\n')
 resultfile.write('camera {\n   // orthographic\n    location <0.0, 0.0, camera_height>\n    right x*image_width/image_height\n    up y\n    direction <0,0,1>\n    angle 2.0*(degrees(atan2(')
 resultfile.write(f'{0.5 * proportions}')
-resultfile.write(', camera_height-0.5))) // Supposed to fit object \n    look_at <0.0, 0.0, 0.0>\n}\n\n')
+resultfile.write(f', camera_height-(1.0/{max(X,Y)})))) // Supposed to fit object \n    look_at <0.0, 0.0, 0.0>')
+resultfile.write('\n}\n\n')
 
 # Light 1
 resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <4, 2, 3>}\n\n')
