@@ -124,8 +124,9 @@ resultfile.write('// Thingie and related parameters\n')
 resultfile.write('#declare thingie = box { <-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}  // Box size 1.0\n') # Box size 1.0
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
 resultfile.write('// Global modifiers for all thingies in the scene\n')
-resultfile.write('#declare color_factor = 1.5;  // Color multiplier for all channels\n')
-resultfile.write('#declare rotate_factor = 1.0;  // Rotate multiplier for all axes. 1.0 correspond to 45 deg\n')
+resultfile.write('#declare color_factor = 1.0;  // Color multiplier for all channels\n')
+resultfile.write('#declare rotate_random = 0.75;  // Rotate multiplier for random. 1.0 correspond to 45 deg\n')
+resultfile.write('#declare rotate_yarkost = 2.0;  // Rotate multiplier for brightness. 1.0 correspond to 45 deg\n')
 resultfile.write('#declare xyzsize = 1.0;  // x,y,z-Size value for all thingies\n\n')
 
 # Object "thething" made of thingies
@@ -162,7 +163,7 @@ for y in range(0, Y, 1):
         if (a > tobeornottobe):             # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('object {thingie')     # Opening object "thingie" to draw
             resultfile.write(' scale <xyzsize,xyzsize,xyzsize>')
-            resultfile.write(f' rotate <rotate_factor*{45.0*random.random()},rotate_factor*{45.0*random.random()},rotate_factor*{45.0*random.random()}>')
+            resultfile.write(f' rotate <rotate_random*{45.0*random.random()},rotate_random*{45.0*random.random()},rotate_yarkost*{45.0*yarkost}>')
             resultfile.write(translatestring)
             resultfile.write(f'translate <{x}, {y}, 0>')
             resultfile.write(' pigment {')
@@ -189,7 +190,8 @@ proportions = max(X,Y)/X
 resultfile.write('#declare camera_height = 3.0;\n\n')
 resultfile.write('camera {\n   // orthographic\n    location <0.0, 0.0, camera_height>\n    right x*image_width/image_height\n    up y\n    direction <0,0,1>\n    angle 2.0*(degrees(atan2(')
 resultfile.write(f'{0.5 * proportions}')
-resultfile.write(', camera_height-0.5))) // Supposed to fit object \n    look_at <0.0, 0.0, 0.0>\n}\n\n')
+resultfile.write(f', camera_height-(1.0/{max(X,Y)})))) // Supposed to fit object \n    look_at <0.0, 0.0, 0.0>')
+resultfile.write('\n}\n\n')
 
 # Light 1
 resultfile.write('light_source {0*x\n   color rgb <1.1,1,1>\n   translate <4, 2, 3>\n}\n\n')
