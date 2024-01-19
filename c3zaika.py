@@ -122,8 +122,8 @@ resultfile.write('#include "finish.inc"\n#include "golds.inc"\n#include "metals.
 resultfile.write('\n// Object thingie\n')
 resultfile.write('#declare thingie = cylinder { <0, 0, 0>, <0, 0, 1.0>, 0.5}\n') # Cylinder 1.0 hight 0.5 radius
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
-resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n\n')
-resultfile.write('#declare displace_factor = 0.5;   // z-Displace multiplier for all thingies\n\n')
+resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n')
+resultfile.write('#declare displace_factor = 0.5;   // z-Displace multiplier for all thingies\n')
 resultfile.write('#declare xyzsize = 1.0;  // x,y,z-Size value for all thingie, Default 1.0\n\n')
 
 # Object "thething" made of thingies
@@ -167,7 +167,7 @@ for y in range(0, Ycount, 1):
         zsize = zsize - 0.05*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
-            resultfile.write('object {thingie')    # Opening object "thingie" to draw
+            resultfile.write('  object {thingie')    # Opening object "thingie" to draw
             resultfile.write(f' scale <xyzsize,xyzsize,xyzsize*{zsize}>')
             resultfile.write(translatestring)
             resultfile.write(f'translate <{x}, {y*triangleheight}, displace_factor*{zdisplacement}>')
@@ -182,10 +182,10 @@ for y in range(0, Ycount, 1):
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates
 resultfile.write('\n// Object transforms to fit 1, 1, 1 cube at 0, 0, 0 coordinates\n')
 resultfile.write('translate <0.25, 0.5, 0>\n')   # compensate for -0.5 extra, now object fit 0..X, 0..Y, 0..maxcolors
-resultfile.write(f'translate <-0.5*{X}, -0.5*{Y}, 0>\n\n')  # translate to center object bottom at x = 0, y = 0, z = 0
+resultfile.write(f'translate <-0.5*{X}, -0.5*{Y}, 0>\n')  # translate to center object bottom at x = 0, y = 0, z = 0
 resultfile.write(f'scale <-1.0/{max(X,Y)}, -1.0/{max(X,Y)}, 1.0/{max(X,Y)}>\n')  # rescale, mirroring POV coordinates to match Photoshop coordinate system
 
-resultfile.write('}\n')   # Closing object "thething"
+resultfile.write('} // thething closed\n')   # Closing object "thething"
 
 # Insert object into scene
 resultfile.write('object {thething}\n')

@@ -146,7 +146,7 @@ eventranslatestring = ' ' # no offset for square packing
 
 for y in range(0, Y, 1):
 
-    resultfile.write(f'\n\n// Row {y}\n')
+    resultfile.write(f'\n\n // Row {y}\n')
 
     if (((y+1)%2)==0):
         translatestring = eventranslatestring
@@ -161,7 +161,7 @@ for y in range(0, Y, 1):
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
 
         if (a > tobeornottobe):             # whether to draw thingie in place of partially transparent pixel or not
-            resultfile.write('object {thingie')     # Opening object "thingie" to draw
+            resultfile.write('  object {thingie')     # Opening object "thingie" to draw
             resultfile.write(' scale <xyzsize,xyzsize,xyzsize>')
             resultfile.write(f' rotate <rotate_random*{45.0*random.random()},rotate_random*{45.0*random.random()},rotate_yarkost*{45.0*yarkost}>')
             resultfile.write(translatestring)
@@ -177,10 +177,10 @@ for y in range(0, Y, 1):
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates
 resultfile.write('\n// Object transforms to fit 1, 1, 1 cube at 0, 0, 0 coordinates\n')
 resultfile.write('translate <0.5, 0.5, 0>\n')   # compensate for -0.5 extra, now object fit 0..X, 0..Y, 0..maxcolors
-resultfile.write(f'translate <-0.5*{X}, -0.5*{Y}, 0>\n\n')  # translate to center object bottom at x = 0, y = 0, z = 0
+resultfile.write(f'translate <-0.5*{X}, -0.5*{Y}, 0>\n')  # translate to center object bottom at x = 0, y = 0, z = 0
 resultfile.write(f'scale <-1.0/{max(X,Y)}, -1.0/{max(X,Y)}, 1.0/{max(X,Y)}>\n')  # rescale, mirroring POV coordinates to match Photoshop coordinate system
 
-resultfile.write('}\n')   # Closing object "thething"
+resultfile.write('} // thething closed\n')   # Closing object "thething"
 
 # Insert object into scene
 resultfile.write('object {thething}\n')
