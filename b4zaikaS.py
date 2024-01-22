@@ -146,7 +146,7 @@ eventranslatestring = ' ' # no offset for square packing
 # Below is 0.5 offset for "brick" packing, commented out by default
 # eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 offset, uncomment it for "brick" packing
 
-# Now going to cycle through image and build onject
+# Now going to cycle through image and build object
 
 for y in range(0, Y, 1):
 
@@ -165,19 +165,15 @@ for y in range(0, Y, 1):
         zsize = 1.0                         # original cube. Edits below may be commented out
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
         zsize = yarkost * zsize             # edited for thingie z-scaling according to source brighness
-        zsize = zsize - 0.05*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
+        zsize = zsize - 0.1*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
 
         if (a > tobeornottobe):             # whether to draw thingie in place of partially transparent pixel or not
-            resultfile.write('  object {thingie')     # Opening object "thingie" to draw
+            resultfile.write('  object {thingie pigment {')     # Opening object "thingie" to draw
+            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
+            resultfile.write('} finish {thingie_finish}')   # closed main object properties, started modifications
             resultfile.write(f' scale <xysize,xysize,{zsize}>')
             resultfile.write(translatestring)
             resultfile.write(f'translate <{x}, {y}, 0>')
-            resultfile.write(' pigment {')
-            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
-            resultfile.write('}')
-            resultfile.write(' finish {')
-            resultfile.write('thingie_finish')
-            resultfile.write('}')
             resultfile.write('}\n')         # Closing object "thingie" after modifications
 
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates

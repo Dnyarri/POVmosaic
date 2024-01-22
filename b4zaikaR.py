@@ -14,7 +14,7 @@
 # 01.000    b4zaikaR.py Initial release. Boxes are rotated randomly.
 #           Odd shift implemented, giving C2 "brickwall" packing output instead of C4.
 #           Default packing set to C4.
-# 01.001    Output generalization.
+# 01.001    Output generalization. Per-box normal added by default.
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -121,7 +121,7 @@ resultfile.write('#include "finish.inc"\n#include "golds.inc"\n#include "metals.
 
 # Thingie element
 resultfile.write('\n// Object thingie\n')
-resultfile.write('#declare thingie = box { <-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}  // Box size 1.0\n') # Box size 1.0
+resultfile.write('#declare thingie = box { <-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0> normal {bumps 0.25 scale <0.1, 0.5, 0.1>}}  // Box size 1.0; note than normal in included at this stage\n') # Box size 1.0; normal may be removed
 resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
 resultfile.write('// Global modifiers for all thingies in the scene\n')
 resultfile.write('#declare color_factor = 1.0;  // Color multiplier for all channels\n')
@@ -142,7 +142,7 @@ eventranslatestring = ' ' # no offset for square packing
 # Below is 0.5 offset for "brick" packing, commented out by default
 # eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 offset, uncomment it for "brick" packing
 
-# Now going to cycle through image and build onject
+# Now going to cycle through image and build object
 
 for y in range(0, Y, 1):
 
@@ -161,17 +161,12 @@ for y in range(0, Y, 1):
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
 
         if (a > tobeornottobe):             # whether to draw thingie in place of partially transparent pixel or not
-            resultfile.write('  object {thingie')     # Opening object "thingie" to draw
-            resultfile.write(' scale <xyzsize,xyzsize,xyzsize>')
+            resultfile.write('  object {thingie scale <xyzsize,xyzsize,xyzsize> pigment {')     # Opening object "thingie" to draw
+            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
+            resultfile.write('} finish {thingie_finish}')   # closed main object properties, started modifications
             resultfile.write(f' rotate <rotate_random*{45.0*random.random()},rotate_random*{45.0*random.random()},rotate_yarkost*{45.0*yarkost}>')
             resultfile.write(translatestring)
             resultfile.write(f'translate <{x}, {y}, 0>')
-            resultfile.write(' pigment {')
-            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
-            resultfile.write('}')
-            resultfile.write(' finish {')
-            resultfile.write('thingie_finish')
-            resultfile.write('}')
             resultfile.write('}\n')         # Closing object "thingie" after modifications
 
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates

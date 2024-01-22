@@ -12,8 +12,8 @@
 # 2024  Replaced Pillow I/O with PyPNG from: https://gitlab.com/drj11/pypng
 # 2024  Complete internal rewriting. Versions from now on:
 #
-# 01.000    s3zaika.py Initial release
-# 01.001    Constant hardcoded to remove math dependency; output generalization
+# 01.000    s3zaika.py Initial release.
+# 01.001    Constant hardcoded to remove math dependency; output generalization.
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -141,7 +141,7 @@ eventranslatestring = ' ' # no offset for kartefour packing
 # Below is 0.5 offset for pentafive packing, commented out by default
 eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 offset for pentafive packing
 
-# Now going to cycle through image and build onject
+# Now going to cycle through image and build object
 Ycount = int(Y/triangleheight)
 
 for y in range(0, Ycount, 1):
@@ -164,16 +164,11 @@ for y in range(0, Ycount, 1):
         # zdisplacement = yarkost * random.random()     # yet alternative thingie z-displacement
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
-            resultfile.write('  object {thingie ')    # Opening object "thingie" to draw
-            resultfile.write('scale <xyzsize,xyzsize,xyzsize>')
+            resultfile.write('  object {thingie scale <xyzsize,xyzsize,xyzsize> pigment {')     # Opening object "thingie" to draw
+            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
+            resultfile.write('} finish {thingie_finish}')   # closed main object properties, started modifications
             resultfile.write(translatestring)
             resultfile.write(f'translate <{x}, {y*triangleheight}, displace_factor*{zdisplacement}>')
-            resultfile.write(' pigment {')
-            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
-            resultfile.write('}')
-            resultfile.write(' finish {')
-            resultfile.write('thingie_finish')
-            resultfile.write('}')
             resultfile.write('}\n')                 # Closing object "thingie" after modifications
 
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates

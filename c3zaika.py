@@ -14,6 +14,7 @@
 # 2024  Complete internal rewriting. Versions from now on:
 #
 # 01.000    c3zaika.py Initial release
+# 01.001    Output generalization.
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -137,11 +138,9 @@ triangleheight = 0.5 * 1.7320508075688773 # Height of tringle with 2*0.5 sides, 
 
 translatestring = ' '
 oddtranslatestring = ' '  # no offset
-eventranslatestring = ' ' # no offset for kartefour packing
-# Below is 0.5 offset for pentafive packing, commented out by default
-eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 offset for pentafive packing
+eventranslatestring = ' translate <0.5, 0, 0> ' # 0.5 x offset for triangle packing
 
-# Now going to cycle through image and build onject
+# Now going to cycle through image and build object
 Ycount = int(Y/triangleheight)
 
 for y in range(0, Ycount, 1):
@@ -167,16 +166,12 @@ for y in range(0, Ycount, 1):
         zsize = zsize - 0.05*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
-            resultfile.write('  object {thingie')    # Opening object "thingie" to draw
+            resultfile.write('  object {thingie pigment {')     # Opening object "thingie" to draw
+            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
+            resultfile.write('} finish {thingie_finish}')   # closed main object properties, started modifications
             resultfile.write(f' scale <xyzsize,xyzsize,xyzsize*{zsize}>')
             resultfile.write(translatestring)
             resultfile.write(f'translate <{x}, {y*triangleheight}, displace_factor*{zdisplacement}>')
-            resultfile.write(' pigment {')
-            resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
-            resultfile.write('}')
-            resultfile.write(' finish {')
-            resultfile.write('thingie_finish')
-            resultfile.write('}')
             resultfile.write('}\n')                 # Closing object "thingie" after modifications
 
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates
