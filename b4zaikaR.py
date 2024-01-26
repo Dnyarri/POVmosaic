@@ -113,7 +113,7 @@ resultfile.write('global_settings\n')
 resultfile.write('{\n')
 resultfile.write('  max_trace_level 3\n')
 resultfile.write('  adc_bailout 0.01\n')
-resultfile.write('  ambient_light <0.5,0.5,0.5>\n')
+resultfile.write('  ambient_light <0.5, 0.5, 0.5>\n')
 resultfile.write('  assumed_gamma 1.0\n')
 resultfile.write('}\n\n')
 

@@ -119,7 +119,7 @@ resultfile.write('global_settings\n')
 resultfile.write('{\n')
 resultfile.write('  max_trace_level 3\n')
 resultfile.write('  adc_bailout 0.01\n')
-resultfile.write('  ambient_light <.5,.5,.5>\n')
+resultfile.write('  ambient_light <0.5, 0.5, 0.5>\n')
 resultfile.write('  assumed_gamma 1.0\n')
 resultfile.write('}\n\n')
 
@@ -129,13 +129,13 @@ resultfile.write('#include "finish.inc"\n#include "golds.inc"\n#include "metals.
 # Thingie element
 resultfile.write('\n// Object thingie\n')
 resultfile.write('#declare thingie = sphere { <0, 0, 0>, 0.5}\n') # Sphere size 1.0
-resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
+resultfile.write('#declare thingie_finish = finish{ambient 0.1 diffuse 0.7 specular 0.8 roughness 0.001}\n')
 resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n')
 resultfile.write('#declare displace_factor = 0.5;   // z-Displace multiplier for all thingies. 0.0 makes strict plane output; 1.0 and higher not recommended\n')
 resultfile.write('#declare xyzsize = 1.0;  // x,y,z-Size value for all thingies, does not affect packing. Default 1.0\n\n')
 
 resultfile.write('\n// Thingie properties - normal\n')
-resultfile.write('#declare normalheight = 0.5;  // Normal intensity. Default 0.5\n')
+resultfile.write('#declare normalheight = 0.25;  // Normal intensity. Default 0.25\n')
 resultfile.write('#declare normalangle = 45;  // Normal is stretched at this angle to X, deg\n')
 resultfile.write('#declare normalanglerange = 45;  //Normal stretching angle randomy varies within this range, deg\n')
 resultfile.write(f'#declare normalrand = seed({int(seconds*10000000)});  // Seeding random\n')   # will rotate normal randomly around z
@@ -170,6 +170,8 @@ for y in range(0, Y, 1):
         a = float(src(x,y,3))/maxcolors            # a = 0 - transparent, a = 1.0 - opaque
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b)
         tobeornottobe = random.random()     # to be used for alpha dithering
+        zdisplacement = 0.0                 # original thingie position
+        # Three strings below may be commented out to remove brightness dependence of z-displacement but NOT scaling
         zdisplacement = random.random()     # to be used for thingie z-displacement
         # zdisplacement = yarkost           # alternative thingie z-displacement
         # zdisplacement = yarkost * random.random()     # yet alternative thingie z-displacement

@@ -118,7 +118,7 @@ resultfile.write('global_settings\n')
 resultfile.write('{\n')
 resultfile.write('  max_trace_level 3\n')
 resultfile.write('  adc_bailout 0.01\n')
-resultfile.write('  ambient_light <0.5,0.5,0.5>\n')
+resultfile.write('  ambient_light <0.5, 0.5, 0.5>\n')
 resultfile.write('  assumed_gamma 1.0\n')
 resultfile.write('}\n\n')
 
@@ -128,7 +128,7 @@ resultfile.write('#include "finish.inc"\n#include "golds.inc"\n#include "metals.
 # Thingie element
 resultfile.write('\n// Object thingie\n')
 resultfile.write('#declare thingie = box { <-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}  // Box size 1.0\n') # Box size 1.0
-resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
+resultfile.write('#declare thingie_finish = finish{ambient 0.1 diffuse 0.7 specular 0.8 roughness 0.001}\n')
 resultfile.write('// Global modifiers for all thingies in the scene\n')
 resultfile.write('#declare color_factor = 1.0;  // Color multiplier for all channels\n')
 resultfile.write('#declare zsize_factor = 1.0;  // z-Size multiplier for all thingies\n')
@@ -169,8 +169,9 @@ for y in range(0, Y, 1):
         r = float(src(x,y,0))/maxcolors; g = float(src(x,y,1))/maxcolors; b = float(src(x,y,2))/maxcolors    # Normalize colors to 0..1.0
         a = float(src(x,y,3))/maxcolors     # a = 0 - transparent, a = 1.0 - opaque
         tobeornottobe = random.random()     # to be used for alpha dithering
-        zsize = 1.0                         # original cube. Edits below may be commented out
+        zsize = 1.0                         # original cube
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
+        # Two strings below may be commented out to remove brightness dependence of scaling
         zsize = yarkost * zsize             # edited for thingie z-scaling according to source brighness
         zsize = zsize - 0.1*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
 

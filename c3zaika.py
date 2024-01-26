@@ -113,7 +113,7 @@ resultfile.write('global_settings\n')
 resultfile.write('{\n')
 resultfile.write('  max_trace_level 3\n')
 resultfile.write('  adc_bailout 0.01\n')
-resultfile.write('  ambient_light <.5,.5,.5>\n')
+resultfile.write('  ambient_light <0.5, 0.5, 0.5>\n')
 resultfile.write('  assumed_gamma 1.0\n')
 resultfile.write('}\n\n')
 
@@ -122,8 +122,8 @@ resultfile.write('#include "finish.inc"\n#include "golds.inc"\n#include "metals.
 
 # Thingie element
 resultfile.write('\n// Object thingie\n')
-resultfile.write('#declare thingie = cylinder { <0, 0, 0>, <0, 0, 1.0>, 0.5}\n') # Cylinder 1.0 hight 0.5 radius
-resultfile.write('#declare thingie_finish = finish{ambient .1 diffuse .7 specular .8 roughness .001}\n')
+resultfile.write('#declare thingie = cylinder { <0, 0, 0>, <0, 0, 1.0>, 0.5}\n') # Cylinder 1.0 high 0.5 radius
+resultfile.write('#declare thingie_finish = finish{ambient 0.1 diffuse 0.7 specular 0.8 roughness 0.001}\n')
 resultfile.write('#declare color_factor = 1.5;   // Color multiplier for all channels\n')
 resultfile.write('#declare displace_factor = 0.5;   // z-Displace multiplier for all thingies\n')
 resultfile.write('#declare xyzsize = 1.0;  // x,y,z-Size value for all thingie, Default 1.0\n\n')
@@ -141,7 +141,7 @@ resultfile.write('#declare thething = union {\n')  # Opening object "thething"
 
 # Internal strings for packing change
 
-triangleheight = 0.5 * 1.7320508075688773 # Height of tringle with 2*0.5 sides, that is the distance between two 0.5 radius spheres as defined by thingie. sqrt(3) = 1.7320508075688773 hardcoded to remove math export
+triangleheight = 0.5 * 1.7320508075688772935274463415059 # Height of tringle with 2*0.5 sides, that is the distance between two 0.5 radius cylindes as defined by thingie. sqrt(3) = 1.732... hardcoded to remove math export
 
 translatestring = ' '
 oddtranslatestring = ' '  # no offset
@@ -165,10 +165,13 @@ for y in range(0, Ycount, 1):
         a = float(src(x,y,3))/maxcolors            # a = 0 - transparent, a = 1.0 - opaque
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
         tobeornottobe = random.random()     # to be used for alpha dithering
+        zdisplacement = 0.0                 # original thingie position
+        # Three strings below may be commented out to remove brightness dependence of z-displacement but NOT scaling
         zdisplacement = random.random()     # to be used for thingie z-displacement
         # zdisplacement = yarkost           # alternative thingie z-displacement
         # zdisplacement = yarkost * random.random()     # yet alternative thingie z-displacement
-        zsize = 1.0                         # original cylinder. Edits below may be commented out
+        zsize = 1.0                         # original cylinder
+        # Two strings below may be commented out to remove brightness dependence of scaling but NOT z-displacement
         zsize = yarkost * zsize             # edited for thingie z-scaling according to source brighness
         zsize = zsize - 0.05*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
 
