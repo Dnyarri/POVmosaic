@@ -21,6 +21,7 @@
 #           Default packing set to C4.
 # 01.005    Normal added, per-thingie rotated based on POVRay random.
 #           Output generalization, POVRay 3.5 statement updated to 3.7.
+#           Potential POV problem fixed.
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -169,11 +170,12 @@ for y in range(0, Y, 1):
         r = float(src(x,y,0))/maxcolors; g = float(src(x,y,1))/maxcolors; b = float(src(x,y,2))/maxcolors    # Normalize colors to 0..1.0
         a = float(src(x,y,3))/maxcolors     # a = 0 - transparent, a = 1.0 - opaque
         tobeornottobe = random.random()     # to be used for alpha dithering
-        zsize = 1.0                         # original cube
         yarkost = float(0.2989*r)+float(0.587*g)+float(0.114*b) # brightness
+        zsize = 1.0                         # original cube
         # Two strings below may be commented out to remove brightness dependence of scaling
-        zsize = yarkost * zsize             # edited for thingie z-scaling according to source brighness
+        zsize = yarkost * zsize             # thingie z-scaling according to source brighness
         zsize = zsize - 0.1*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
+        zsize = max(zsize, 0.005)           # Important to avoid divide by zero
 
         if (a > tobeornottobe):             # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('  object {thingie pigment {')     # Opening object "thingie" to draw

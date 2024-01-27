@@ -16,6 +16,7 @@
 # 01.000    c3zaika.py Initial release
 # 01.001    Normal added, per-thingie rotated based on POVRay random.
 #           Output generalization, POVRay 3.5 statement updated to 3.7.
+# 01.002    Potential POV problem fixed.
 #
 #       Project mirrors:
 #       https://github.com/Dnyarri/POVmosaic
@@ -171,9 +172,10 @@ for y in range(0, Ycount, 1):
         # zdisplacement = yarkost           # alternative thingie z-displacement
         # zdisplacement = yarkost * random.random()     # yet alternative thingie z-displacement
         zsize = 1.0                         # original cylinder
-        # Two strings below may be commented out to remove brightness dependence of scaling but NOT z-displacement
-        zsize = yarkost * zsize             # edited for thingie z-scaling according to source brighness
-        zsize = zsize - 0.05*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
+        # Two strings below may be commented out to remove brightness dependence of scaling
+        zsize = yarkost * zsize             # thingie z-scaling according to source brighness
+        zsize = zsize - 0.1*yarkost*random.random()     # furher adding random to z-scaling, keeping 0..1 range
+        zsize = max(zsize, 0.005)           # Important to avoid divide by zero
 
         if (a > tobeornottobe):           # whether to draw thingie in place of partially transparent pixel or not
             resultfile.write('  object {thingie pigment {')     # Opening object "thingie" to draw
