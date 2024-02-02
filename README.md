@@ -4,7 +4,7 @@
 
 Python utilities for conversion of bitmap image (in [PNG format](http://www.libpng.org/pub/png/)) to some sort of solid objects mosaic in [POVRay](https://www.povray.org/) format. Development is likely to be continued, program list is about to propagate.
 
-*Brief programs description*
+*Brief programs description - simple solid primitives*
 
 - **s3zaika** - converts every single pixel into solid sphere. *S*pheres are packed into triangle grid (C<sub>*3*</sub> symmetry). Sphere height over source plane depends on random, adding some releif to avoid monotonous shadow pattern.
 - **s4zaika** - converts every single pixel into solid sphere. *S*pheres are packed into square grid (C<sub>*4*</sub> symmetry). Sphere height over source plane depends on random.
@@ -14,6 +14,9 @@ Python utilities for conversion of bitmap image (in [PNG format](http://www.libp
 - **p3zaika** - converts every single pixel into solid triangle prism. *P*risms are packed into triangle grid (C<sub>*3*</sub> symmetry) - *3<sub>6</sub>* regular plane partition - and scaled so that prism height is controlled by source image brightness, adding some releif (like rough heightfiled).
 - **p6zaika** - converts every single pixel into solid hexagonal prism. *P*risms are packed into hexagonal grid (C<sub>*6*</sub> symmetry) - a **honey comb** regular plane partition *6<sub>3</sub>* - and scaled so that prism height is controlled by source image brightness, adding some releif (like rough heightfiled made of pencils).
 
+*Subfolders description - solid complex objects*
+
+- **superellipsoid/superellipsoid-4zaika.py** - converts every single pixel into superellipsoid. Placent similar to b4zaika(s); superellipsoid parameters are random. General effect is rather pop than artistic.
 
 *Dependencies:* Tkinter, PyPNG
 
