@@ -16,7 +16,7 @@ Python utilities for conversion of bitmap image (in [PNG format](http://www.libp
 
 *Subfolders description - solid complex objects*
 
-- **superellipsoid/superzaika.py** - converts every single pixel into superellipsoid. Placent similar to b4zaika(s); superellipsoid parameters are random. General effect is rather pop than artistic.
+- **superellipsoid/superzaika.py** - converts every single pixel into superellipsoid. Placement similar to b4zaika(s); superellipsoid parameters are random. General effect is rather pop than artistic.
 
 *Dependencies:* Tkinter, PyPNG
 
