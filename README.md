@@ -4,6 +4,8 @@
 
 Python utilities for conversion of bitmap image (in [PNG format](http://www.libpng.org/pub/png/)) to some sort of solid objects mosaic in [POVRay](https://www.povray.org/) format. Development is likely to be continued, program list is about to propagate.
 
+![Example of p6zaika export rendering](p6.png)
+
 *Brief programs description - simple solid primitives*
 
 - **s3zaika** - converts every single pixel into solid sphere. *S*pheres are packed into triangle grid (C<sub>*3*</sub> symmetry). Sphere height over source plane depends on random, adding some releif to avoid monotonous shadow pattern.
@@ -17,6 +19,8 @@ Python utilities for conversion of bitmap image (in [PNG format](http://www.libp
 *Subfolders description - solid complex objects*
 
 - **superellipsoid/superzaika.py** - converts every single pixel into superellipsoid. Placement similar to b4zaika(s); superellipsoid parameters are random. General effect is rather pop than artistic.
+
+![Example of s3zaika export rendering](s3.png)
 
 *Dependencies:* Tkinter, PyPNG
 
