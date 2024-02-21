@@ -21,11 +21,6 @@
 
 
 - **blob/** - программы превращают каждый пиксель в сферический компонент пузыря (blob). Редактирование радиуса компонента и параметра threshold пузыря приводят к весьма впечатляющим изменениям.
-<<<<<<< HEAD
-=======
-
-![Example of s3zaika export rendering](s3.png)
->>>>>>> 52a13d989ca7453c8ceb61f0f5eba70053f6b369
 
 ![Example of s3zaika export rendering](s3.png)
 

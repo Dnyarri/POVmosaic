@@ -20,12 +20,7 @@ Python utilities for conversion of bitmap image (in [PNG format](http://www.libp
 
 - **superellipsoid/** - programs to convert every single pixel into superellipsoid. Placement similar to b4zaika(s); superellipsoid parameters are random. General effect is rather pop than artistic.
 
-- **blob/** - programs converting every single pixel into blob component. Component (sphere) properties and blob threshold are easy to edit, resulting to quite impressive changes. 
-<<<<<<< HEAD
-=======
-
-![Example of s3zaika export rendering](s3.png)
->>>>>>> 52a13d989ca7453c8ceb61f0f5eba70053f6b369
+- **blob/** - programs converting every single pixel into blob component. Component (sphere) properties and blob threshold are easy to edit, resulting to quite impressive changes.
 
 ![Example of s3zaika export rendering](s3.png)
 
