@@ -1,38 +1,71 @@
-# POV Box Mosaic, square pattern, scaled boxes artwork
-# Program for conversion of image into a set of tightly packed rectangular boxes,
-# colored according to source image pixels, scaled upward according to source image brightness/random
-# for artistic appearance, similar to height field
-# (c) Ilya Razmanov (mailto:ilyarazmanov@gmail.com)
-#
-# Input: PNG
-# Output: POVRay
-#
-# History:
-# 2007  Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
-# 2023  Rewritten to Python. I/O with PyPNG from: https://gitlab.com/drj11/pypng
-# 2024  Complete internal rewriting. Versions from now on:
-#
-# 01.000    b4-zaika.py Initial release
-# 01.001    Changed box z-size to source brightness minus 5% randomized
-# 01.002    Changed internal structure to easily implement "brickwall" C2 packing and some global scene variables
-# 01.003    Minor code generalization and POV output optimization
-#
-# 01.004    b4zaikaS.py Naming convention change. Boxes are scaled according to brighness minus random.
-#           Default packing set to C4.
-# 01.005    Normal added, per-thingie rotated based on POVRay random.
-#           Output generalization, POVRay 3.5 statement updated to 3.7.
-#           Potential POV problem fixed.
-#
-#       Project mirrors:
-#       https://github.com/Dnyarri/POVmosaic
-#       https://gitflic.ru/project/dnyarri/povmosaic
-#
+#!/usr/bin/env python
+
+'''
+POV Box Mosaic, square pattern, scaled boxes artwork
+Program for conversion of image into a set of tightly packed rectangular boxes,
+colored according to source image pixels, scaled upward according to source image brightness/random
+for artistic appearance, similar to height field
+
+Created by: Ilya Razmanov (mailto:ilyarazmanov@gmail.com)
+            aka Ilyich the Toad (mailto:amphisoft@gmail.com)
+
+Input: PNG
+Output: POVRay
+
+History:
+2007    Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
+2023    Rewritten to Python. I/O with PyPNG from: https://gitlab.com/drj11/pypng
+2024    Complete internal rewriting. Versions from now on:
+
+01.000  b4-zaika.py Initial release
+01.001  Changed box z-size to source brightness minus 5% randomized
+01.002  Changed internal structure to easily implement "brickwall" C2 packing and some global scene variables
+01.003  Minor code generalization and POV output optimization
+
+01.004  b4zaikaS.py Naming convention change. Boxes are scaled according to brighness minus random.
+        Default packing set to C4.
+01.005  Normal added, per-thingie rotated based on POVRay random.
+        Output generalization, POVRay 3.5 statement updated to 3.7.
+        Potential POV problem fixed.
+01.006  GUI improved.
+
+    Project mirrors:
+        https://github.com/Dnyarri/POVmosaic
+        https://gitflic.ru/project/dnyarri/povmosaic
+
+'''
+
+__author__ = "Ilya Razmanov"
+__copyright__ = "(c) 2007-2024 Ilya Razmanov"
+__credits__ = "Ilya Razmanov"
+__license__ = "unlicense"
+__version__ = "2024.02.29"
+__maintainer__ = "Ilya Razmanov"
+__email__ = "ilyarazmanov@gmail.com"
+__status__ = "Production"
+
+from tkinter import Tk
+from tkinter import Label
+from tkinter import filedialog
 
 from time import time
 from time import ctime
 from random import random
-import png
-from tkinter import filedialog
+
+import png                      # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
+
+# --------------------------------------------------------------
+# Creating dialog
+
+sortir = Tk()
+sortir.title('PNG to POV conversion')
+sortir.geometry('+100+100')
+zanyato = Label(sortir, text = 'Starting...', font=("arial", 14), padx=16, pady=10, justify='center')
+zanyato.pack()
+sortir.withdraw()
+
+# Main dialog created and hidden
+# --------------------------------------------------------------
 
 # Open source image
 sourcefilename = filedialog.askopenfilename(title='Open source PNG file', filetypes=[('PNG','.png')], defaultextension = ('PNG','.png'))
@@ -156,6 +189,12 @@ eventranslatestring = ' ' # no offset for square packing
 
 for y in range(0, Y, 1):
 
+    message = ('Processing row ' + str(y) +' of ' + str(Y) + '...')
+    sortir.deiconify()
+    zanyato.config(text = message)
+    sortir.update()
+    sortir.update_idletasks()
+
     resultfile.write(f'\n\n // Row {y}\n')
 
     if (((y+1)%2)==0):
@@ -181,7 +220,7 @@ for y in range(0, Y, 1):
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
             resultfile.write('} finish {thingie_finish} normal {bumps normalheight scale <0.5, 0.05, 0.1> rotate z*(normalangle + normalanglerange*rand(normalrand) - 0.5*normalanglerange)}')   # per-object normal, based on POVRay rand.
             # resultfile.write('} finish {thingie_finish}')    # legacy close finish without normal
-            resultfile.write(f' scale <xysize,xysize,zsize_factor*{zsize}>')
+            resultfile.write(f' scale <xysize, xysize, zsize_factor*{zsize}>')
             resultfile.write(translatestring)
             resultfile.write(f'translate <{x}, {y}, 0>')
             resultfile.write('}\n')         # Closing object "thingie" after modifications
@@ -212,3 +251,12 @@ resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-2, 6
 resultfile.write('\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/')
 # Close output
 resultfile.close()
+
+# --------------------------------------------------------------
+# Destroying dialog
+
+sortir.destroy()
+sortir.mainloop()
+
+# Dialog destroyed and closed
+# --------------------------------------------------------------

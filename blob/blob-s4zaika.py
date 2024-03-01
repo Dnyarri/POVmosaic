@@ -1,29 +1,62 @@
-# POV Sphere Mosaic, square pattern
-# Program for conversion of image into a C4 symmetry blob of tightly packed spheres,
-# colored according to source image pixels
-# (c) Ilya Razmanov (mailto:ilyarazmanov@gmail.com)
-#
-# Input: PNG
-# Output: POVRay
-#
-# History:
-# 2007  Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
-# 2023  Rewritten to Python.
-# 2024  Exploring the idea; union replaced with blob. Versions from now on:
-#
-# 01.000    blob-s4zaika.py Initial release
-# 01.001    Added per-thingie randomized normal
-#
-#       Project mirrors:
-#       https://github.com/Dnyarri/POVmosaic
-#       https://gitflic.ru/project/dnyarri/povmosaic
-#
+#!/usr/bin/env python
+
+'''
+POV Sphere Blob Mosaic, square pattern
+Program for conversion of image into a C4 symmetry blob of tightly packed spheres,
+colored according to source image pixels
+
+Created by: Ilya Razmanov (mailto:ilyarazmanov@gmail.com)
+            aka Ilyich the Toad (mailto:amphisoft@gmail.com)
+
+Input: PNG
+Output: POVRay
+
+History:
+2007    Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
+2023    Rewritten to Python.
+2024    Exploring the idea; union replaced with blob. Versions from now on:
+
+01.000  blob-s4zaika.py Initial release
+01.001  Added per-thingie randomized normal
+01.007  GUI improved.
+
+    Project mirrors:
+        https://github.com/Dnyarri/POVmosaic
+        https://gitflic.ru/project/dnyarri/povmosaic
+
+'''
+
+__author__ = "Ilya Razmanov"
+__copyright__ = "(c) 2007-2024 Ilya Razmanov"
+__credits__ = "Ilya Razmanov"
+__license__ = "unlicense"
+__version__ = "2024.02.29"
+__maintainer__ = "Ilya Razmanov"
+__email__ = "ilyarazmanov@gmail.com"
+__status__ = "Production"
+
+from tkinter import Tk
+from tkinter import Label
+from tkinter import filedialog
 
 from time import time
 from time import ctime
 from random import random
-import png      # I/O with PyPNG from: https://gitlab.com/drj11/pypng
-from tkinter import filedialog
+
+import png                      # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
+
+# --------------------------------------------------------------
+# Creating dialog
+
+sortir = Tk()
+sortir.title('PNG to POV conversion')
+sortir.geometry('+100+100')
+zanyato = Label(sortir, text = 'Starting...', font=("arial", 14), padx=16, pady=10, justify='center')
+zanyato.pack()
+sortir.withdraw()
+
+# Main dialog created and hidden
+# --------------------------------------------------------------
 
 # Open source image
 sourcefilename = filedialog.askopenfilename(title='Open source PNG file', filetypes=[('PNG','.png')], defaultextension = ('PNG','.png'))
@@ -149,6 +182,12 @@ eventranslatestring = ' ' # no offset for kartefour packing
 
 for y in range(0, Y, 1):
 
+    message = ('Processing row ' + str(y) +' of ' + str(Y) + '...')
+    sortir.deiconify()
+    zanyato.config(text = message)
+    sortir.update()
+    sortir.update_idletasks()
+
     resultfile.write(f'\n\n // Row {y}\n')
 
     if (((y+1)%2)==0):
@@ -167,12 +206,12 @@ for y in range(0, Y, 1):
         # zdisplacement = yarkost * random()     # yet alternative thingie z-displacement
 
         if (a > tobeornottobe):             # whether to draw thingie in place of partially transparent pixel or not
-            resultfile.write('    sphere { <0,0,0>, blobradius, blobblobness pigment {')    # Opening thingie
+            resultfile.write('    sphere {<0,0,0>, blobradius, blobblobness pigment {')    # Opening thingie
             resultfile.write(f'rgb <color_factor*{r}, color_factor*{g}, color_factor*{b}>')
             resultfile.write('}')           # close color
             resultfile.write(' finish {thingie_finish} normal {bumps normalheight scale <0.5, 0.05, 0.1> rotate z*(normalangle + normalanglerange*rand(normalrand) - 0.5*normalanglerange)}')   # per-object normal, based on POVRay rand.
             # resultfile.write(' finish {thingie_finish}')    # legacy close finish without normal
-            resultfile.write(' scale <xyzsize,xyzsize,xyzsize>')
+            resultfile.write(' scale <xyzsize, xyzsize, xyzsize>')
             resultfile.write(translatestring)
             resultfile.write(f'translate <{x}, {y}, displace_factor*{zdisplacement}>')
             resultfile.write('}\n')                 # Closing object "thingie" after modifications
@@ -203,3 +242,12 @@ resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-2, 6
 resultfile.write('\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/\n')
 # Close output
 resultfile.close()
+
+# --------------------------------------------------------------
+# Destroying dialog
+
+sortir.destroy()
+sortir.mainloop()
+
+# Dialog destroyed and closed
+# --------------------------------------------------------------

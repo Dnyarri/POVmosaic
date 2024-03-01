@@ -1,28 +1,61 @@
-# POV Superellipsoid Box Mosaic, square pattern
-# Program for conversion of image into a set of tightly packed superellipsoids,
-# colored according to source image pixels, with random superellipsoid parameters
-# (c) Ilya Razmanov (mailto:ilyarazmanov@gmail.com)
-#
-# Input: PNG
-# Output: POVRay
-#
-# History:
-# 2007  Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
-# 2023  Rewritten to Python. I/O with PyPNG from: https://gitlab.com/drj11/pypng
-# 2024  Complete internal rewriting. Versions from now on:
-#
-# 01.000    superzaika.py Initial release
-#
-#       Project mirrors:
-#       https://github.com/Dnyarri/POVmosaic
-#       https://gitflic.ru/project/dnyarri/povmosaic
-#
+#!/usr/bin/env python
+
+'''
+POV Superellipsoid Mosaic, square pattern
+Program for conversion of image into a set of tightly packed superellipsoids,
+colored according to source image pixels, with random superellipsoid parameters
+
+Created by: Ilya Razmanov (mailto:ilyarazmanov@gmail.com)
+            aka Ilyich the Toad (mailto:amphisoft@gmail.com)
+
+Input: PNG
+Output: POVRay
+
+History:
+2007  Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
+2023  Rewritten to Python. I/O with PyPNG from: https://gitlab.com/drj11/pypng
+2024  Complete internal rewriting. Versions from now on:
+
+01.000    superzaika.py Initial release
+01.002  GUI improved.
+
+    Project mirrors:
+        https://github.com/Dnyarri/POVmosaic
+        https://gitflic.ru/project/dnyarri/povmosaic
+
+'''
+
+__author__ = "Ilya Razmanov"
+__copyright__ = "(c) 2007-2024 Ilya Razmanov"
+__credits__ = "Ilya Razmanov"
+__license__ = "unlicense"
+__version__ = "2024.02.29"
+__maintainer__ = "Ilya Razmanov"
+__email__ = "ilyarazmanov@gmail.com"
+__status__ = "Production"
+
+from tkinter import Tk
+from tkinter import Label
+from tkinter import filedialog
 
 from time import time
 from time import ctime
 from random import random
-import png
-from tkinter import filedialog
+
+import png                      # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
+
+# --------------------------------------------------------------
+# Creating dialog
+
+sortir = Tk()
+sortir.title('PNG to POV conversion')
+sortir.geometry('+100+100')
+zanyato = Label(sortir, text = 'Starting...', font=("arial", 14), padx=16, pady=10, justify='center')
+zanyato.pack()
+sortir.withdraw()
+
+# Main dialog created and hidden
+# --------------------------------------------------------------
 
 # Open source image
 sourcefilename = filedialog.askopenfilename(title='Open source PNG file', filetypes=[('PNG','.png')], defaultextension = ('PNG','.png'))
@@ -145,6 +178,12 @@ eventranslatestring = ' ' # no offset for square packing
 
 for y in range(0, Y, 1):
 
+    message = ('Processing row ' + str(y) +' of ' + str(Y) + '...')
+    sortir.deiconify()
+    zanyato.config(text = message)
+    sortir.update()
+    sortir.update_idletasks()
+
     resultfile.write(f'\n\n // Row {y}\n')
 
     if (((y+1)%2)==0):
@@ -199,3 +238,12 @@ resultfile.write('light_source {0*x\n   color rgb <0.9,1,1>\n   translate <-2, 6
 resultfile.write('\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/')
 # Close output
 resultfile.close()
+
+# --------------------------------------------------------------
+# Destroying dialog
+
+sortir.destroy()
+sortir.mainloop()
+
+# Dialog destroyed and closed
+# --------------------------------------------------------------
