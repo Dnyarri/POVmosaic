@@ -4,7 +4,7 @@
 
 Python utility for conversion of bitmap image (in [PNG format](http://www.libpng.org/pub/png/)) to some sort of solid superellipsoid mosaic in [POVRay](https://www.povray.org/) format.
 
-![Example of superzaika export rendering](super.png)
+![Example of superzaika export rendering](https://dnyarri.github.io/imgzaika/320/superzaika.png)
 
 *Brief program description - solid superellipsoid mosaic*
 

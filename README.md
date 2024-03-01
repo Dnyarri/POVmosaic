@@ -4,7 +4,7 @@
 
 Python utilities for conversion of bitmap image (in [PNG format](http://www.libpng.org/pub/png/)) to some sort of solid objects mosaic in [POVRay](https://www.povray.org/) format. Development is likely to be continued, program list is about to propagate.
 
-![Example of p6zaika export rendering](p6.png)
+![Example of p6zaika export rendering](https://dnyarri.github.io/imgzaika/320/p6zaika.png)
 
 *Brief programs description - simple solid primitives*
 
@@ -22,11 +22,15 @@ Python utilities for conversion of bitmap image (in [PNG format](http://www.libp
 
 - **blob/** - programs converting every single pixel into blob component. Component (sphere) properties and blob threshold are easy to edit, resulting to quite impressive changes.
 
-![Example of s3zaika export rendering](s3.png)
+- **tori/** - programs for simulating canvas and cross-stitch.
+
+![Example of linen export rendering](https://dnyarri.github.io/imgzaika/320/linen.png)
 
 *Dependencies:* Tkinter, PyPNG
 
 *Usage:* programs are equipped with minimal GUI, so all you have to do after starting the programs is use standard "Open..." GUI to open image file, then use standard "Save..." GUI to set POVRay scene file to be created, then wait while program does the job, then open resulting POV file with POVRay and render the scene. Scene contains enough basic stuff (globals, light, camera) to be rendered successfully right after exporting without any editing.
+
+[Project website](https://dnyarri.github.io/)
 
 Project mirrors:
 
