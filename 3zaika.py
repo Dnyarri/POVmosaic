@@ -191,7 +191,7 @@ resultfile.writelines([
         '\n//       Thingie normal variants\n',
         '#declare thingie_normal1 = normal{bumps 0.0}\n',
         '#declare thingie_normal2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
-        '#declare thingie_normal3 = normal{bumps 1.0 scale<0.5, 0.05, 0.05> rotate<0, 0, 30>}\n',
+        '#declare thingie_normal3 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
         '\n//       Global modifiers for all thingies in the scene\n',
         '#declare color_factor = 1.0;               // Color multiplier for all channels\n',
         '\n//       Seed random\n',
