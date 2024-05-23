@@ -137,7 +137,8 @@ seconds = time(); localtime = ctime(seconds)    # will be used for randomization
 # --------------------------------
 #   POV header start
 #
-resultfile.writelines(['/*\n',
+resultfile.writelines([
+    '/*\n',
     'Persistence of Vision Ray Tracer Scene Description File\n',
     'Version: 3.7\n',
     'Description: Mosaic picture consisting from solid boxes, C4 symmetry (square) packing.\n',
@@ -155,19 +156,20 @@ resultfile.writelines(['/*\n',
 ])
 
 #   Globals
-resultfile.writelines(['\n',
-                       '#version 3.7;\n\n',
-                       'global_settings{\n',
-                       '    max_trace_level 3   // Small to speed up preview. May need to be increased for metals\n',
-                       '    adc_bailout 0.01    // High to speed up preview. May need to be decreased to 1/256\n',
-                       '    ambient_light <0.5, 0.5, 0.5>\n',
-                       '    assumed_gamma 1.0\n}\n\n',
-                       '#include "colors.inc"\n',
-                       '#include "finish.inc"\n',
-                       '#include "metals.inc"\n',
-                       '#include "golds.inc"\n',
-                       '\n'
-                       ])
+resultfile.writelines([
+        '\n',
+        '#version 3.7;\n\n',
+        'global_settings{\n',
+        '    max_trace_level 3   // Small to speed up preview. May need to be increased for metals\n',
+        '    adc_bailout 0.01    // High to speed up preview. May need to be decreased to 1/256\n',
+        '    ambient_light <0.5, 0.5, 0.5>\n',
+        '    assumed_gamma 1.0\n}\n\n',
+        '#include "colors.inc"\n',
+        '#include "finish.inc"\n',
+        '#include "metals.inc"\n',
+        '#include "golds.inc"\n',
+        '\n',
+])
 #   POV header end
 # --------------------------------
 
@@ -239,6 +241,7 @@ for y in range(0, Y, 1):
 
         # Something to map something to. By default - brightness, normalized to 0..1
         map = float(srcY(x, y))/maxcolors
+        map = abs((2.0 * map) - 1)  # Triangle transfer function
 
         # alpha to be used for alpha dithering
         a = float(src(x, y, 3))/maxcolors
