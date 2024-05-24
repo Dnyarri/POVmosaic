@@ -16,6 +16,8 @@ History:
 04.04.2024  b4zaikaR.py final state.
 
 0.0.0.1     Complete rewriting to more flexible project - 21 May 2024.
+0.0.0.4     Position and scale mapping, new CSG as objects.
+0.0.0.5     Normal randomization added.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -27,7 +29,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.4"
+__version__ = "0.0.0.5"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -190,20 +192,24 @@ resultfile.writelines([
         '\n//       Thingie normal variants\n',
         '#declare thingie_normal_1 = normal{bumps 0.0}\n',
         '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
-        '#declare thingie_normal_3 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
+        '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
+        '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
         '\n//       Global modifiers for all thingies in the scene\n',
         '#declare color_factor = 1.0;               // Color multiplier for all channels\n',
         '#declare brickwall_offset = <0.5, 0, 0>;   // Odd lines shift for brick wall\n',
         '#declare brickwall_offset = <0.0, 0, 0>;   // Default 0 odd lines shift for no brick wall\n',
-        '#declare rotate_all = <10, -10, 0>;        // Base rotation of all thingies. Values in degrees\n',
+        '#declare rotate_all = <0, 0, 0>;           // Base rotation of all thingies. Values in degrees\n',
         '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-     */\n',
         '#declare thingie = thingie_1\n',
         '#declare thingie_finish = thingie_finish_1\n',
         '#declare thingie_normal = thingie_normal_1\n',
         '\n//       Per-thingie modifiers\n',
-        '#declare move_map = <0, 0, 0>;  // To move thingies depending on map. No constrains on values\n',
-        '#declare scale_map = <0, 0, 0>;  // To rescale thingies depending on map. Expected values 0..1\n',
-        '#declare rotate_map = <15, -30, 180>;  // To rotate thingies depending on map. Values in degrees\n',
+        '#declare move_map = <0, 0, 0>;    // To move thingies depending on map. No constrains on values\n',
+        '#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Expected values 0..1\n',
+        '#declare rotate_map = <0, 0, 0>;  // To rotate thingies depending on map. Values in degrees\n',
+        '\n//       Per-thingie normal modifiers\n',
+        '#declare normal_move_rnd = <0, 0, 0>;    // Random move of finish. No constrains on values\n',
+        '#declare normal_rotate_rnd = <0, 0, 0>;  // Random rotate of finish. Values in degrees\n',
         '\n//       Seed random\n',
         f'#declare rnd_1 = seed({int(seconds * 1000000)});\n',
         '\n',
@@ -261,7 +267,7 @@ for y in range(0, Y, 1):
                 f'      {even_odd_string}\n',
                 f'      pigment{{rgb<color_factor*{r}, color_factor*{g}, color_factor*{b}>}}\n',
                 '      finish{thingie_finish}\n',
-                '      normal{thingie_normal}\n',
+                '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
                 f'      translate<{x}, {y}, 0>\n',
                 '    }\n'
             # Finished thingie
