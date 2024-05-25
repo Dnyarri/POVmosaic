@@ -16,8 +16,8 @@ History:
 04.04.2024  s3zaika.py final state, completely rewritten as compared to first transition from FM.
 
 0.0.0.1     Complete rewriting to more flexible project - 22 May 2024.
-0.0.0.4     Position and scale mapping, new CSG as objects.
-0.0.0.5     Normal randomization added.
+0.0.0.4     Position and scale mapping. More thingies.
+0.0.0.6     Normal randomization. Pigment format changed to rgbft (no lgbt puns please!).
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -29,7 +29,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.5"
+__version__ = "0.0.0.6"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -200,6 +200,8 @@ resultfile.writelines([
         '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
         '\n//       Global modifiers for all thingies in the scene\n',
         '#declare color_factor = 1.0;       // Color multiplier for all channels\n',
+        '#declare f_value = 0.0;            // Filter value for all thingies\n',
+        '#declare t_value = 0.0;            // Transmit value for all thingies\n',
         '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-     */\n',
         '#declare thingie = thingie_1\n',
         '#declare thingie_finish = thingie_finish_1\n',
@@ -275,7 +277,7 @@ for y in range(0, Ycount, 1):
                 f'      rotate(rotate_map * <{map}, {map}, {map}>)\n',
                 f'      translate(move_map * <{map}, {map}, {map}>)\n',
                 f'      {even_odd_string}\n',
-                f'      pigment{{rgb<color_factor*{r}, color_factor*{g}, color_factor*{b}>}}\n',
+                f'      pigment{{rgbft<color_factor*{r}, color_factor*{g}, color_factor*{b}, f_value, t_value>}}\n',
                 '      finish{thingie_finish}\n',
                 '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
                 f'      translate<{x}, {y*triangle_height}, 0>\n',
