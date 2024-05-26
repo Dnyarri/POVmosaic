@@ -13,11 +13,12 @@ History:
 2007        Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
 2023        Rewritten to Python. I/O with PyPNG from: https://gitlab.com/drj11/pypng
             s3zaika.py Initial release. Direct translation from FMML to Python.
-04.04.2024  s3zaika.py final state, completely rewritten as compared to first transition from FM.
+04.04.2024  s3zaika.py final state, completely rewritten vs. first transition from FM.
 
 0.0.0.1     Complete rewriting to more flexible project - 22 May 2024.
 0.0.0.4     Position and scale mapping. More thingies.
-0.0.0.6     Normal randomization. Pigment format changed to rgbft (no lgbt puns please!).
+0.0.0.6     Normal randomization. Position and rotation randomization. Unwanted commutation fixed.
+            Pigment format changed to rgbft (no lgbt puns please!).
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -159,18 +160,18 @@ resultfile.writelines([
 
 #   Globals
 resultfile.writelines([
-        '\n',
-        '#version 3.7;\n\n',
-        'global_settings{\n',
-        '    max_trace_level 3   // Small to speed up preview. May need to be increased for metals\n',
-        '    adc_bailout 0.01    // High to speed up preview. May need to be decreased to 1/256\n',
-        '    ambient_light <0.5, 0.5, 0.5>\n',
-        '    assumed_gamma 1.0\n}\n\n',
-        '#include "colors.inc"\n',
-        '#include "finish.inc"\n',
-        '#include "metals.inc"\n',
-        '#include "golds.inc"\n',
-        '\n',
+    '\n',
+    '#version 3.7;\n\n',
+    'global_settings{\n',
+    '    max_trace_level 3   // Small to speed up preview. May need to be increased for metals\n',
+    '    adc_bailout 0.01    // High to speed up preview. May need to be decreased to 1/256\n',
+    '    ambient_light <0.5, 0.5, 0.5>\n',
+    '    assumed_gamma 1.0\n}\n\n',
+    '#include "colors.inc"\n',
+    '#include "finish.inc"\n',
+    '#include "metals.inc"\n',
+    '#include "golds.inc"\n',
+    '\n',
 ])
 #   POV header end
 # --------------------------------
@@ -178,47 +179,50 @@ resultfile.writelines([
 # --------------------------------
 # Thingie element, then scene
 resultfile.writelines([
-        '\n// Necessary math stuff set as de facto constants to avoid imporing math\n',
-        '#declare sqrtof3 = 1.7320508075688772935274463415059;   // sqrt(3)\n',
-        '#declare revsqrtof3 = 1.0/sqrtof3;                      // 1.0/sqrt(3)\n',
-        '\n//       Thingie variants\n',
-        '#declare thingie_1 = sphere{<0, 0, 0>, 0.5}\n',
-        '#declare thingie_2 = cylinder{<0, 0, 0>, <0, 0, 1.0>, 0.5}\n',
-        '// Hexagonal prism 1.0 high, outer radius 0.5 - like pencils in honeycomb pack\n',
-        '#declare thingie_3 = prism{linear_sweep linear_spline 0, 1, 7,\n <-0.5, 0.5*revsqrtof3>, <0,revsqrtof3>, <0.5, 0.5*revsqrtof3>,\n <0.5,- 0.5*revsqrtof3>, <0,-revsqrtof3>, <-0.5,- 0.5*revsqrtof3>,\n <-0.5, 0.5*revsqrtof3> rotate x*90}\n',
-        '// CSG examples, may be good for randomly rotated thingies\n',    # CSG
-        '#declare thingie_4 = intersection{\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate x*90}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate y*90}\n  }  //  Cubic\n',
-        '#declare thingie_5 = intersection{\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*219.0}\n  }  //  Tetrahedral\n',
-        '\n//       Thingie finish variants\n',
-        '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth HDPE\n',
-        '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',
-        '#declare thingie_finish_3 = F_MetalE    // Example of linking complex finish from golds.inc\n',
-        '\n//       Thingie normal variants\n',
-        '#declare thingie_normal_1 = normal{bumps 0.0}\n',
-        '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
-        '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
-        '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
-        '\n//       Global modifiers for all thingies in the scene\n',
-        '#declare color_factor = 1.0;       // Color multiplier for all channels\n',
-        '#declare f_value = 0.0;            // Filter value for all thingies\n',
-        '#declare t_value = 0.0;            // Transmit value for all thingies\n',
-        '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-     */\n',
-        '#declare thingie = thingie_1\n',
-        '#declare thingie_finish = thingie_finish_1\n',
-        '#declare thingie_normal = thingie_normal_1\n',
-        '\n//       Per-thingie modifiers\n',
-        '#declare move_map = <0, 0, 0>;      // To move thingies depending on map. No constrains on values\n',
-        '#declare scale_map = <0, 0, 0>;     // To rescale thingies depending on map. Expected values 0..1\n',
-        '#declare rotate_map = <0, 0, 0>;    // To rotate thingies depending on map. Values in degrees\n',
-        '\n//       Per-thingie normal modifiers\n',
-        '#declare normal_move_rnd = <0, 0, 0>;    // Random move of finish. No constrains on values\n',
-        '#declare normal_rotate_rnd = <0, 0, 0>;  // Random rotate of finish. Values in degrees\n',
-        '\n//       Seed random\n',
-        f'#declare rnd_1 = seed({int(seconds * 1000000)});\n',
-        '\n',
-        # Starting scene content, main object
-        '\n// Object thething made out of thingies\n',
-        '#declare thething = union{\n',  # Opening big thething
+    '\n// Necessary math stuff set as de facto constants to avoid imporing math\n',
+    '#declare sqrtof3 = 1.7320508075688772935274463415059;   // sqrt(3)\n',
+    '#declare revsqrtof3 = 1.0/sqrtof3;                      // 1.0/sqrt(3)\n',
+    '\n//       Thingie variants\n',
+    '#declare thingie_1 = sphere{<0, 0, 0>, 0.5}\n',
+    '#declare thingie_2 = cylinder{<0, 0, 0>, <0, 0, 1.0>, 0.5}\n',
+    '#declare thingie_3 = cone{<0, 0, 0>, 0.5, <0, 0, 1.0>, 0.0}\n',
+    '// Hexagonal prism below, 1.0 high, outer radius 0.5 - like pencils in honeycomb pack\n',
+    '#declare thingie_4 = prism{linear_sweep linear_spline 0, 1, 7,\n <-0.5, 0.5*revsqrtof3>, <0,revsqrtof3>, <0.5, 0.5*revsqrtof3>,\n <0.5,- 0.5*revsqrtof3>, <0,-revsqrtof3>, <-0.5,- 0.5*revsqrtof3>,\n <-0.5, 0.5*revsqrtof3> rotate x*270}  // Try conic_sweep as well\n',
+    '// CSG examples below, may be good for randomly rotated thingies\n',
+    '#declare thingie_5 = intersection{\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate x*90}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate y*90}\n  }  //  Cubic rounded\n',
+    '#declare thingie_6 = intersection{\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*219.0}\n  }  //  Tetrahedral rounded\n',
+    '\n//       Thingie finish variants\n',
+    '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth HDPE\n',
+    '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',
+    '#declare thingie_finish_3 = F_MetalE    // Example of linking complex finish from golds.inc\n',
+    '\n//       Thingie normal variants\n',
+    '#declare thingie_normal_1 = normal{bumps 0.0}\n',
+    '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
+    '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
+    '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
+    '\n//       Global modifiers for all thingies in the scene\n',
+    '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
+    '#declare f_value = 0.0;           // Filter value for all thingies\n',
+    '#declare t_value = 0.0;           // Transmit value for all thingies\n',
+    '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-     */\n',
+    '#declare thingie = thingie_1\n',
+    '#declare thingie_finish = thingie_finish_1\n',
+    '#declare thingie_normal = thingie_normal_1\n',
+    '\n//       Per-thingie modifiers\n',
+    '#declare move_map = <0, 0, 0>;    // To move thingies depending on map. No constrains on values\n',
+    '#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Expected values 0..1\n',
+    '#declare rotate_map = <0, 0, 0>;  // To rotate thingies depending on map. Values in degrees\n',
+    '#declare move_rnd = <0, 0, 0>;    // To move thingies randomly. No constrains on values\n',
+    '#declare rotate_rnd = <0, 0, 0>;  // To rotate thingies randomly. Values in degrees\n',
+    '\n//       Per-thingie normal modifiers\n',
+    '#declare normal_move_rnd = <0, 0, 0>;    // Random move of finish. No constrains on values\n',
+    '#declare normal_rotate_rnd = <0, 0, 0>;  // Random rotate of finish. Values in degrees\n',
+    '\n//       Seed random\n',
+    f'#declare rnd_1 = seed({int(seconds * 1000000)});\n',
+    '\n',
+    # Starting scene content, main object
+    '\n// Object thething made out of thingies\n',
+    '#declare thething = union{\n',  # Opening big thething
 ])
 
 # Internal strings for packing change
@@ -273,13 +277,15 @@ for y in range(0, Ycount, 1):
             # Opening object "thingie" to draw
             resultfile.writelines([
                 '    object{thingie\n',
-                f'      scale(<1, 1, 1> - (scale_map * <{map}, {map}, {map}>))\n',
-                f'      rotate(rotate_map * <{map}, {map}, {map}>)\n',
-                f'      translate(move_map * <{map}, {map}, {map}>)\n',
-                f'      {even_odd_string}\n',
                 f'      pigment{{rgbft<color_factor*{r}, color_factor*{g}, color_factor*{b}, f_value, t_value>}}\n',
                 '      finish{thingie_finish}\n',
                 '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
+                f'      scale(<1, 1, 1> - (scale_map * <{map}, {map}, {map}>))\n',
+                f'      rotate(rotate_map * <{map}, {map}, {map}>)\n',
+                f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
+                f'      {even_odd_string}\n',
+                f'      translate(move_map * <{map}, {map}, {map}>)\n',
+                f'      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
                 f'      translate<{x}, {y*triangle_height}, 0>\n',
                 '    }\n'
             # Finished thingie
@@ -307,16 +313,16 @@ resultfile.writelines([
     '  location<0.0, 0.0, camera_height>\n',
     '  right x*image_width/image_height\n',
     '  up y\n',
-    '  direction <0,0,1>\n',
+    '  direction <0, 0, 1>\n',
     f'  angle 2.0*(degrees(atan2({0.5 * proportions}, camera_height-(1.0/{max(X, Y)})))) // Supposed to fit object\n',
     '  look_at<0.0, 0.0, 0.0>\n',
     '}\n\n',
 ])
 
 # Light 1
-resultfile.write('light_source {0*x\n  color rgb<1.1,1,1>\n  translate<4, 2, 3>\n}\n\n')
+resultfile.write('light_source {0*x\n  color rgb<1.1, 1, 1>\n  translate<4, 2, 3>\n}\n\n')
 # Light 2
-resultfile.write('light_source {0*x\n  color rgb<0.9,1,1>\n  translate<-2, 6, 7>\n}\n\n')
+resultfile.write('light_source {0*x\n  color rgb<0.9, 1, 1>\n  translate<-2, 6, 7>\n}\n\n')
 # Signature
 resultfile.write('\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/')
 # Close output
