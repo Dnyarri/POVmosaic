@@ -19,6 +19,7 @@ History:
 0.0.0.4     Position and scale mapping. More thingies.
 0.0.0.6     Normal randomization. Position and rotation randomization. Unwanted commutation fixed.
             Pigment format changed to rgbft (no lgbt puns please!).
+0.0.0.7     Mapping moved to POVRay user-defined functions.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -30,7 +31,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.6"
+__version__ = "0.0.0.7"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -205,10 +206,15 @@ resultfile.writelines([
     '#declare brickwall_offset = <0.5, 0, 0>;   // Odd lines shift for brick wall\n',
     '#declare brickwall_offset = <0.0, 0, 0>;   // Default 0 odd lines shift for no brick wall\n',
     '#declare rotate_all = <0, 0, 0>;           // Base rotation of all thingies. Values in degrees\n',
+    '\n//       Map functions for all thingies in the scene\n',
+    '#declare map_1 = function(c) {c}                           // Direct input\n',
+    '#declare map_2 = function(c) {abs((2.0 * c) - 1.0)}        // Triangle\n',
+    '#declare map_3 = function(c) {1.0 - abs((2.0 * c) - 1.0)}  // Inverse triangle\n',
     '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-     */\n',
     '#declare thingie = thingie_1\n',
     '#declare thingie_finish = thingie_finish_1\n',
     '#declare thingie_normal = thingie_normal_1\n',
+    '#declare map = function(c) {map_1(c)}\n',
     '\n//       Per-thingie modifiers\n',
     '#declare move_map = <0, 0, 0>;    // To move thingies depending on map. No constrains on values\n',
     '#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Expected values 0..1\n',
@@ -256,8 +262,7 @@ for y in range(0, Y, 1):
         b = float(src(x, y, 2))/maxcolors
 
         # Something to map something to. By default - brightness, normalized to 0..1
-        map = float(srcY(x, y))/maxcolors
-        map = abs((2.0 * map) - 1)  # Triangle transfer function
+        c = float(srcY(x, y))/maxcolors
 
         # alpha to be used for alpha dithering
         a = float(src(x, y, 3))/maxcolors
@@ -272,11 +277,11 @@ for y in range(0, Y, 1):
                 f'      pigment{{rgbft<color_factor*{r}, color_factor*{g}, color_factor*{b}, f_value, t_value>}}\n',
                 '      finish{thingie_finish}\n',
                 '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
-                f'      scale(<1, 1, 1> - (scale_map * <{map}, {map}, {map}>))\n',
-                f'      rotate((rotate_map * <{map}, {map}, {map}>) + rotate_all)\n',
+                f'      scale(<1, 1, 1> - (scale_map * <map({c}), map({c}), map({c})>))\n',
+                f'      rotate((rotate_map * <map({c}), map({c}), map({c})>) + rotate_all)\n',
                 f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
                 f'      {even_odd_string}\n',
-                f'      translate(move_map * <{map}, {map}, {map}>)\n',
+                f'      translate(move_map * <map({c}), map({c}), map({c})>)\n',
                 f'      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
                 f'      translate<{x}, {y}, 0>\n',
                 '    }\n'
