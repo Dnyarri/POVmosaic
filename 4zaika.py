@@ -19,7 +19,8 @@ History:
 0.0.0.4     Position and scale mapping. More thingies.
 0.0.0.6     Normal randomization. Position and rotation randomization. Unwanted commutation fixed.
             Pigment format changed to rgbft (no lgbt puns please!).
-0.0.0.7     Mapping moved to POVRay user-defined functions.
+0.0.0.8     Mapping moved to POVRay user-defined functions.
+            General restructure for easy editing.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -31,7 +32,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.7"
+__version__ = "0.0.0.8"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -169,10 +170,10 @@ resultfile.writelines([
     '    adc_bailout 0.01    // High to speed up preview. May need to be decreased to 1/256\n',
     '    ambient_light <0.5, 0.5, 0.5>\n',
     '    assumed_gamma 1.0\n}\n\n',
-    '#include "colors.inc"\n',
     '#include "finish.inc"\n',
     '#include "metals.inc"\n',
     '#include "golds.inc"\n',
+    '#include "glass.inc"\n',
     '\n',
 ])
 #   POV header end
@@ -181,6 +182,7 @@ resultfile.writelines([
 # --------------------------------
 # Thingie element, then scene
 resultfile.writelines([
+    '\n// # # # # # USER CONTROL SECTION # # # # #\n',
     '\n//       Thingie variants\n',
     '#declare thingie_1 = box{<-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}\n',
     '#declare thingie_2 = sphere{<0, 0, 0>, 0.5}\n',
@@ -210,7 +212,7 @@ resultfile.writelines([
     '#declare map_1 = function(c) {c}                           // Direct input\n',
     '#declare map_2 = function(c) {abs((2.0 * c) - 1.0)}        // Triangle\n',
     '#declare map_3 = function(c) {1.0 - abs((2.0 * c) - 1.0)}  // Inverse triangle\n',
-    '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-     */\n',
+    '\n//   -<*<* Selecting variants, configuring scene *>*>-\n',
     '#declare thingie = thingie_1\n',
     '#declare thingie_finish = thingie_finish_1\n',
     '#declare thingie_normal = thingie_normal_1\n',
@@ -227,7 +229,23 @@ resultfile.writelines([
     '\n//       Seed random\n',
     f'#declare rnd_1 = seed({int(seconds * 1000000)});\n',
     '\n',
-    # Starting scene content, main object
+    # Starting scene content
+    # Camera
+    '\n// # # # # # SCENE SECTION # # # # #\n\n',
+    '#declare camera_height = 3.0;\n\n',
+    'camera{\n',
+    '  // orthographic\n',
+    '  location<0.0, 0.0, camera_height>\n',
+    '  right x*image_width/image_height\n',
+    '  up y\n',
+    '  direction <0, 0, 1>\n',
+    f'  angle 2.0*(degrees(atan2({0.5 * max(X,Y)/X}, camera_height-({1.0/max(X, Y)})))) // Supposed to fit object\n',
+    '  look_at<0.0, 0.0, 0.0>\n',
+    '}\n\n',
+    # Light
+    'light_source {0*x\n  color rgb<1.1, 1, 1>\n  translate<4, 2, 3>\n}\n\n',
+    'light_source {0*x\n  color rgb<0.9, 1, 1>\n  translate<-2, 6, 7>\n}\n\n',
+    # Main object
     '\n// Object thething made out of thingies\n',
     '#declare thething = union{\n',  # Opening big thething
 ])
@@ -295,33 +313,11 @@ resultfile.writelines([
     f'  translate<{-0.5*X}, {-0.5*Y}, 0>\n',  # centering at scene zero
     f'  scale<{-1.0/max(X, Y)}, {-1.0/max(X, Y)}, {1.0/max(X, Y)}>\n',    # fitting and mirroring
     '} // thething closed\n\n'
+    '\nobject {thething}\n\n',
+    '\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/'
 ])
-# closing big thething
+# Closed scene
 
-# Inserting big thething into scene
-resultfile.write('object {thething}\n\n')
-
-# Camera
-proportions = max(X,Y)/X
-resultfile.writelines([
-    '#declare camera_height = 3.0;\n',
-    'camera{\n',
-    '  // orthographic\n',
-    '  location<0.0, 0.0, camera_height>\n',
-    '  right x*image_width/image_height\n',
-    '  up y\n',
-    '  direction <0, 0, 1>\n',
-    f'  angle 2.0*(degrees(atan2({0.5 * proportions}, camera_height-(1.0/{max(X, Y)})))) // Supposed to fit object\n',
-    '  look_at<0.0, 0.0, 0.0>\n',
-    '}\n\n',
-])
-
-# Light 1
-resultfile.write('light_source {0*x\n  color rgb<1.1, 1, 1>\n  translate<4, 2, 3>\n}\n\n')
-# Light 2
-resultfile.write('light_source {0*x\n  color rgb<0.9, 1, 1>\n  translate<-2, 6, 7>\n}\n\n')
-# Signature
-resultfile.write('\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/')
 # Close output
 resultfile.close()
 
