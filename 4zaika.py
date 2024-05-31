@@ -197,7 +197,7 @@ resultfile.writelines([
     '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth HDPE\n',
     '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',
     '#declare thingie_finish_3 = finish{ambient 0.1 diffuse 0.5 specular 1\n    roughness 0.01 metallic reflection {0.75 metallic}}    // Metallic example\n',
-    '#declare thingie_finish_4 = finish{ambient 0.1 diffuse 0.5 reflection 0.1 specular 1 roughness 0.005\n    irid {0.5 thickness 0.5 turbulence 0.5}}    // Iridescence example\n',
+    '#declare thingie_finish_4 = finish{ambient 0.1 diffuse 0.5 reflection 0.1 specular 1 roughness 0.005\n    irid {0.5 thickness 0.9 turbulence 0.5}}    // Iridescence example\n',
     '\n//       Thingie normal variants\n',
     '#declare thingie_normal_1 = normal{bumps 0.0}  // Null normal placeholder\n',
     '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
@@ -234,19 +234,19 @@ resultfile.writelines([
     # Starting scene content
     # Camera
     '\n// # # # # # SCENE SECTION # # # # #\n\n',
-    '#declare camera_height = 3.0;\n\n',
+    '#declare camera_height = 3.0;  // Camera height over object, used for view angle\n\n',
     'camera{\n',
     '  // orthographic\n',
     '  location<0.0, 0.0, camera_height>\n',
     '  right x*image_width/image_height\n',
     '  up y\n',
     '  direction <0, 0, 1>\n',
-    f'  angle 2.0*(degrees(atan2({0.5 * max(X,Y)/X}, camera_height-({1.0/max(X, Y)})))) // Supposed to fit object\n',
+    f'  angle 2.0*(degrees(atan2({0.5 * max(X,Y)/X}, camera_height-({1.0/max(X,Y)})))) // Supposed to fit object\n',
     '  look_at<0.0, 0.0, 0.0>\n',
     '}\n\n',
     # Light
-    'light_source {0*x\n  color rgb<1.1, 1, 1>\n  translate<4, 2, 3>\n}\n\n',
-    'light_source {0*x\n  color rgb<0.9, 1, 1>\n  translate<-2, 6, 7>\n}\n\n',
+    'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n  translate<4, 2, 3>\n}\n\n',
+    'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n  translate<-2, 6, 7>\n}\n\n',
     # Main object
     '\n// Object thething made out of thingies\n',
     '#declare thething = union{\n',  # Opening big thething
