@@ -32,7 +32,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.8"
+__version__ = "0.0.0.9"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -229,8 +229,9 @@ resultfile.writelines([
     '#declare normal_move_rnd = <0, 0, 0>;    // Random move of finish. No constrains on values\n',
     '#declare normal_rotate_rnd = <0, 0, 0>;  // Random rotate of finish. Values in degrees\n',
     '\n//       Seed random\n',
-    f'#declare rnd_1 = seed({int(seconds * 1000000)});\n',
-    '\n',
+    f'#declare rnd_1 = seed({int(seconds * 1000000)});\n\n',
+    '\n// -<*<* Insert preset to override setting above *>*>-\n',
+    '// #include "preset_01.inc"    // Set path and name of your file related to scene file\n\n',
     # Starting scene content
     # Camera
     '\n// # # # # # SCENE SECTION # # # # #\n\n',
