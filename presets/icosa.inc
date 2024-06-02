@@ -1,8 +1,9 @@
 /* 
 POVRay include file
 Description: Icosahedron triangle mesh
-Example object include file for
+Example object include file for 3zaika.py
 https://github.com/Dnyarri/POVmosaic
+Author: Based on example by Paul Bourke, a bit edited
 */
 
 #local b2 = 1 / (1 + sqrt(5));

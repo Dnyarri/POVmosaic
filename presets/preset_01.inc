@@ -1,6 +1,7 @@
 /* 
 POVRay include file
 Description: Preset file for scene generated with 3zaika.py
+    Icosahedron shapes, randomply rotated, glass-like
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 */
