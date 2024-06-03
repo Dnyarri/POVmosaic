@@ -21,6 +21,7 @@ History:
             Pigment format changed to rgbft (no lgbt puns please!).
 0.0.0.8     Mapping moved to POVRay user-defined functions.
             General restructure for easy editing.
+0.0.0.10    Changes for easy scene patching with .inc
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -32,7 +33,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.9"
+__version__ = "0.0.0.10"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -185,7 +186,6 @@ resultfile.writelines([
     '\n// Necessary math stuff set as de facto constants to avoid imporing math\n',
     '#declare sqrtof3 = 1.7320508075688772935274463415059;   // sqrt(3)\n',
     '#declare revsqrtof3 = 1.0/sqrtof3;                      // 1.0/sqrt(3)\n\n',
-    '#declare sqrtof3div2 = 0.86602540378443864676372317075294;  // sqrt(3)/2\n\n',
     '\n// -<*<* Predefined variants *>*>-\n',
     '\n//       Thingie variants\n',
     '#declare thingie_1 = sphere{<0, 0, 0>, 0.5}\n',
@@ -198,8 +198,6 @@ resultfile.writelines([
     '// CSG examples below, may be good for randomly rotated thingies\n',
     '#declare thingie_6 = intersection{\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate x*90}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate y*90}\n  }  //  Cubic rounded\n',
     '#declare thingie_7 = intersection{\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*219.0}\n  }  //  Tetrahedral rounded\n',
-    '// Isosceles trigonal prism below, try conic_sweep as well\n',
-    '#declare thingie_8 = prism {linear_sweep linear_spline 0, 1, 4, <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*270 translate<0, 0.5*sqrtof3div2, 0> scale <0.5, 1, 1>}  //  This is isosceles triangle, not equilateral\n',
     '\n//       Thingie finish variants\n',
     '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth HDPE\n',
     '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',
@@ -214,6 +212,7 @@ resultfile.writelines([
     '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
     '#declare f_value = 0.0;           // Filter value for all thingies\n',
     '#declare t_value = 0.0;           // Transmit value for all thingies\n',
+    '#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
     '\n//       Map functions for all thingies in the scene\n',
     '#declare map_1 = function(c) {c}                           // Direct input\n',
     '#declare map_2 = function(c) {abs((2.0 * c) - 1.0)}        // Inverse triangle, zero in the middle\n',
@@ -270,7 +269,7 @@ triangle_height = 0.5 * 1.7320508075688772935274463415059
 
 even_odd_string = ''
 even_string = 'translate<0.5, 0, 0>'
-odd_string = 'rotate<0.0, 0.0, 180.0>'    # consider 'rotate<0.0, 0.0, 180.0>' or scale <1.0, -1.0, 1.0>
+odd_string = 'rotate evenodd_rotate'    # consider 'rotate<0.0, 0.0, 180.0>' or scale <1.0, -1.0, 1.0>
 
 # Now going to cycle through image and build big thething
 Ycount = int(Y/triangle_height)

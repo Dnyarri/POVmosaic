@@ -21,6 +21,7 @@ History:
             Pigment format changed to rgbft (no lgbt puns please!).
 0.0.0.8     Mapping moved to POVRay user-defined functions.
             General restructure for easy editing.
+0.0.0.10    Changes for easy scene patching with .inc
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -32,7 +33,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.9"
+__version__ = "0.0.0.10"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -207,9 +208,10 @@ resultfile.writelines([
     '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
     '#declare f_value = 0.0;           // Filter value for all thingies\n',
     '#declare t_value = 0.0;           // Transmit value for all thingies\n',
-    '#declare brickwall_offset = <0.5, 0, 0>;   // Odd lines shift for brick wall\n',
-    '#declare brickwall_offset = <0.0, 0, 0>;   // Default 0 odd lines shift for no brick wall\n',
-    '#declare rotate_all = <0, 0, 0>;           // Base rotation of all thingies. Values in degrees\n',
+    '#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
+    '#declare evenodd_offset = <0.5, 0, 0>;      // Even lines shift for brick wall\n',
+    '#declare evenodd_offset = <0.0, 0, 0>;      // Default 0 even lines shift for no brick wall\n',
+    '#declare rotate_all = <0, 0, 0>;            // Base rotation of all thingies. Values in degrees\n',
     '\n//       Map functions for all thingies in the scene\n',
     '#declare map_1 = function(c) {c}                           // Direct input\n',
     '#declare map_2 = function(c) {abs((2.0 * c) - 1.0)}        // Inverse triangle, zero in the middle\n',
@@ -257,8 +259,8 @@ resultfile.writelines([
 
 # Internal strings for packing change
 even_odd_string = ''
-even_string = 'translate brickwall_offset'
-odd_string = '// Odd row'
+even_string = 'translate evenodd_offset'
+odd_string = 'rotate evenodd_rotate'
 
 # Now going to cycle through image and build big thething
 
