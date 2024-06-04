@@ -6,11 +6,13 @@ https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Authors: preset file made by Ilya Razmanov.
     Icosahedron shape mostly based on example by Paul Bourke,
-    edited a bit to improve results.
+    edited a bit to improve a bit. A bit improved successfully.
 */
 
-#declare thingie_finish = thingie_finish_3
+#declare thingie_finish = finish{ambient 0.1 diffuse 0.5 specular 1.0
+    roughness 0.03 metallic 1.0 reflection {0.9 metallic 0.0}}
 #declare f_value = 0.5;
+
 #declare rotate_rnd = <90, 90, 90>;
 
 #local b2 = 1 / (1 + sqrt(5));

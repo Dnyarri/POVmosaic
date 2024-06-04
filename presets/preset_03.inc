@@ -7,6 +7,9 @@ Read project help.html for options description.
 Author: Ilya Razmanov
 */
 
+#declare thingie_normal = normal{bumps 0.03 scale<1.0, 0.05, 0.5> rotate z*-30}
+#declare normal_rotate_rnd = <0, 0, 10>;
+
 #declare sqrtof3div2 = 0.86602540378443864676372317075294;  // sqrt(3)/2
 
 // Isosceles trigonal prism below, try conic_sweep as well

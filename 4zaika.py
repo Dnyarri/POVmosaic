@@ -50,8 +50,8 @@ import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 sortir = Tk()
 sortir.title('PNG to POV conversion')
 sortir.geometry('+100+100')
-zanyato = Label(sortir, text='Starting...', font=(
-    "arial", 14), padx=16, pady=10, justify='center')
+sortir.overrideredirect(True)
+zanyato = Label(sortir, text='Starting...', font=('Courier', 14), padx=16, pady=10, justify='left')
 zanyato.pack()
 sortir.withdraw()
 # Main dialog created and hidden
@@ -258,15 +258,16 @@ resultfile.writelines([
 ])
 
 # Internal strings for packing change
-even_odd_string = ''
-even_string = 'translate evenodd_offset'
-odd_string = 'rotate evenodd_rotate'
+even_string_trn = 'translate evenodd_offset'
+odd_string_trn = ''
+even_string_rot = ''
+odd_string_rot = 'rotate evenodd_rotate'
 
 # Now going to cycle through image and build big thething
 
 for y in range(0, Y, 1):
 
-    message = ('Processing row ' + str(y) + ' of ' + str(Y) + '...')
+    message = (f'Reading {sourcefilename}\nWriting {resultfilename}\nProcessing row {str(y)} of {str(Y)}...')
     sortir.deiconify()
     zanyato.config(text=message)
     sortir.update()
@@ -275,9 +276,11 @@ for y in range(0, Y, 1):
     resultfile.write(f'\n  // Row {y}\n')
 
     if (((y+1) % 2) == 0):
-        even_odd_string = even_string
+        even_odd_string_trn = even_string_trn
+        even_odd_string_rot = even_string_rot
     else:
-        even_odd_string = odd_string
+        even_odd_string_trn = odd_string_trn
+        even_odd_string_rot = odd_string_rot
 
     for x in range(0, X, 1):
 
@@ -303,9 +306,10 @@ for y in range(0, Y, 1):
                 '      finish{thingie_finish}\n',
                 '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
                 f'      scale(<1, 1, 1> - (scale_map * <map({c}), map({c}), map({c})>))\n',
+                f'      {even_odd_string_rot}\n',
                 f'      rotate((rotate_map * <map({c}), map({c}), map({c})>) + rotate_all)\n',
                 f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
-                f'      {even_odd_string}\n',
+                f'      {even_odd_string_trn}\n',
                 f'      translate(move_map * <map({c}), map({c}), map({c})>)\n',
                 f'      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
                 f'      translate<{x}, {y}, 0>\n',

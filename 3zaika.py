@@ -50,8 +50,8 @@ import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 sortir = Tk()
 sortir.title('PNG to POV conversion')
 sortir.geometry('+100+100')
-zanyato = Label(sortir, text='Starting...', font=(
-    "arial", 14), padx=16, pady=10, justify='center')
+sortir.overrideredirect(True)
+zanyato = Label(sortir, text='Starting...', font=('Courier', 14), padx=16, pady=10, justify='left')
 zanyato.pack()
 sortir.withdraw()
 # Main dialog created and hidden
@@ -268,7 +268,7 @@ sqrt(3) = 1.732... hardcoded to remove math export
 triangle_height = 0.5 * 1.7320508075688772935274463415059
 
 even_odd_string = ''
-even_string = 'translate<0.5, 0, 0>'
+even_string = 'translate<0.5, 0, 0>'    # mandatory shift for triangle pattern, uneditable
 odd_string = 'rotate evenodd_rotate'    # consider 'rotate<0.0, 0.0, 180.0>' or scale <1.0, -1.0, 1.0>
 
 # Now going to cycle through image and build big thething
@@ -276,7 +276,7 @@ Ycount = int(Y/triangle_height)
 
 for y in range(0, Ycount, 1):
 
-    message = ('Processing row ' + str(y) + ' of ' + str(Ycount) + '...')
+    message = (f'Reading {sourcefilename}\nWriting {resultfilename}\nProcessing row {str(y)} of {str(Y)}...')
     sortir.deiconify()
     zanyato.config(text=message)
     sortir.update()
