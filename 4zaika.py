@@ -22,6 +22,8 @@ History:
 0.0.0.8     Mapping moved to POVRay user-defined functions.
             General restructure for easy editing.
 0.0.0.10    Changes for easy scene patching with .inc
+0.0.0.11    Separated even/odd scale/translate. Gave up and introduced initial scale
+            and rotate - makes file bigger but simplifies editing.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -33,7 +35,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.10"
+__version__ = "0.0.0.11"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -183,7 +185,7 @@ resultfile.writelines([
 # --------------------------------
 # Thingie element, then scene
 resultfile.writelines([
-    '\n// -<*<* Predefined variants *>*>-\n',
+    '\n/*\n   -<*<* Predefined variants *>*>-\n*/\n\n',
     '\n//       Thingie variants\n',
     '#declare thingie_1 = box{<-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}\n',
     '#declare thingie_2 = sphere{<0, 0, 0>, 0.5}\n',
@@ -204,6 +206,12 @@ resultfile.writelines([
     '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
     '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
     '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
+    '\n//       Map functions for all thingies in the scene\n',
+    '#declare map_1 = function(c) {c}                           // Direct input\n',
+    '#declare map_2 = function(c) {abs((2.0 * c) - 1.0)}        // Inverse triangle, zero in the middle\n',
+    '#declare map_3 = function(c) {1.0 - abs((2.0 * c) - 1.0)}  // Triangle, maximum in the middle\n',
+    '#declare map_4 = function(c) {int(4*c)/4}                  // Posterize, 4 steps\n',
+    '#declare map_5 = function(c) {3*c-int(3*c)}                // Saw function, 3 tooths\n',
     '\n//       Global modifiers for all thingies in the scene\n',
     '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
     '#declare f_value = 0.0;           // Filter value for all thingies\n',
@@ -211,14 +219,9 @@ resultfile.writelines([
     '#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
     '#declare evenodd_offset = <0.5, 0, 0>;      // Even lines shift for brick wall\n',
     '#declare evenodd_offset = <0.0, 0, 0>;      // Default 0 even lines shift for no brick wall\n',
+    '#declare scale_all = <1, 1, 1>;             // Base scale of all thingies. 1=original\n',
     '#declare rotate_all = <0, 0, 0>;            // Base rotation of all thingies. Values in degrees\n',
-    '\n//       Map functions for all thingies in the scene\n',
-    '#declare map_1 = function(c) {c}                           // Direct input\n',
-    '#declare map_2 = function(c) {abs((2.0 * c) - 1.0)}        // Inverse triangle, zero in the middle\n',
-    '#declare map_3 = function(c) {1.0 - abs((2.0 * c) - 1.0)}  // Triangle, maximum in the middle\n',
-    '#declare map_4 = function(c) {int(4*c)/4}                  // Posterize, 4 steps\n',
-    '#declare map_5 = function(c) {3*c-int(3*c)}                // Saw function, 3 tooths\n',
-    '\n// -<*<* Selecting variants, configuring scene *>*>-\n\n',
+    '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-\n*/\n\n',
     '#declare thingie = thingie_1\n',
     '#declare thingie_finish = thingie_finish_1\n',
     '#declare thingie_normal = thingie_normal_1\n',
@@ -305,7 +308,7 @@ for y in range(0, Y, 1):
                 f'      pigment{{rgbft<color_factor*{r}, color_factor*{g}, color_factor*{b}, f_value, t_value>}}\n',
                 '      finish{thingie_finish}\n',
                 '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
-                f'      scale(<1, 1, 1> - (scale_map * <map({c}), map({c}), map({c})>))\n',
+                f'      scale(scale_all - (scale_map * <map({c}), map({c}), map({c})>))\n',
                 f'      {even_odd_string_rot}\n',
                 f'      rotate((rotate_map * <map({c}), map({c}), map({c})>) + rotate_all)\n',
                 f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',

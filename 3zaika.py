@@ -22,6 +22,7 @@ History:
 0.0.0.8     Mapping moved to POVRay user-defined functions.
             General restructure for easy editing.
 0.0.0.10    Changes for easy scene patching with .inc
+0.0.0.11    General output restructure for readability.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -33,7 +34,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.10"
+__version__ = "0.0.0.11"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -186,7 +187,7 @@ resultfile.writelines([
     '\n// Necessary math stuff set as de facto constants to avoid imporing math\n',
     '#declare sqrtof3 = 1.7320508075688772935274463415059;   // sqrt(3)\n',
     '#declare revsqrtof3 = 1.0/sqrtof3;                      // 1.0/sqrt(3)\n\n',
-    '\n// -<*<* Predefined variants *>*>-\n',
+    '\n/*\n   -<*<* Predefined variants *>*>-\n*/\n',
     '\n//       Thingie variants\n',
     '#declare thingie_1 = sphere{<0, 0, 0>, 0.5}\n',
     '#declare thingie_2 = cylinder{<0, 0, 0>, <0, 0, 1.0>, 0.5}\n',
@@ -208,18 +209,18 @@ resultfile.writelines([
     '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
     '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
     '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
-    '\n//       Global modifiers for all thingies in the scene\n',
-    '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
-    '#declare f_value = 0.0;           // Filter value for all thingies\n',
-    '#declare t_value = 0.0;           // Transmit value for all thingies\n',
-    '#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
     '\n//       Map functions for all thingies in the scene\n',
     '#declare map_1 = function(c) {c}                           // Direct input\n',
     '#declare map_2 = function(c) {abs((2.0 * c) - 1.0)}        // Inverse triangle, zero in the middle\n',
     '#declare map_3 = function(c) {1.0 - abs((2.0 * c) - 1.0)}  // Triangle, maximum in the middle\n',
     '#declare map_4 = function(c) {int(4*c)/4}                  // Posterize, 4 steps\n',
     '#declare map_5 = function(c) {3*c-int(3*c)}                // Saw function, 3 tooths\n',
-    '\n// -<*<* Selecting variants, configuring scene *>*>-\n\n',
+    '\n//       Global modifiers for all thingies in the scene\n',
+    '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
+    '#declare f_value = 0.0;           // Filter value for all thingies\n',
+    '#declare t_value = 0.0;           // Transmit value for all thingies\n',
+    '#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
+    '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-\n*/\n\n',
     '#declare thingie = thingie_1\n',
     '#declare thingie_finish = thingie_finish_1\n',
     '#declare thingie_normal = thingie_normal_1\n',
