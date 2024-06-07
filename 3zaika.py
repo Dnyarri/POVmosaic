@@ -22,7 +22,7 @@ History:
 0.0.0.8     Mapping moved to POVRay user-defined functions.
             General restructure for easy editing.
 0.0.0.10    Changes for easy scene patching with .inc
-0.0.0.11    General output restructure for readability.
+0.0.0.12    General output restructure for readability. Small additions to scene.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -34,7 +34,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.11"
+__version__ = "0.0.0.12"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -203,7 +203,7 @@ resultfile.writelines([
     '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth HDPE\n',
     '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',
     '#declare thingie_finish_3 = finish{ambient 0.1 diffuse 0.5 specular 1\n    roughness 0.01 metallic reflection {0.75 metallic}}    // Metallic example\n',
-    '#declare thingie_finish_4 = finish{ambient 0.1 diffuse 0.5 reflection 0.1 specular 1 roughness 0.005\n    irid {0.5 thickness 0.9 turbulence 0.5}}    // Iridescence example\n',
+    '#declare thingie_finish_4 = finish{ambient 0.1 diffuse 0.5 reflection 0.1 specular 1 roughness 0.005\n    irid {0.5 thickness 0.9 turbulence 0.9}}    // Iridescence example\n',
     '\n//       Thingie normal variants\n',
     '#declare thingie_normal_1 = normal{bumps 0.0}  // Null normal placeholder\n',
     '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
@@ -254,6 +254,7 @@ resultfile.writelines([
     # Light
     'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n  translate<4, 2, 3>\n}\n\n',
     'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n  translate<-2, 6, 7>\n}\n\n',
+    'background{color rgbft <0, 0, 0, 1, 1>}\n\n',
     # Main object
     '\n// Object thething made out of thingies\n',
     '#declare thething = union{\n',  # Opening big thething

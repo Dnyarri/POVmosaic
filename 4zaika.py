@@ -22,8 +22,8 @@ History:
 0.0.0.8     Mapping moved to POVRay user-defined functions.
             General restructure for easy editing.
 0.0.0.10    Changes for easy scene patching with .inc
-0.0.0.11    Separated even/odd scale/translate. Gave up and introduced initial scale
-            and rotate - makes file bigger but simplifies editing.
+0.0.0.12    Separated even/odd scale/translate. Gave up and introduced initial scale
+            and rotate - makes file bigger but simplifies editing. Small additions to scene.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -35,7 +35,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.11"
+__version__ = "0.0.0.12"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Development"
@@ -255,6 +255,7 @@ resultfile.writelines([
     # Light
     'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n  translate<4, 2, 3>\n}\n\n',
     'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n  translate<-2, 6, 7>\n}\n\n',
+    'background{color rgbft <0, 0, 0, 1, 1>}\n\n',
     # Main object
     '\n// Object thething made out of thingies\n',
     '#declare thething = union{\n',  # Opening big thething
