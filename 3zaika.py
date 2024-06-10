@@ -332,7 +332,7 @@ resultfile.writelines([
     f'  translate<{-0.5*X}, {-0.5*Y}, 0>\n',  # centering at scene zero
     f'  scale<{-1.0/max(X, Y)}, {-1.0/max(X, Y)}, {1.0/max(X, Y)}>\n',    # fitting and mirroring
     '} // thething closed\n\n'
-    '\nobject {thething}\n\n',
+    f'\nobject {{thething\n//  interior {{ior 2.0 fade_power 1.5 fade_distance 0.1*{1.0/max(X, Y)} fade_color<0.5, 0.5, 0.5>}} \n}}\n',
     '\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/'
 ])
 # Closed scene
