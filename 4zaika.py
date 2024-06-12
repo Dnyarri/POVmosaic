@@ -16,14 +16,8 @@ History:
 04.04.2024  b4zaikaR.py final state.
 
 0.0.0.1     Complete rewriting to more flexible project - 21 May 2024.
-0.0.0.4     Position and scale mapping. More thingies.
-0.0.0.6     Normal randomization. Position and rotation randomization. Unwanted commutation fixed.
-            Pigment format changed to rgbft (no lgbt puns please!).
-0.0.0.8     Mapping moved to POVRay user-defined functions.
-            General restructure for easy editing.
-0.0.0.10    Changes for easy scene patching with .inc
-0.0.0.12    Separated even/odd scale/translate. Gave up and introduced initial scale
-            and rotate - makes file bigger but simplifies editing. Small additions to scene.
+0.0.0.12    3zaika ready to release - 10 June 2024.
+1.6.12.12   First Production release - 12 June 2024.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -35,10 +29,10 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "0.0.0.12"
+__version__ = "1.6.12.12"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
-__status__ = "Development"
+__status__ = "Production"
 
 from tkinter import Tk, Label, filedialog
 from time import time, ctime
