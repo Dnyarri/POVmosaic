@@ -16,7 +16,7 @@ History:
 04.04.2024  b4zaikaR.py final state.
 
 0.0.0.1     Complete rewriting to more flexible project - 21 May 2024.
-0.0.0.12    3zaika ready to release - 10 June 2024.
+0.0.0.12    4zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
 
     Project mirrors:
@@ -34,7 +34,8 @@ __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
 
-from tkinter import Tk, Label, filedialog
+from tkinter import Tk, Label, filedialog, X
+from tkinter.ttk import Progressbar
 from time import time, ctime
 from random import random
 
@@ -49,6 +50,8 @@ sortir.geometry('+100+100')
 sortir.overrideredirect(True)
 zanyato = Label(sortir, text='Starting...', font=('Courier', 14), padx=16, pady=10, justify='left')
 zanyato.pack()
+progressbar =  Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100)
+progressbar.pack(fill=X, expand=True)
 sortir.withdraw()
 # Main dialog created and hidden
 
@@ -200,12 +203,6 @@ resultfile.writelines([
     '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
     '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
     '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
-    '\n//       Map functions for all thingies in the scene\n',
-    '#declare map_1 = function(c) {c}                           // Direct input\n',
-    '#declare map_2 = function(c) {abs((2.0 * c) - 1.0)}        // Inverse triangle, zero in the middle\n',
-    '#declare map_3 = function(c) {1.0 - abs((2.0 * c) - 1.0)}  // Triangle, maximum in the middle\n',
-    '#declare map_4 = function(c) {int(4*c)/4}                  // Posterize, 4 steps\n',
-    '#declare map_5 = function(c) {3*c-int(3*c)}                // Saw function, 3 tooths\n',
     '\n//       Global modifiers for all thingies in the scene\n',
     '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
     '#declare f_value = 0.0;           // Filter value for all thingies\n',
@@ -215,11 +212,19 @@ resultfile.writelines([
     '#declare evenodd_offset = <0.0, 0, 0>;      // Default 0 even lines shift for no brick wall\n',
     '#declare scale_all = <1, 1, 1>;             // Base scale of all thingies. 1=original\n',
     '#declare rotate_all = <0, 0, 0>;            // Base rotation of all thingies. Values in degrees\n',
+    '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\nBy default exported map is five points linear spline, control points are set in the table below,\nfirst column is input, first digits in second column is output for this input.\nNote that by default input=output, i.e. no changes applied to source pixel brightness. */\n\n',
+    '#declare Curve = function {  // Spline curve construction begins\n',
+    '  spline { linear_spline\n',
+    '    0.0,   <0.0,   0>\n',
+    '    0.25,  <0.25,  0>\n',
+    '    0.5,   <0.5,   0>\n',
+    '    0.75,  <0.75,  0>\n',
+    '    1.0,   <1.0,   0>}\n  }  // Construction complete\n',
+    '#declare map = function(c) {Curve(c).u}  // Spline curve assigned as map\n',
     '\n/*\n   -<*<* Selecting variants, configuring scene *>*>-\n*/\n\n',
     '#declare thingie = thingie_1\n',
     '#declare thingie_finish = thingie_finish_1\n',
     '#declare thingie_normal = thingie_normal_1\n',
-    '#declare map = function(c) {map_1(c)}\n',
     '\n//       Per-thingie modifiers\n',
     '#declare move_map = <0, 0, 0>;    // To move thingies depending on map. No constrains on values\n',
     '#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Expected values 0..1\n',
@@ -268,6 +273,7 @@ for y in range(0, Y, 1):
     message = (f'Reading {sourcefilename}\nWriting {resultfilename}\nProcessing row {str(y)} of {str(Y)}...')
     sortir.deiconify()
     zanyato.config(text=message)
+    progressbar.config(value=y, maximum=Y)
     sortir.update()
     sortir.update_idletasks()
 
