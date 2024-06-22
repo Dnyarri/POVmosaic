@@ -29,12 +29,12 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.6.12.12"
+__version__ = "1.6.22.1"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
 
-from tkinter import Tk, Label, filedialog, X
+from tkinter import Tk, filedialog, BOTH
 from tkinter.ttk import Progressbar
 from time import time, ctime
 from random import random
@@ -45,13 +45,11 @@ import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 # Creating dialog
 
 sortir = Tk()
-sortir.title('PNG to POV conversion')
+sortir.title('POVRay Mosaic: 3Zaika')
 sortir.geometry('+100+100')
 sortir.overrideredirect(True)
-zanyato = Label(sortir, text='Starting...', font=('Courier', 14), padx=16, pady=10, justify='left')
-zanyato.pack()
-progressbar =  Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100)
-progressbar.pack(fill=X, expand=True)
+progressbar =  Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100, length=500)
+progressbar.pack(fill=BOTH, expand=True)
 sortir.withdraw()
 # Main dialog created and hidden
 
@@ -275,13 +273,12 @@ odd_string = 'rotate evenodd_rotate'    # consider 'rotate<0.0, 0.0, 180.0>' or 
 
 # Now going to cycle through image and build big thething
 Ycount = int(Y/triangle_height)
+progressbar.config(maximum=Ycount)
 
 for y in range(0, Ycount, 1):
 
-    message = (f'Reading {sourcefilename}\nWriting {resultfilename}\nProcessing row {str(y)} of {str(Ycount)}...')
     sortir.deiconify()
-    zanyato.config(text=message)
-    progressbar.config(value=y, maximum=Ycount)
+    progressbar.config(value=y)
     sortir.update()
     sortir.update_idletasks()
 
