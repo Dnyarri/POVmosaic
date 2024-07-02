@@ -18,6 +18,7 @@ History:
 0.0.0.1     Complete rewriting to more flexible project - 22 May 2024.
 0.0.0.12    3zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
+1.7.2.14    Major bug fixed
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -29,7 +30,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.6.22.1"
+__version__ = "1.7.2.14"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -297,7 +298,7 @@ for y in range(0, Ycount, 1):
         b = float(src(x, y*triangle_height, 2))/maxcolors
 
         # Something to map something to. By default - brightness, normalized to 0..1
-        c = float(srcY(x, y))/maxcolors
+        c = float(srcY(x, y*triangle_height))/maxcolors
 
         # alpha to be used for alpha dithering
         a = float(src(x, y*triangle_height, 3))/maxcolors
