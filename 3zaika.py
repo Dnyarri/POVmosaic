@@ -18,7 +18,7 @@ History:
 0.0.0.1     Complete rewriting to more flexible project - 22 May 2024.
 0.0.0.12    3zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
-1.7.2.14    Major bug fixed
+1.7.5.14    Bilinear interpolation added to map. Not used for coloring since results are unnecessary smooth.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -30,7 +30,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.2.14"
+__version__ = "1.7.5.14"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -133,6 +133,31 @@ def srcY(x, y):
 
     return Yntensity
 # end of srcY function
+
+def srcYL(x, y):
+    """
+    Analog of srcY above, but returns bilinearly interpolated brightness of pixel x, y
+
+    """
+
+    fx = float(x); fy = float(y)        # Uses float input coordinates for interpolation
+    fx = max(0,fx); fx = min((X-1),fx)
+    fy = max(0,fy); fy = min((Y-1),fy)
+
+    # Neighbour pixels coordinates (square corners x0,y0; x1,y0; x0,y1; x1,y1)
+    x0 = int(x); x1 = x0 + 1
+    y0 = int(y); y1 = y0 + 1
+
+    # Reading corners src (see scr above) and interpolating
+    channelvalue = (
+        srcY(x0, y0) * (x1 - fx) * (y1 - fy) +
+        srcY(x0, y1) * (x1 - fx) * (fy - y0) +
+        srcY(x1, y0) * (fx - x0) * (y1 - fy) +
+        srcY(x1, y1) * (fx - x0) * (fy - y0)
+    )
+
+    return int(channelvalue)
+# end of srcYL function
 
 # WRITING POV FILE
 
@@ -287,8 +312,10 @@ for y in range(0, Ycount, 1):
 
     if (((y+1) % 2) == 0):
         even_odd_string = even_string
+        even_odd_trans = 0.5
     else:
         even_odd_string = odd_string
+        even_odd_trans = 0.0
 
     for x in range(0, X, 1):
 
@@ -298,7 +325,8 @@ for y in range(0, Ycount, 1):
         b = float(src(x, y*triangle_height, 2))/maxcolors
 
         # Something to map something to. By default - brightness, normalized to 0..1
-        c = float(srcY(x, y*triangle_height))/maxcolors
+        # c = float(srcY(x, y*triangle_height))/maxcolors # Nearest neghbour
+        c = float(srcYL(x+even_odd_trans, y*triangle_height))/maxcolors # Bilinear
 
         # alpha to be used for alpha dithering
         a = float(src(x, y*triangle_height, 3))/maxcolors
