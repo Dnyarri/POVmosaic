@@ -18,6 +18,7 @@ History:
 0.0.0.1     Complete rewriting to more flexible project - 21 May 2024.
 0.0.0.12    4zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
+1.7.9.10    Minor changes.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -29,7 +30,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.6.22.1"
+__version__ = "1.7.9.10"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -322,8 +323,7 @@ for y in range(0, Y, 1):
 # Transform object to fit 1, 1, 1 cube at 0, 0, 0 coordinates
 resultfile.writelines([
     '\n  // Object transforms to fit 1, 1, 1 cube at 0, 0, 0 coordinates\n',
-    '  translate<0.5, 0.5, 0>\n',             # compensate of thingie size around zero
-    f'  translate<{-0.5*X}, {-0.5*Y}, 0>\n',  # centering at scene zero
+    f'  translate <0.5, 0.5, 0> + <{-0.5*X}, {-0.5*Y}, 0>\n',  # centering at scene zero
     f'  scale<{-1.0/max(X, Y)}, {-1.0/max(X, Y)}, {1.0/max(X, Y)}>\n',    # fitting and mirroring
     '} // thething closed\n\n'
     '\nobject {thething\n'
