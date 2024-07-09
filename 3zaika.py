@@ -19,6 +19,7 @@ History:
 0.0.0.12    3zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
 1.7.9.10    Bilinear interpolation added to map. Not used for coloring since results are too smooth.
+1.7.9.15    Coordinate system match Photoshop, origin is top left, z points to the viewer.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -30,7 +31,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.9.10"
+__version__ = "1.7.9.15"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -265,19 +266,21 @@ resultfile.writelines([
     # Starting scene content
     # Camera
     '\n// # # # # # SCENE SECTION # # # # #\n\n',
+    '// NOTE: Coordinate system match Photoshop, origin is top left, z points to the viewer\n\n',
     '#declare camera_height = 3.0;  // Camera height over object, used for view angle\n\n',
     'camera{\n',
     '  // orthographic\n',
     '  location<0.0, 0.0, camera_height>\n',
     '  right x*image_width/image_height\n',
     '  up y\n',
+    '  sky <0, -1, 0>\n',
     '  direction <0, 0, 1>\n',
     f'  angle 2.0*(degrees(atan2({0.5 * max(X,Y)/X}, camera_height-({1.0/max(X,Y)})))) // Supposed to fit object\n',
     '  look_at<0.0, 0.0, 0.0>\n',
     '}\n\n',
     # Light
-    'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n  translate<4, 2, 3>\n}\n\n',
-    'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n  translate<-2, 6, 7>\n}\n\n',
+    'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n  translate<4, -2, 3>\n}\n\n',
+    'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n  translate<-2, -6, 7>\n}\n\n',
     'background{color rgbft<0, 0, 0, 1, 1>}\n\n',
     # Main object
     '\n// Object thething made out of thingies\n',
@@ -356,7 +359,7 @@ for y in range(0, Ycount, 1):
 resultfile.writelines([
     '\n  // Object transforms to fit 1, 1, 1 cube at 0, 0, 0 coordinates\n',
     f'  translate <0.25, 0.5, 0> + <{-0.5*X}, {-0.5*Y}, 0>\n',  # centering at scene zero
-    f'  scale<{-1.0/max(X, Y)}, {-1.0/max(X, Y)}, {1.0/max(X, Y)}>\n',    # fitting and mirroring
+    f'  scale<{1.0/max(X, Y)}, {1.0/max(X, Y)}, {1.0/max(X, Y)}>\n',    # fitting and mirroring
     '} // thething closed\n\n'
     '\nobject {thething\n'
     f'//  interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color<0.95, 0.95, 0.95>}}\n',
