@@ -18,7 +18,8 @@ History:
 0.0.0.1     Complete rewriting to more flexible project - 21 May 2024.
 0.0.0.12    4zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
-1.7.9.15    Coordinate system match Photoshop, origin is top left, z points to the viewer.
+1.7.10.18   Coordinate system match Photoshop, origin is top left, z points to the viewer.
+            Camera improved.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -30,7 +31,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.9.15"
+__version__ = "1.7.10.18"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -239,17 +240,17 @@ resultfile.writelines([
     '// #include "preset_01.inc"    // Set path and name of your file related to scene file\n\n',
     # Starting scene content
     # Camera
-    '\n// # # # # # SCENE SECTION # # # # #\n\n',
-    '// NOTE: Coordinate system match Photoshop, origin is top left, z points to the viewer\n\n',
-    '#declare camera_height = 3.0;  // Camera height over object, used for view angle\n\n',
+    '\n/*\n\n# # # # # SCENE SECTION # # # # #\n\n',
+    'NOTE: Coordinate system match Photoshop,\norigin is top left, z points to the viewer.\nsky vector is important!\n\n*/\n\n',
+    '#declare camera_position = <0.0, 0.0, 3.0>;  // Camera position over object, used for view angle\n\n',
     'camera{\n',
     '  // orthographic\n',
-    '  location<0.0, 0.0, camera_height>\n',
+    '  location camera_position\n',
     '  right x*image_width/image_height\n',
     '  up y\n',
     '  sky <0, -1, 0>\n',
     '  direction <0, 0, 1>\n',
-    f'  angle 2.0*(degrees(atan2({0.5 * max(X,Y)/X}, camera_height-({1.0/max(X,Y)})))) // Supposed to fit object\n',
+    f'  angle 2.0*(degrees(atan2({0.5 * max(X, Y)/X}, vlength(camera_position - <0.0, 0.0, 0.0>)))) // Supposed to fit object, unless thingies are too high\n',
     '  look_at<0.0, 0.0, 0.0>\n',
     '}\n\n',
     # Light
