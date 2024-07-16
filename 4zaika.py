@@ -18,7 +18,7 @@ History:
 0.0.0.1     Complete rewriting to more flexible project - 21 May 2024.
 0.0.0.12    4zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
-1.7.9.10    Minor changes.
+1.7.16.11   Global color modifier changed to transfer function.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -30,7 +30,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.9.10"
+__version__ = "1.7.16.11"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -47,7 +47,7 @@ import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 
 sortir = Tk()
 sortir.title('POVRay Mosaic: 4Zaika')
-sortir.geometry('+100+100')
+sortir.geometry('+128+64')
 sortir.overrideredirect(True)
 progressbar =  Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100, length=500)
 progressbar.pack(fill=BOTH, expand=True)
@@ -183,7 +183,7 @@ resultfile.writelines([
 resultfile.writelines([
     '\n/*\n   -<*<* Predefined variants *>*>-\n*/\n\n',
     '\n//       Thingie variants\n',
-    '#declare thingie_1 = box{<-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}\n',
+    '#declare thingie_1 = box{<-0.5, -0.5, -0.5>, <0.5, 0.5, 0.5>}\n',
     '#declare thingie_2 = sphere{<0, 0, 0>, 0.5}\n',
     '#declare thingie_3 = cylinder{<0, 0, 0>, <0, 0, 1.0>, 0.5}\n',
     '#declare thingie_4 = superellipsoid{<0.5, 0.5> scale 0.5}\n',
@@ -203,9 +203,9 @@ resultfile.writelines([
     '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
     '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
     '\n//       Global modifiers for all thingies in the scene\n',
-    '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
-    '#declare f_value = 0.0;           // Filter value for all thingies\n',
-    '#declare t_value = 0.0;           // Transmit value for all thingies\n',
+    '#declare cm = function(k) {k}   // Color transfer function for all channels, all thingies\n',
+    '#declare f_val = 0.0;           // Filter value for all thingies\n',
+    '#declare t_val = 0.0;           // Transmit value for all thingies\n',
     '#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
     '#declare evenodd_offset = <0.5, 0, 0>;      // Even lines shift for brick wall\n',
     '#declare evenodd_offset = <0.0, 0, 0>;      // Default 0 even lines shift for no brick wall\n',
@@ -305,7 +305,7 @@ for y in range(0, Y, 1):
             # Opening object "thingie" to draw
             resultfile.writelines([
                 '    object{thingie\n',
-                f'      pigment{{rgbft<color_factor*{r}, color_factor*{g}, color_factor*{b}, f_value, t_value>}}\n',
+                f'      pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
                 '      finish{thingie_finish}\n',
                 '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
                 f'      scale(scale_all - (scale_map * <map({c}), map({c}), map({c})>))\n',
