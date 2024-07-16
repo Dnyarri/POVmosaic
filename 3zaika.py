@@ -19,7 +19,7 @@ History:
 0.0.0.12    3zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
 1.7.9.10    Bilinear interpolation added to map. Not used for coloring since results are too smooth.
-1.7.16.11   Global color modifier changed to transfer function.
+1.7.16.11   Global color modifier changed to transfer function. Freezing branch as "classic".
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic

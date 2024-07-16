@@ -18,7 +18,7 @@ History:
 0.0.0.1     Complete rewriting to more flexible project - 21 May 2024.
 0.0.0.12    4zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
-1.7.16.11   Global color modifier changed to transfer function.
+1.7.16.11   Global color modifier changed to transfer function. Freezing branch as "classic".
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
