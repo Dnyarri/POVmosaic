@@ -19,7 +19,7 @@ History:
 0.0.0.12    4zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
 1.7.16.17   Coordinate system match Photoshop, origin is top left, z points to the viewer.
-            Camera improved. Global color modifier changed to transfer function. Scaling changed from subtractive to additive, old presets go to hell!
+            Camera improved. Global color modifier changed to transfer function. Scaling changed from subtractive to additive, be careful with old presets if they include scaling!
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -226,8 +226,8 @@ resultfile.writelines([
     '#declare thingie_finish = thingie_finish_1\n',
     '#declare thingie_normal = thingie_normal_1\n',
     '\n//       Per-thingie modifiers\n',
-    '#declare move_map = <0, 0, 0>;    // To move thingies depending on map. No constrains on values\n',
-    '#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Expected values 0..1\n',
+    f'#declare move_map = <0, 0, 0>;    // To move thingies depending on map. Additive, no constrains on values. Source image size is {max(X, Y)}\n',
+    '#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Additive, no constrains on values except object overlap on x,y\n',
     '#declare rotate_map = <0, 0, 0>;  // To rotate thingies depending on map. Values in degrees\n',
     '#declare move_rnd = <0, 0, 0>;    // To move thingies randomly. No constrains on values\n',
     '#declare rotate_rnd = <0, 0, 0>;  // To rotate thingies randomly. Values in degrees\n',
