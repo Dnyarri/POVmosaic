@@ -18,8 +18,8 @@ History:
 0.0.0.1     Complete rewriting to more flexible project - 21 May 2024.
 0.0.0.12    4zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
-1.7.16.9    Coordinate system match Photoshop, origin is top left, z points to the viewer.
-            Camera improved. Global color modifier changed to transfer function.
+1.7.16.17   Coordinate system match Photoshop, origin is top left, z points to the viewer.
+            Camera improved. Global color modifier changed to transfer function. Scaling changed from subtractive to additive, old presets go to hell!
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -31,7 +31,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.16.9"
+__version__ = "1.7.16.17"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -48,7 +48,7 @@ import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 
 sortir = Tk()
 sortir.title('POVRay Mosaic: 4Zaika')
-sortir.geometry('+100+100')
+sortir.geometry('+64+128')
 sortir.overrideredirect(True)
 progressbar =  Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100, length=500)
 progressbar.pack(fill=BOTH, expand=True)
@@ -311,7 +311,7 @@ for y in range(0, Y, 1):
                 f'      pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
                 '      finish{thingie_finish}\n',
                 '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
-                f'      scale(scale_all - (scale_map * <map({c}), map({c}), map({c})>))\n',
+                f'      scale(scale_all + (scale_map * <map({c}), map({c}), map({c})>))\n',
                 f'      {even_odd_string_rot}\n',
                 f'      rotate((rotate_map * <map({c}), map({c}), map({c})>) + rotate_all)\n',
                 f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
