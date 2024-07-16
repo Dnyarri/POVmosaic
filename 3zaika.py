@@ -275,8 +275,8 @@ resultfile.writelines([
     '  right x*image_width/image_height\n',
     '  up y\n',
     '  sky <0, -1, 0>\n',
-    '  direction <0, 0, 1>\n',
-    f'  angle 2.0*(degrees(atan2({0.5 * max(X+0.5, Y+0.5)/X}, vlength(camera_position - <0.0, 0.0, 0.0>)))) // Supposed to fit object, unless thingies are too high\n',
+    f'  direction <0, 0, vlength(camera_position - <0.0, 0.0, {1.0/max(X, Y)}>)>  // May alone work for many pictures. Otherwise fiddle with angle below\n',
+    f'//  angle 2.0*(degrees(atan2({0.5 * max(X+0.5, Y+0.5)/X}, vlength(camera_position - <0.0, 0.0, {1.0/max(X, Y)}>)))) // Supposed to fit object, unless thingies are too high\n',
     '  look_at<0.0, 0.0, 0.0>\n',
     '}\n\n',
     # Light
@@ -350,7 +350,7 @@ for y in range(0, Ycount, 1):
                 f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
                 f'      {even_odd_string}\n',
                 f'      translate(move_map * <map({c}), map({c}), map({c})>)\n',
-                f'      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
+                '      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
                 f'      translate<{x}, {y*triangle_height}, 0>\n',
                 '    }\n'
             # Finished thingie

@@ -184,7 +184,7 @@ resultfile.writelines([
 resultfile.writelines([
     '\n/*\n   -<*<* Predefined variants *>*>-\n*/\n\n',
     '\n//       Thingie variants\n',
-    '#declare thingie_1 = box{<-0.5, -0.5, 0.0>, <0.5, 0.5, 1.0>}\n',
+    '#declare thingie_1 = box{<-0.5, -0.5, -0.5>, <0.5, 0.5, 0.5>}\n',
     '#declare thingie_2 = sphere{<0, 0, 0>, 0.5}\n',
     '#declare thingie_3 = cylinder{<0, 0, 0>, <0, 0, 1.0>, 0.5}\n',
     '#declare thingie_4 = superellipsoid{<0.5, 0.5> scale 0.5}\n',
@@ -249,8 +249,8 @@ resultfile.writelines([
     '  right x*image_width/image_height\n',
     '  up y\n',
     '  sky <0, -1, 0>\n',
-    '  direction <0, 0, 1>\n',
-    f'  angle 2.0*(degrees(atan2({0.5 * max(X, Y)/X}, vlength(camera_position - <0.0, 0.0, 0.0>)))) // Supposed to fit object, unless thingies are too high\n',
+    f'  direction <0, 0, vlength(camera_position - <0.0, 0.0, {1.0/max(X, Y)}>)>  // May alone work for many pictures. Otherwise fiddle with angle below\n',
+    f'//  angle 2.0*(degrees(atan2({0.5 * max(X, Y)/X}, vlength(camera_position - <0.0, 0.0, {1.0/max(X, Y)}>)))) // Supposed to fit object, unless thingies are too high\n',
     '  look_at<0.0, 0.0, 0.0>\n',
     '}\n\n',
     # Light
@@ -317,7 +317,7 @@ for y in range(0, Y, 1):
                 f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
                 f'      {even_odd_string_trn}\n',
                 f'      translate(move_map * <map({c}), map({c}), map({c})>)\n',
-                f'      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
+                '      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
                 f'      translate<{x}, {y}, 0>\n',
                 '    }\n'
             # Finished thingie
