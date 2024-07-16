@@ -19,8 +19,8 @@ History:
 0.0.0.12    3zaika ready to release - 10 June 2024.
 1.6.12.12   First Production release - 12 June 2024.
 1.7.9.10    Bilinear interpolation added to map. Not used for coloring since results are too smooth.
-1.7.10.18   Coordinate system match Photoshop, origin is top left, z points to the viewer.
-            Camera improved.
+1.7.16.9    Coordinate system match Photoshop, origin is top left, z points to the viewer.
+            Camera improved. Global color modifier changed to transfer function.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -32,7 +32,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.10.18"
+__version__ = "1.7.16.9"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -234,9 +234,9 @@ resultfile.writelines([
     '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
     '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
     '\n//       Global modifiers for all thingies in the scene\n',
-    '#declare color_factor = 1.0;      // Color multiplier for all channels\n',
-    '#declare f_value = 0.0;           // Filter value for all thingies\n',
-    '#declare t_value = 0.0;           // Transmit value for all thingies\n',
+    '#declare cm = function(k) {k}   // Color transfer function for all channels, all thingies\n',
+    '#declare f_val = 0.0;           // Filter value for all thingies\n',
+    '#declare t_val = 0.0;           // Transmit value for all thingies\n',
     '#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
     '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\nBy default exported map is five points linear spline, control points are set in the table below,\nfirst column is input, first digits in second column is output for this input.\nNote that by default input=output, i.e. no changes applied to source pixel brightness. */\n\n',
     '#declare Curve = function {  // Spline curve construction begins\n',
@@ -342,7 +342,7 @@ for y in range(0, Ycount, 1):
             # Opening object "thingie" to draw
             resultfile.writelines([
                 '    object{thingie\n',
-                f'      pigment{{rgbft<color_factor*{r}, color_factor*{g}, color_factor*{b}, f_value, t_value>}}\n',
+                f'      pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
                 '      finish{thingie_finish}\n',
                 '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
                 f'      scale(<1, 1, 1> - (scale_map * <map({c}), map({c}), map({c})>))\n',
