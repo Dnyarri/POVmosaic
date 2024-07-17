@@ -20,6 +20,7 @@ History:
 1.6.12.12   First Production release - 12 June 2024.
 1.7.16.17   Coordinate system match Photoshop, origin is top left, z points to the viewer.
             Camera improved. Global color modifier changed to transfer function. Scaling changed from subtractive to additive, be careful with old presets if they include scaling!
+1.7.17.1    Global/individual texture switch added for pseudo-heightmap effects.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -31,7 +32,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.16.17"
+__version__ = "1.7.17.1"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -204,6 +205,8 @@ resultfile.writelines([
     '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
     '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
     '\n//       Global modifiers for all thingies in the scene\n',
+    '#declare yes_color = 1;        // Whether source per-thingie color is taken or global patten applied\n',
+    '// Color-relater settings below work only for "yes_color = 1;"\n',
     '#declare cm = function(k) {k}   // Color transfer function for all channels, all thingies\n',
     '#declare f_val = 0.0;           // Filter value for all thingies\n',
     '#declare t_val = 0.0;           // Transmit value for all thingies\n',
@@ -308,9 +311,11 @@ for y in range(0, Y, 1):
             # Opening object "thingie" to draw
             resultfile.writelines([
                 '    object{thingie\n',
-                f'      pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
-                '      finish{thingie_finish}\n',
-                '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
+                '      #if (yes_color)\n',
+                f'        pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
+                '        finish{thingie_finish}\n',
+                '        normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
+                '      #end\n',
                 f'      scale(scale_all + (scale_map * <map({c}), map({c}), map({c})>))\n',
                 f'      {even_odd_string_rot}\n',
                 f'      rotate((rotate_map * <map({c}), map({c}), map({c})>) + rotate_all)\n',
@@ -329,9 +334,13 @@ resultfile.writelines([
     f'  translate <0.5, 0.5, 0> + <{-0.5*X}, {-0.5*Y}, 0>\n',  # centering at scene zero
     f'  scale<{1.0/max(X, Y)}, {1.0/max(X, Y)}, {1.0/max(X, Y)}>\n',    # fitting and mirroring
     '} // thething closed\n\n'
-    '\nobject {thething\n'
-    f'//  interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color<0.95, 0.95, 0.95>}}\n',
-    '}\n',
+    '\nobject {thething\n'  # inserting thething
+    '  #if (yes_color < 1)\n',
+    '    pigment {color rgb<0.5, 0.5, 0.5>}\n',
+    '    finish {thingie_finish}\n',
+    '  #end\n',
+    f'  interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color<0.95, 0.95, 0.95>}}\n',
+    '}\n',  # insertion complete
     '\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/'
 ])
 # Closed scene

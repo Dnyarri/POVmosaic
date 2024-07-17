@@ -21,6 +21,7 @@ History:
 1.7.9.10    Bilinear interpolation added to map. Not used for coloring since results are too smooth.
 1.7.16.17   Coordinate system match Photoshop, origin is top left, z points to the viewer.
             Camera improved. Global color modifier changed to transfer function. Scaling changed from subtractive to additive, be careful with old presets if they include scaling!
+1.7.17.1    Global/individual texture switch added for pseudo-heightmap effects.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -32,7 +33,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.16.17"
+__version__ = "1.7.17.1"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -216,10 +217,10 @@ resultfile.writelines([
     '#declare thingie_1 = sphere{<0, 0, 0>, 0.5}\n',
     '#declare thingie_2 = cylinder{<0, 0, 0>, <0, 0, 1.0>, 0.5}\n',
     '#declare thingie_3 = cone{<0, 0, 0>, 0.5, <0, 0, 1.0>, 0.0}\n',
-    '// Hexagonal prism below, like pencils in honeycomb pack, try conic_sweep as well\n',
-    '#declare thingie_4 = prism{linear_sweep linear_spline 0, 1, 7,\n <-0.5, 0.5*revsqrtof3>, <0,revsqrtof3>, <0.5, 0.5*revsqrtof3>,\n <0.5,- 0.5*revsqrtof3>, <0,-revsqrtof3>, <-0.5,- 0.5*revsqrtof3>,\n <-0.5, 0.5*revsqrtof3> rotate x*270}\n',
-    '// Rhomb prism below, try conic_sweep as well\n',
-    '#declare thingie_5 = prism{linear_sweep linear_spline 0, 1, 5, <-1.0, 0>,\n <0, sqrtof3>, <1, 0>, <0, -sqrtof3>, <-1.0, 0> rotate x*270 scale 0.5}\n',
+    '// Hexagonal prism below, like pencils in honeycomb pack\n',
+    '#declare thingie_4 = prism{linear_sweep linear_spline 0, 1, 7,\n <-0.5, 0.5*revsqrtof3>, <0,revsqrtof3>, <0.5, 0.5*revsqrtof3>,\n <0.5,- 0.5*revsqrtof3>, <0,-revsqrtof3>, <-0.5,- 0.5*revsqrtof3>,\n <-0.5, 0.5*revsqrtof3> rotate x*90}\n',
+    '// Rhomb prism below\n',
+    '#declare thingie_5 = prism{linear_sweep linear_spline 0, 1, 5, <-1.0, 0>,\n <0, sqrtof3>, <1, 0>, <0, -sqrtof3>, <-1.0, 0> rotate x*90 scale 0.5}\n',
     '// CSG examples below, may be good for randomly rotated thingies\n',
     '#declare thingie_6 = intersection{\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate x*90}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate y*90}\n  }  //  Cubic rounded CSG end\n',
     '#declare thingie_7 = intersection{\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*219.0}\n  }  //  Tetrahedral rounded CSG end\n',
@@ -234,6 +235,8 @@ resultfile.writelines([
     '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
     '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
     '\n//       Global modifiers for all thingies in the scene\n',
+    '#declare yes_color = 1;        // Whether source per-thingie color is taken or global patten applied\n',
+    '// Color-relater settings below work only for "yes_color = 1;"\n',
     '#declare cm = function(k) {k}   // Color transfer function for all channels, all thingies\n',
     '#declare f_val = 0.0;           // Filter value for all thingies\n',
     '#declare t_val = 0.0;           // Transmit value for all thingies\n',
@@ -342,9 +345,11 @@ for y in range(0, Ycount, 1):
             # Opening object "thingie" to draw
             resultfile.writelines([
                 '    object{thingie\n',
-                f'      pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
-                '      finish{thingie_finish}\n',
-                '      normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
+                '      #if (yes_color)\n',
+                f'        pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
+                '        finish{thingie_finish}\n',
+                '        normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
+                '      #end\n',
                 f'      scale(<1, 1, 1> + (scale_map * <map({c}), map({c}), map({c})>))\n',
                 f'      rotate(rotate_map * <map({c}), map({c}), map({c})>)\n',
                 f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
@@ -362,9 +367,13 @@ resultfile.writelines([
     f'  translate <0.25, 0.5, 0> + <{-0.5*X}, {-0.5*Y}, 0>\n',  # centering at scene zero
     f'  scale<{1.0/max(X, Y)}, {1.0/max(X, Y)}, {1.0/max(X, Y)}>\n',    # fitting and mirroring
     '} // thething closed\n\n'
-    '\nobject {thething\n'
-    f'//  interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color<0.95, 0.95, 0.95>}}\n',
-    '}\n',
+    '\nobject {thething\n'  # inserting thething
+    '  #if (yes_color < 1)\n',
+    '    pigment {color rgb<0.5, 0.5, 0.5>}\n',
+    '    finish {thingie_finish}\n',
+    '  #end\n',
+    f'  interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color<0.95, 0.95, 0.95>}}\n',
+    '}\n',  # insertion complete
     '\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/'
 ])
 # Closed scene
