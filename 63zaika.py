@@ -34,7 +34,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.18.21"
+__version__ = "1.7.19.8"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -266,6 +266,7 @@ resultfile.writelines([
     '#declare normal_rotate_rnd = <0, 0, 0>;  // Random rotate of finish. Values in degrees\n',
     '\n//       Seed random\n',
     f'#declare rnd_1 = seed({int(seconds * 1000000)});\n\n',
+    'background{color rgbft <0, 0, 0, 1, 1>} // Sometimes need to be redefined\n\n\n',
     '\n// -<*<* Insert preset to override setting above *>*>-\n',
     '// #include "preset_01.inc"    // Set path and name of your file related to scene file\n\n',
     # Starting scene content
@@ -280,13 +281,12 @@ resultfile.writelines([
     '  up y\n',
     '  sky <0, -1, 0>\n',
     f'  direction <0, 0, vlength(camera_position - <0.0, 0.0, {1.0/max(X, Y)}>)>  // May alone work for many pictures. Otherwise fiddle with angle below\n',
-    f'//  angle 2.0*(degrees(atan2({0.5 * max(X+0.5, Y+0.5)/X}, vlength(camera_position - <0.0, 0.0, {1.0/max(X, Y)}>)))) // Supposed to fit object, unless thingies are too high\n',
+    f'  angle 2.0*(degrees(atan2({0.5 * max(X+0.5, Y+0.5)/X}, vlength(camera_position - <0.0, 0.0, {1.0/max(X, Y)}>)))) // Supposed to fit object, unless thingies are too high\n',
     '  look_at<0.0, 0.0, 0.0>\n',
     '}\n\n',
     # Light
     'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n  translate<4, -2, 3>\n}\n\n',
     'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n  translate<-2, -6, 7>\n}\n\n',
-    'background{color rgbft<0, 0, 0, 1, 1>}\n\n',
     # Main object
     '\n// Object thething made out of thingies\n',
     '#declare thething = union{\n',  # Opening big thething
@@ -373,7 +373,7 @@ resultfile.writelines([
     '    pigment {color rgb<0.5, 0.5, 0.5>}\n',
     '    finish {thingie_finish}\n',
     '  #end\n',
-    f'  interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color<0.95, 0.95, 0.95>}}\n',
+    f'  interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color <0.0, 0.5, 1.0>}}\n',
     '}\n',  # insertion complete
     '\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/'
 ])
