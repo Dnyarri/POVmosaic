@@ -1,13 +1,13 @@
 /* 
 POVRay include file
-Description: Preset file for scene generated with 4zaika.py
+Description: Preset file for scene generated with 44zaika.py
     Dice shapes, stepwise rotated with source brightness
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov
 */
 
-'#declare yes_color = 1;
+#declare yes_color = 1;
 
 #undef map  // Undef global map from main scene .pov file before redefining new one below
 #declare map = function(c) {int(64*c)}  // Stepwise increasing function of c (posterize 64 levels)

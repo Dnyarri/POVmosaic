@@ -208,6 +208,7 @@ resultfile.writelines([
     '\n/*\n   -<*<* Predefined variants *>*>-\n*/\n',
     '\n//       Thingie variants\n',
     '#declare thingie_1 = prism {\n    conic_sweep\n    linear_spline\n    0,\n    1,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*270\n}\n',
+    '#declare thingie_2 = prism {\n    linear_sweep\n    linear_spline\n    0,\n    1,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*90\n}\n',
     '\n//       Thingie finish variants\n',
     '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth plastic\n',
     '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',

@@ -1,11 +1,13 @@
 /* 
 POVRay include file
-Description: Preset file for scene generated with 3zaika.py
+Description: Preset file for scene generated with 63zaika.py
     Isosceles trigonal prism, try conic_sweep as well
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov
 */
+
+#declare yes_color = 1;
 
 #declare thingie_normal = normal{bumps 0.03 scale<1.0, 0.05, 0.5> rotate z*-30}
 #declare normal_rotate_rnd = <0, 0, 10>;
