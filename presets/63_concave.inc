@@ -11,7 +11,7 @@ Author: Ilya Razmanov
 #declare revsqrtof3 = 1.0/sqrtof3;                      // 1.0/sqrt(3)
 
 #undef map
-#declare map = function(c) {1.0-c}
+#declare map = function(c) {1.0 - c}
 
 #declare scale_map = <0, 0, 5>;
 #declare move_rnd = <0, 0, 0.1>;

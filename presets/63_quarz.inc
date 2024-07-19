@@ -15,7 +15,7 @@ Author: Ilya Razmanov
 background{color rgbft<1, 1, 1, 1, 1>}
 
 #undef map
-#declare map = function(c) {1.0-c}
+#declare map = function(c) {abs((2.0 * c) - 1)}
 
 #declare scale_map = <0, 0, 1.5>;
 
