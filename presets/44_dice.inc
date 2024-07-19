@@ -7,6 +7,8 @@ Read project help.html for options description.
 Author: Ilya Razmanov
 */
 
+'#declare yes_color = 1;
+
 #undef map  // Undef global map from main scene .pov file before redefining new one below
 #declare map = function(c) {int(64*c)}  // Stepwise increasing function of c (posterize 64 levels)
 #declare rotate_map = <0, 90, 0>;  // Using 90 deg to switch dice precisely one facet
