@@ -7,6 +7,7 @@ Read project help.html for options description.
 Author: Ilya Razmanov
 */
 
+#declare yes_color = 1;
 
 #declare sqrtof3 = 1.7320508075688772935274463415059;      // sqrt(3)
 #declare sqrtof3div2 = 0.86602540378443864676372317075294; // sqrt(3)/2

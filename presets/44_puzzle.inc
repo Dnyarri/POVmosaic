@@ -9,10 +9,12 @@ Read project help.html for options description.
 Author: Ilya Razmanov
 */
 
-#declare move_rnd = <0, 0, 0.15>;
+#declare yes_color = 1;
 
-declare pin_rad = 0.2;
-declare pin_off = 0.1;
+#declare move_rnd = <0, 0, 0.25>;
+
+#declare pin_rad = 0.2;
+#declare pin_off = 0.1;
 
 #declare thingie = difference {
     union {

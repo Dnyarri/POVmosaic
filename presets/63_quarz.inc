@@ -10,6 +10,8 @@ Author: Ilya Razmanov
 #declare sqrtof3 = 1.7320508075688772935274463415059;   // sqrt(3)
 #declare revsqrtof3 = 1.0/sqrtof3;                      // 1.0/sqrt(3)
 
+#declare yes_color = 1;
+
 #declare f_val = 0.6;
 
 background{color rgbft<1, 1, 1, 1, 1>}
