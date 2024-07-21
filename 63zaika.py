@@ -22,7 +22,7 @@ History:
 1.7.16.17   Coordinate system match Photoshop, origin is top left, z points to the viewer.
             Camera improved. Global color modifier changed to transfer function. Scaling changed from subtractive to additive, be careful with old presets if they include scaling!
 1.7.17.1    Global/individual texture switch added for pseudo-heightmap effects.
-1.7.18.21   Renamed to 63zaika to reflect regular plane partition class 6/3.
+1.7.21.21   Renamed to 63zaika to reflect regular plane partition class 6/3. Prisms changed.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -34,7 +34,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.19.8"
+__version__ = "1.7.21.21"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -218,10 +218,10 @@ resultfile.writelines([
     '#declare thingie_1 = sphere{<0, 0, 0>, 0.5}\n',
     '#declare thingie_2 = cylinder{<0, 0, 0>, <0, 0, 1.0>, 0.5}\n',
     '#declare thingie_3 = cone{<0, 0, 0>, 0.5, <0, 0, 1.0>, 0.0}\n',
-    '// Hexagonal prism below, like pencils in honeycomb pack\n',
-    '#declare thingie_4 = prism{linear_sweep linear_spline 0, 1, 7,\n <-0.5, 0.5*revsqrtof3>, <0,revsqrtof3>, <0.5, 0.5*revsqrtof3>,\n <0.5,- 0.5*revsqrtof3>, <0,-revsqrtof3>, <-0.5,- 0.5*revsqrtof3>,\n <-0.5, 0.5*revsqrtof3> rotate x*90}\n',
-    '// Rhomb prism below\n',
-    '#declare thingie_5 = prism{linear_sweep linear_spline 0, 1, 5, <-1.0, 0>,\n <0, sqrtof3>, <1, 0>, <0, -sqrtof3>, <-1.0, 0> rotate x*90 scale 0.5}\n',
+    '// Hexagonal prism below, like pencils in honeycomb pack. Try conic_sweep as well\n',
+    '#declare thingie_4 = prism{linear_sweep linear_spline -1, 0, 7,\n <-0.5, 0.5*revsqrtof3>, <0,revsqrtof3>, <0.5, 0.5*revsqrtof3>,\n <0.5,- 0.5*revsqrtof3>, <0,-revsqrtof3>, <-0.5,- 0.5*revsqrtof3>,\n <-0.5, 0.5*revsqrtof3> rotate x*90 translate z}\n',
+    '// Rhomb prism below. Try conic_sweep as well\n',
+    '#declare thingie_5 = prism{linear_sweep linear_spline -1, 0, 5, <-1.0, 0>,\n <0, sqrtof3>, <1, 0>, <0, -sqrtof3>, <-1.0, 0> rotate x*90 scale 0.5 translate z}\n',
     '// CSG examples below, may be good for randomly rotated thingies\n',
     '#declare thingie_6 = intersection{\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate x*90}\n    cylinder{<0, 0, -1.0>, <0, 0, 1.0>, 0.5 rotate y*90}\n  }  //  Cubic rounded CSG end\n',
     '#declare thingie_7 = intersection{\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*109.5}\n    cylinder{<0, -1.0, 0>, <0, 1.0, 0>, 0.5 rotate z*109.5 rotate y*219.0}\n  }  //  Tetrahedral rounded CSG end\n',

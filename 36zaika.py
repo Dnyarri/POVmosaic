@@ -16,7 +16,7 @@ History:
 04.04.2024  s3zaika.py final state, completely rewritten vs. first transition from FM.
 
 0.0.0.1     Complete rewriting to more flexible project - 18 June 2024.
-1.7.18.21   Bugs seem to be eliminated, common problems perist.
+1.7.21.21   Bugs seem to be eliminated. Prisms changed.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -28,7 +28,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.19.8"
+__version__ = "1.7.21.21"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -207,8 +207,8 @@ resultfile.writelines([
     '#declare sqrtof3div2 = 0.86602540378443864676372317075294; // sqrt(3)/2\n\n',
     '\n/*\n   -<*<* Predefined variants *>*>-\n*/\n',
     '\n//       Thingie variants\n',
-    '#declare thingie_1 = prism {\n    conic_sweep\n    linear_spline\n    0,\n    1,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*270\n}\n',
-    '#declare thingie_2 = prism {\n    linear_sweep\n    linear_spline\n    0,\n    1,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*90\n}\n',
+    '#declare thingie_1 = prism {\n    linear_sweep\n    linear_spline\n    -1,\n    0,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*90 translate z\n}\n',
+    '#declare thingie_2 = prism {\n    conic_sweep\n    linear_spline\n    -1,\n    0,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*90 translate z\n}\n',
     '\n//       Thingie finish variants\n',
     '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth plastic\n',
     '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',
