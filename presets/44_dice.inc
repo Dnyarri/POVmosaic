@@ -1,17 +1,19 @@
 /* 
 POVRay include file
-Description: Preset file for scene generated with 4zaika.py
+Description: Preset file for scene generated with 44zaika.py
     Dice shapes, stepwise rotated with source brightness
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov
 */
 
+#declare yes_color = 1;
+
 #undef map  // Undef global map from main scene .pov file before redefining new one below
-#declare map = function(c) {int(64*c)}  // Stepwise increasing function of c (posterize 64 levels)
-#declare rotate_map = <0, 90, 0>;  // Using 90 deg to switch dice precisely one facet
-#declare evenodd_rotate = <90.0, 0.0, 0.0>;  // Cheating - even/odd rotation adds variance to mapping
-#declare evenodd_offset = <0.5, 0, 0>;  // Unnecessary, added just for fun
+#declare map = function(c) {int(64*c)}      // Stepwise increasing function of c (posterize 64 levels)
+#declare rotate_map = <0, 90, 0>;           // Using 90 deg to switch dice precisely one facet
+#declare evenodd_rotate = <90.0, 0.0, 0.0>; // Cheating - even/odd rotation adds variance to mapping
+#declare evenodd_offset = <0.5, 0, 0>;      // Unnecessary, added just for fun
 
 // Dice thingie begins
 #local Hole = sphere {<0, 0, 0>, 0.2

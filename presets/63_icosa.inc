@@ -1,6 +1,6 @@
 /* 
 POVRay include file
-Description: Preset file for scene generated with 3zaika.py or 4zaika.py
+Description: Preset file for scene generated with 63zaika.py or 44zaika.py
     Icosahedron shapes, randomply rotated, glass-like
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
@@ -8,6 +8,10 @@ Authors: preset file made by Ilya Razmanov.
     Icosahedron shape mostly based on example by Paul Bourke,
     edited a bit to improve a bit. A bit improved successfully.
 */
+
+#declare yes_color = 1;
+
+// #declare f_val = 0.5;     // when enabling, don't forget about max_trace_level
 
 #declare thingie_finish = finish{ambient 0.1 diffuse 0.5 specular 0.9
     roughness 0.03 metallic 1.0 reflection {0.9 metallic 0.0}}
