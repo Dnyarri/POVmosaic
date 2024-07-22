@@ -16,7 +16,7 @@ History:
 04.04.2024  s3zaika.py final state, completely rewritten vs. first transition from FM.
 
 0.0.0.1     Complete rewriting to more flexible project - 18 June 2024.
-1.7.21.21   Bugs seem to be eliminated. Prisms changed.
+1.7.22.12   Bugs seem to be eliminated. Prisms changed. Ready for release.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -28,7 +28,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.21.21"
+__version__ = "1.7.22.12"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"

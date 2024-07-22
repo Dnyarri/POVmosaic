@@ -21,7 +21,7 @@ History:
 1.7.16.17   Coordinate system match Photoshop, origin is top left, z points to the viewer.
             Camera improved. Global color modifier changed to transfer function. Scaling changed from subtractive to additive, be careful with old presets if they include scaling!
 1.7.17.1    Global/individual texture switch added for pseudo-heightmap effects.
-1.7.18.21   Renamed to 44zaika to reflect regular plane partition class 4/4.
+1.7.22.12   Renamed to 44zaika to reflect regular plane partition class 4/4. Ready for release.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -33,7 +33,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.19.8"
+__version__ = "1.7.22.12"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
