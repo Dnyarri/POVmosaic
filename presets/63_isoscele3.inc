@@ -20,4 +20,5 @@ Author: Ilya Razmanov
     <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>
     rotate x*270 translate<0, 0.5*sqrtof3div2, 0> scale <0.5, 1, 1>}  //  This is isosceles triangle, not equilateral!
 
-#declare evenodd_rotate = <0.0, 0.0, 180.0>;
+#declare evenodd_transform = transform {rotate <0.0, 0.0, 180.0>}   // for 63zaika 1.7.24.15 and above
+#declare evenodd_rotate = <0.0, 0.0, 180.0>;    // for compatibility with 3zaika and 63zaika 1.7.22.12

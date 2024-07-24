@@ -23,6 +23,7 @@ History:
             Camera improved. Global color modifier changed to transfer function. Scaling changed from subtractive to additive, be careful with old presets if they include scaling!
 1.7.17.1    Global/individual texture switch added for pseudo-heightmap effects.
 1.7.22.12   Renamed to 63zaika to reflect regular plane partition class 6/3. Prisms changed. Ready for release.
+1.7.24.15   Changed even/odd rotate to even/odd transform. Updated presets for compatibility.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -34,7 +35,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.22.12"
+__version__ = "1.7.24.15"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -241,7 +242,7 @@ resultfile.writelines([
     '#declare cm = function(k) {k}   // Color transfer function for all channels, all thingies\n',
     '#declare f_val = 0.0;           // Filter value for all thingies\n',
     '#declare t_val = 0.0;           // Transmit value for all thingies\n',
-    '#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
+    '#declare evenodd_transform = transform {rotate <0.0, 0.0, 0.0>}  // Odd lines rotate, rarely useful\n',
     '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\nBy default exported map is five points linear spline, control points are set in the table below,\nfirst column is input, first digits in second column is output for this input.\nNote that by default input=output, i.e. no changes applied to source pixel brightness. */\n\n',
     '#declare Curve = function {  // Spline curve construction begins\n',
     '  spline { linear_spline\n',
@@ -303,7 +304,7 @@ triangle_height = 0.5 * 1.7320508075688772935274463415059
 
 even_odd_string = ''
 even_string = 'translate<0.5, 0, 0>'    # mandatory shift for triangle pattern, uneditable
-odd_string = 'rotate evenodd_rotate'    # consider 'rotate<0.0, 0.0, 180.0>' or scale <1.0, -1.0, 1.0>
+odd_string = 'transform {evenodd_transform}'    # consider 'rotate<0.0, 0.0, 180.0>' or scale <1.0, -1.0, 1.0>
 
 # Now going to cycle through image and build big thething
 Ycount = int(Y/triangle_height)
