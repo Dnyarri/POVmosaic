@@ -1,6 +1,6 @@
 /* 
 POVRay include file
-Description: Preset file for scene generated with 43zaika.py
+Description: Preset file for scene generated with 63zaika.py
     Puzzle elements - hexagonal CSG, extending thingie bounding box,
     but cutting at two corners absolutely the same pin holes as pin extends to a different corner,
     thus making contacting sides and corners match each other.
@@ -24,20 +24,20 @@ Author: Ilya Razmanov
 #declare pinsize = 0.1;
 #declare plus = union {
     cylinder {<-0.5, 0.5*revsqrtof3, 0>, <-0.5, 0.5*revsqrtof3, 1.0>, pinsize}  // 1
-    cylinder {<0.5,- 0.5*revsqrtof3, 0>, <0.5,- 0.5*revsqrtof3, 1.0>, pinsize}  // 4
-}
+    cylinder {<0.5, -0.5*revsqrtof3, 0>, <0.5, -0.5*revsqrtof3, 1.0>, pinsize}  // 4
+}   // Beside 1 & 4 combo, 1 & 2 should also work.
 #declare minus = union {
-    cylinder {<0,revsqrtof3, -1>, <0,revsqrtof3, 2>, pinsize}                  // 2
-    cylinder {<0.5, 0.5*revsqrtof3, -1>, <0.5, 0.5*revsqrtof3, 2>, pinsize}    // 3
-    cylinder {<0,-revsqrtof3, -1>, <0,-revsqrtof3, 2>, pinsize}                 // 5
+    cylinder {<0, revsqrtof3, -1>, <0, revsqrtof3, 2>, pinsize}                 // 2
+    cylinder {<0.5, 0.5*revsqrtof3, -1>, <0.5, 0.5*revsqrtof3, 2>, pinsize}     // 3
+    cylinder {<0, -revsqrtof3, -1>, <0, -revsqrtof3, 2>, pinsize}               // 5
     cylinder {<-0.5, -0.5*revsqrtof3, -1>, <-0.5, -0.5*revsqrtof3, 2>, pinsize} // 6
 }
 #declare prizma = prism{linear_sweep linear_spline -1, 0, 7,
  <-0.5, 0.5*revsqrtof3>,
- <0,revsqrtof3>,
+ <0, revsqrtof3>,
  <0.5, 0.5*revsqrtof3>,
  <0.5, -0.5*revsqrtof3>,
- <0,-revsqrtof3>,
+ <0, -revsqrtof3>,
  <-0.5, -0.5*revsqrtof3>,
  <-0.5, 0.5*revsqrtof3>
    rotate x*90 translate z}
