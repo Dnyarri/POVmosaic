@@ -17,26 +17,26 @@ Author: Ilya Razmanov
 #declare move_rnd = <0, 0, 0.1>;
 
 // Thingie CSG construction
-#declare brad = 0.5;
-#declare bstr = 1.0;
+#declare bradius = 0.5;
+#declare bstrength = 1.0;
 #declare net = blob {threshold 0.7
-    sphere {<-0.5, 0.5*revsqrtof3, 0>, brad, bstr}    // 1
-    sphere {<0, revsqrtof3, 0>, brad, bstr}           // 2
-    sphere {<0.5, 0.5*revsqrtof3, 0>, brad, bstr}     // 3
-    sphere {<0.5, -0.5*revsqrtof3, 0>, brad, bstr}    // 4
-    sphere {<0, -revsqrtof3, 0>, brad, bstr}          // 5
-    sphere {<-0.5, -0.5*revsqrtof3, 0>, brad, bstr}   // 6
-scale 0.75}
+    sphere {<-0.5, 0.5*revsqrtof3, 0>, bradius, bstrength}    // 1
+    sphere {<0, revsqrtof3, 0>, bradius, bstrength}           // 2
+    sphere {<0.5, 0.5*revsqrtof3, 0>, bradius, bstrength}     // 3
+    sphere {<0.5, -0.5*revsqrtof3, 0>, bradius, bstrength}    // 4
+    sphere {<0, -revsqrtof3, 0>, bradius, bstrength}          // 5
+    sphere {<-0.5, -0.5*revsqrtof3, 0>, bradius, bstrength}   // 6
+  scale <0.75, 0.75, 1.0>} // with scale 1.0 it's rather grapnene, with <0.6, 0.6, 1.0> looks nice, with <1, 1, 10> spiky
 
 #declare prizma = prism{linear_sweep linear_spline -1, 1, 7,
- <-0.5, 0.5*revsqrtof3>,
- <0,revsqrtof3>,
- <0.5, 0.5*revsqrtof3>,
- <0.5, -0.5*revsqrtof3>,
- <0,-revsqrtof3>,
- <-0.5, -0.5*revsqrtof3>,
- <-0.5, 0.5*revsqrtof3>
-   rotate x*90 translate z}
+    <-0.5, 0.5*revsqrtof3>,
+    <0, revsqrtof3>,
+    <0.5, 0.5*revsqrtof3>,
+    <0.5, -0.5*revsqrtof3>,
+    <0, -revsqrtof3>,
+    <-0.5, -0.5*revsqrtof3>,
+    <-0.5, 0.5*revsqrtof3>
+  rotate x*90 translate z}
 
 #declare thingie = intersection {
     object {prizma}
