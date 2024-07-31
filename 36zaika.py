@@ -28,7 +28,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.22.12"
+__version__ = "1.7.31.12"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -209,6 +209,7 @@ resultfile.writelines([
     '\n//       Thingie variants\n',
     '#declare thingie_1 = prism {\n    linear_sweep\n    linear_spline\n    -1,\n    0,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*90 translate z\n}\n',
     '#declare thingie_2 = prism {\n    conic_sweep\n    linear_spline\n    -1,\n    0,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*90 translate z\n}\n',
+    '#declare thingie_3 = difference {\n    object {thingie_2}\n    object {thingie_2 scale<0, 0, -1.0> translate<0, 0, 1.0>}\n}  // WARNING: CSG of two previously defined objects depends on them!\n',
     '\n//       Thingie finish variants\n',
     '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth plastic\n',
     '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',
