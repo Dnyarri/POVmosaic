@@ -26,7 +26,8 @@ Author: Ilya Razmanov
     sphere {<0.5, -0.5*revsqrtof3, 0>, bradius, bstrength}    // 4
     sphere {<0, -revsqrtof3, 0>, bradius, bstrength}          // 5
     sphere {<-0.5, -0.5*revsqrtof3, 0>, bradius, bstrength}   // 6
-  scale <0.75, 0.75, 1.0>} // with scale 1.0 it's rather grapnene, with <0.6, 0.6, 1.0> looks nice, with <1, 1, 10> spiky
+  scale <0.75, 0.75, 1.0>
+} // with scale 1.0 it's rather grapnene, with <0.6, 0.6, 1.0> looks nice, with <1, 1, 10> spiky
 
 #declare prizma = prism{linear_sweep linear_spline -1, 1, 7,
     <-0.5, 0.5*revsqrtof3>,
@@ -36,8 +37,10 @@ Author: Ilya Razmanov
     <0, -revsqrtof3>,
     <-0.5, -0.5*revsqrtof3>,
     <-0.5, 0.5*revsqrtof3>
-  rotate x*90 translate z}
+  rotate x*90 translate z
+}
 
 #declare thingie = intersection {
     object {prizma}
-    object {net}}
+    object {net}
+}

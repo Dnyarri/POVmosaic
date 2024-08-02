@@ -36,4 +36,5 @@ Author: Ilya Razmanov
             <0, 0.5-pin_off, -1>, <0, 0.5-pin_off, 1>, pin_rad
         }
     }
-scale 0.99}
+  scale 0.99
+}

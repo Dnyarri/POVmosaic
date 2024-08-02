@@ -12,8 +12,8 @@ Author: Ilya Razmanov
 #declare move_rnd = <0, 0, 0.1>;
 
 #declare thingie = box{<-0.5, -0.5, -0.5>, <0.5, 0.5, 0.5>
-matrix <1, 0, 0,
-        0.5, 1, 0,
-        0, 0, 1,
-        0, 0, 0>
-}
+    matrix <1, 0, 0,
+            0.5, 1, 0,
+            0, 0, 1,
+            0, 0, 0>
+  }

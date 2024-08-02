@@ -26,4 +26,5 @@ Author: Ilya Razmanov
     sphere {<0.5, -0.5*revsqrtof3, 0>, bradius, bstrength}    // 4
     sphere {<0, -revsqrtof3, 0>, bradius, bstrength}          // 5
     sphere {<-0.5, -0.5*revsqrtof3, 0>, bradius, bstrength}   // 6
-  scale <0.6, 0.6, 1.0>}
+  scale <0.6, 0.6, 1.0>
+  }
