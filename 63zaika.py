@@ -35,7 +35,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.7.24.15"
+__version__ = "1.8.5.12"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -52,7 +52,8 @@ import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 
 sortir = Tk()
 sortir.title('POVRay Mosaic: 63Zaika')
-sortir.geometry('+64+128')
+sortir.geometry('500x16+64+128')
+sortir.resizable(width=True, height=True)
 sortir.overrideredirect(True)
 progressbar =  Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100, length=500)
 progressbar.pack(fill=BOTH, expand=True)
