@@ -35,7 +35,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.8.5.12"
+__version__ = "1.8.19.8"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -277,7 +277,7 @@ resultfile.writelines([
     'NOTE: Coordinate system match Photoshop,\norigin is top left, z points to the viewer.\nsky vector is important!\n\n*/\n\n',
     '#declare camera_position = <0.0, 0.0, 3.0>;  // Camera position over object, used for view angle\n\n',
     'camera{\n',
-    '  // orthographic\n',
+    '//  orthographic\n',
     '  location camera_position\n',
     '  right x*image_width/image_height\n',
     '  up y\n',
@@ -287,8 +287,8 @@ resultfile.writelines([
     '  look_at<0.0, 0.0, 0.0>\n',
     '}\n\n',
     # Light
-    'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n  translate<4, -2, 3>\n}\n\n',
-    'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n  translate<-2, -6, 7>\n}\n\n',
+    'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n//  area_light <1, 0, 0>, <0, 1, 0>, 5, 5 circular orient area_illumination on\n  translate<4, -2, 3>\n}\n\n',
+    'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n//  area_light <1, 0, 0>, <0, 1, 0>, 5, 5 circular orient area_illumination on\n  translate<-2, -6, 7>\n}\n\n',
     # Main object
     '\n// Object thething made out of thingies\n',
     '#declare thething = union{\n',  # Opening big thething
