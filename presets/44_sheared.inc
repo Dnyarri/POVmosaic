@@ -1,7 +1,9 @@
 /* 
 POVRay include file
 Description: Preset file for scene generated with 44zaika.py
+
     Cube (box) sheared using matrix. Note this is not 4/4 symmetry anymore!
+
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov

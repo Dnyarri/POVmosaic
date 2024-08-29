@@ -1,7 +1,9 @@
 /* 
 POVRay include file
 Description: Preset file for scene generated with 44zaika.py
+
     Dice shapes, stepwise rotated with source brightness
+
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov

@@ -1,7 +1,9 @@
 /* 
 POVRay include file
 Description: Preset file for scene generated with 63zaika.py
+
     Prisms simulating one of quarz crystals form.
+
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov

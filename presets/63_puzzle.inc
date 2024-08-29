@@ -1,11 +1,13 @@
 /* 
 POVRay include file
 Description: Preset file for scene generated with 63zaika.py
+
     Puzzle elements - hexagonal CSG, extending thingie bounding box,
     but cutting at two corners absolutely the same pin holes as pin extends to a different corner,
     thus making contacting sides and corners match each other.
     Yes, this is HEXAGONAL pattern, therefore at one point 3 corners meet,
     and there must be 2 holes per 1 pin.
+
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov

@@ -1,8 +1,10 @@
 /* 
 POVRay include file
 Description: Preset file for scene generated with 63zaika.py
+
     Isosceles trigonal prism, try conic_sweep as well.
     It is isosceles but not equilateral!
+
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov

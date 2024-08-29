@@ -1,7 +1,9 @@
 /* 
 POVRay include file
 Description: Preset file for scene generated with 36zaika.py
+
     Prisms with concave end, gives a bit more testured impession.
+
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov

@@ -1,9 +1,11 @@
 /* 
 POVRay include file
 Description: Preset file for scene generated with 44zaika.py
+
     Puzzle elements - CSG, extending thingie bounding box,
     but cutting at one side absolutely the same pin hole as pin extends to the other side,
     thus making contacting sides match each other.
+
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
 Author: Ilya Razmanov
