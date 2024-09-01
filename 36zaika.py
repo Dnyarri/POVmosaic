@@ -17,6 +17,7 @@ History:
 
 0.0.0.1     Complete rewriting to more flexible project - 18 June 2024.
 1.7.22.12   Bugs seem to be eliminated. Prisms changed. Ready for release.
+1.9.1.0     Reworked normals, added triangle tile normal.
 
     Project mirrors:
         https://github.com/Dnyarri/POVmosaic
@@ -28,7 +29,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.8.19.8"
+__version__ = "1.9.1.0"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -45,14 +46,13 @@ import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 
 sortir = Tk()
 sortir.title('POVRay Mosaic: 36Zaika')
-sortir.geometry('500x16+64+128')
+sortir.geometry(f'500x16+{(sortir.winfo_screenwidth()-500)//2}+{(sortir.winfo_screenheight()-16)//2}')
 sortir.resizable(width=True, height=True)
-sortir.overrideredirect(True)
-progressbar =  Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100, length=500)
+progressbar = Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100, length=500)
 progressbar.pack(fill=BOTH, expand=True)
+sortir.overrideredirect(True)
 sortir.withdraw()
 # Main dialog created and hidden
-
 
 # --------------------------------------------------------------
 # Open source and export files
@@ -68,9 +68,9 @@ if sourcefilename == '':
 # open PNG file
 source = png.Reader(filename=sourcefilename)  # starting PyPNG
 
-# Opening image, iDAT comes to "pixels" as bytearray, to be tuple'd later
+# Opening image, iDAT comes to "pixels" generator, to be tuple'd later
 X, Y, pixels, info = source.asRGBA()
-Z = (info['planes'])            # Maximum CHANNEL NUMBER
+Z = (info['planes'])            # Maximum channel number
 imagedata = tuple((pixels))     # Attempt to fix all bytearrays as tuple
 
 if (info['bitdepth'] == 8):
@@ -195,6 +195,7 @@ resultfile.writelines([
     '#include "metals.inc"\n',
     '#include "golds.inc"\n',
     '#include "glass.inc"\n',
+    '#include "functions.inc"\n',
     '\n',
 ])
 #   POV header end
@@ -212,17 +213,18 @@ resultfile.writelines([
     '#declare thingie_2 = prism {\n    conic_sweep\n    linear_spline\n    -1,\n    0,\n    4,\n    <-1.0, sqrtof3div2>, <1.0, sqrtof3div2>, <0, -sqrtof3div2>, <-1.0, sqrtof3div2>\n    rotate x*90 translate z\n}\n',
     '#declare thingie_3 = difference {\n    object {thingie_2}\n    object {thingie_2 scale<0, 0, -1.0> translate<0, 0, 1.0>}\n}  // WARNING: CSG of two previously defined objects depends on them!\n',
     '\n//       Thingie finish variants\n',
-    '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}    // Smooth plastic\n',
-    '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1}    // Dull, good color representation\n',
+    '#declare thingie_finish_1 = finish{ambient 0.1 diffuse 0.7 specular 0.8 reflection 0 roughness 0.005}  // Smooth plastic\n',
+    '#declare thingie_finish_2 = finish{phong 0.1 phong_size 1} // Dull, good color representation\n',
     '#declare thingie_finish_3 = finish{ambient 0.1 diffuse 0.5 specular 1\n    roughness 0.01 metallic reflection {0.75 metallic}}    // Metallic example\n',
     '#declare thingie_finish_4 = finish{ambient 0.1 diffuse 0.5 reflection 0.1 specular 1 roughness 0.005\n    irid {0.5 thickness 0.9 turbulence 0.9}}    // Iridescence example\n',
     '\n//       Thingie normal variants\n',
-    '#declare thingie_normal_1 = normal{bumps 0.0}  // Null normal placeholder\n',
+    '#declare thingie_normal_1 = normal{function {1}}  // Constant normal placeholder, template for function\n',
     '#declare thingie_normal_2 = normal{bumps 1.0 scale<0.01, 0.01, 0.01>}\n',
     '#declare thingie_normal_3 = normal{bumps 0.05 scale<1.0, 0.05, 0.5>}\n',
-    '#declare thingie_normal_4 = normal{spiral1 16 0.5 scallop_wave rotate y*90}\n',
+    '#declare thingie_normal_4 = normal{spiral1 8 0.5 scallop_wave}\n',
+    '#declare thingie_normal_5 = normal{tiling 3 scale <0.5, 5, 0.5> rotate <90, 0, 0>}\n',
     '\n//       Global modifiers for all thingies in the scene\n',
-    '#declare yes_color = 1;        // Whether source per-thingie color is taken or global patten applied\n',
+    '#declare yes_color = 1;         // Whether source per-thingie color is taken or global patten applied\n',
     '// Color-relater settings below work only for "yes_color = 1;"\n',
     '#declare cm = function(k) {k}   // Color transfer function for all channels, all thingies\n',
     '#declare f_val = 0.0;           // Filter value for all thingies\n',
@@ -249,6 +251,8 @@ resultfile.writelines([
     '\n//       Per-thingie normal modifiers\n',
     '#declare normal_move_rnd = <0, 0, 0>;    // Random move of finish. No constrains on values\n',
     '#declare normal_rotate_rnd = <0, 0, 0>;  // Random rotate of finish. Values in degrees\n',
+    '\n//       Common interior for the whole thething, fade_distance proportional to thingie size\n',
+    f'#declare thething_interior = interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color <0.0, 0.5, 1.0>}}\n',
     '\n//       Seed random\n',
     f'#declare rnd_1 = seed({int(seconds * 1000000)});\n\n',
     'background{color rgbft <0, 0, 0, 1, 1>} // Sometimes need to be redefined\n\n\n',
@@ -361,7 +365,7 @@ resultfile.writelines([
     '    pigment {color rgb<0.5, 0.5, 0.5>}\n',
     '    finish {thingie_finish}\n',
     '  #end\n',
-    f'  interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0/max(X, Y)} fade_color <0.0, 0.5, 1.0>}}\n',
+    '  interior {thething_interior}\n',
     '}\n',  # insertion complete
     '\n/*\n\nhappy rendering\n\n  0~0\n (---)\n(.>|<.)\n-------\n\n*/'
 ])
