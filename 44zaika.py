@@ -23,10 +23,17 @@ History:
 1.7.17.1    Global/individual texture switch added for pseudo-heightmap effects.
 1.7.22.12   Renamed to 44zaika to reflect regular plane partition class 4/4. Ready for release.
 1.9.1.0     Reworked normals.
+1.9.1.1     Gamma note was added to export. Direct gamma setting to POV file is not forced
+            since some software writes wrong numbers in gAMA
+            so it is left to user to decide what to do with this.
 
-    Project mirrors:
-        https://github.com/Dnyarri/POVmosaic
-        https://gitflic.ru/project/dnyarri/povmosaic
+-------------------
+Main site:
+https://dnyarri.github.io  
+
+Project mirrored at:  
+https://github.com/Dnyarri/POVmosaic  
+https://gitflic.ru/project/dnyarri/povmosaic  
 
 '''
 
@@ -34,7 +41,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.9.1.0"
+__version__ = "1.9.1.1"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -75,13 +82,19 @@ source = png.Reader(filename=sourcefilename)  # starting PyPNG
 
 # Opening image, iDAT comes to "pixels" generator, to be tuple'd later
 X, Y, pixels, info = source.asRGBA()
-Z = (info['planes'])            # Maximum channel number
-imagedata = tuple((pixels))     # Attempt to fix all bytearrays as tuple
+Z = (info['planes'])        # Maximum channel number
+imagedata = tuple(pixels)   # Building tuple from generator
 
 if (info['bitdepth'] == 8):
-    maxcolors = 255             # Maximal value for 8-bit channel
+    maxcolors = 255         # Maximal value for 8-bit channel
 if (info['bitdepth'] == 16):
-    maxcolors = 65535           # Maximal value for 16-bit channel
+    maxcolors = 65535       # Maximal value for 16-bit channel
+
+if 'gamma' in info:
+    gAMA = info['gamma']
+    gamma_note = f'Source PNG gAMA was {gAMA}'
+else:
+    gamma_note = 'Source PNG gAMA was absent'
 
 # opening result file, first get name
 resultfilename = filedialog.asksaveasfilename(
@@ -172,7 +185,7 @@ resultfile.writelines([
     '    max_trace_level 3   // Small to speed up preview. May need to be increased for metals\n',
     '    adc_bailout 0.01    // High to speed up preview. May need to be decreased to 1/256\n',
     '    ambient_light <0.5, 0.5, 0.5>\n',
-    '    assumed_gamma 1.0\n}\n\n',
+    f'    assumed_gamma 1.0   // {gamma_note}!\n}}\n\n',
     '#include "finish.inc"\n',
     '#include "metals.inc"\n',
     '#include "golds.inc"\n',
