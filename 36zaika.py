@@ -18,7 +18,7 @@ History:
 0.0.0.1     Complete rewriting to more flexible project - 18 June 2024.
 1.7.22.12   Bugs seem to be eliminated. Prisms changed. Ready for release.
 1.9.1.0     Reworked normals, added triangle tile normal.
-1.9.1.1     Added global transform, gamma note etc.
+1.9.13.5    Added global transform, changed globals to use UTF-8, added gamma note etc.
 
 -------------------
 Main site:
@@ -34,7 +34,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.9.1.1"
+__version__ = "1.9.13.5"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -200,8 +200,10 @@ resultfile.writelines([
     'global_settings{\n',
     '    max_trace_level 3   // Small to speed up preview. May need to be increased for metals\n',
     '    adc_bailout 0.01    // High to speed up preview. May need to be decreased to 1/256\n',
+    f'    assumed_gamma 1.0   // {gamma_note}, that may or may not be of value.\n',
     '    ambient_light <0.5, 0.5, 0.5>\n',
-    f'    assumed_gamma 1.0   // {gamma_note}, that may or may not be of value.\n}}\n\n',
+    '    charset utf8\n',
+    '}\n\n',
     '#include "finish.inc"\n',
     '#include "metals.inc"\n',
     '#include "golds.inc"\n',
