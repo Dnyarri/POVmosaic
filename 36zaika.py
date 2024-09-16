@@ -355,7 +355,7 @@ for y in range(0, Ycount, 1):
                 '      #if (yes_color)\n',
                 f'        pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
                 '        finish{thingie_finish}\n',
-                '        normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))}\n',
+                '        normal{thingie_normal translate(normal_move_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5)) rotate(normal_rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))}\n',
                 '      #end\n',
                 f'      {flip_string}\n',
                 f'      scale(<1, 1, 1> + (scale_map * <map({c}), map({c}), map({c})>))\n',
@@ -363,7 +363,7 @@ for y in range(0, Ycount, 1):
                 f'      rotate(rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)-0.5>))\n',
                 f'      {even_odd_string}\n',
                 f'      translate(move_map * <map({c}), map({c}), map({c})>)\n',
-                '      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
+                '      translate(move_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))\n',
                 f'      translate<{x}, {y*triangle_height}, 0>\n',
                 '    }\n'
             # Finished thingie
