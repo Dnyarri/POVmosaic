@@ -23,7 +23,8 @@ History:
 1.7.17.1    Global/individual texture switch added for pseudo-heightmap effects.
 1.7.22.12   Renamed to 44zaika to reflect regular plane partition class 4/4. Ready for release.
 1.9.1.0     Reworked normals.
-1.9.13.5    Added global transform, changed globals to use UTF-8, added gamma note etc.
+1.9.16.2    Added global transform, changed randoms in normal and move from + to +/-,
+            changed globals in export to UTF-8, added gamma note etc.
 
 -------------------
 Main site:
@@ -39,7 +40,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.9.16.1"
+__version__ = "1.9.16.2"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -51,7 +52,7 @@ from random import random
 
 import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 
-# --------------------------------------------------------------
+# -------------------------------------------------------------- {#888888, 11}
 # Creating dialog
 
 sortir = Tk()
@@ -112,7 +113,7 @@ resultfile = open(resultfilename, 'w')
 
 # Both files opened
 
-def src(x, y, z):
+def src(x, y, z):   # {#884400, 16}
     '''
     Analog of src from FM, force repeate edge instead of out of range.
     Returns int channel value z for pixel x, y
@@ -130,7 +131,7 @@ def src(x, y, z):
     return channelvalue
 # end of src function
 
-def srcY(x, y):
+def srcY(x, y):   # {#884400, 17}
     '''
     Returns brightness of pixel x, y
     
@@ -300,7 +301,7 @@ progressbar.config(maximum=Y)
 
 for y in range(0, Y, 1):
 
-    sortir.deiconify()
+    sortir.deiconify()  # {#888888, 3}
     progressbar.config(value=y)
     sortir.update()
     sortir.update_idletasks()
@@ -372,10 +373,7 @@ resultfile.writelines([
 # Close output
 resultfile.close()
 
-# --------------------------------------------------------------
-# Destroying dialog
-
+# --------------------------------------------------------------  {#888888, 3}
 sortir.destroy()
 sortir.mainloop()
 # Dialog destroyed and closed
-# --------------------------------------------------------------
