@@ -39,7 +39,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.9.13.5"
+__version__ = "1.9.16.1"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -337,12 +337,12 @@ for y in range(0, Y, 1):
                 '      #if (yes_color)\n',
                 f'        pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
                 '        finish{thingie_finish}\n',
-                '        normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)}\n',
+                '        normal{thingie_normal translate(normal_move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>) rotate(normal_rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))}\n',
                 '      #end\n',
                 f'      scale(scale_all + (scale_map * <map({c}), map({c}), map({c})>))\n',
                 f'      {even_odd_string_rot}\n',
                 f'      rotate((rotate_map * <map({c}), map({c}), map({c})>) + rotate_all)\n',
-                f'      rotate(rotate_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
+                f'      rotate(rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)-0.5>))\n',
                 f'      {even_odd_string_trn}\n',
                 f'      translate(move_map * <map({c}), map({c}), map({c})>)\n',
                 '      translate(move_rnd * <rand(rnd_1), rand(rnd_1), rand(rnd_1)>)\n',
