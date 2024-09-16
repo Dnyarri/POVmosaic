@@ -9,7 +9,7 @@ Read project help.html for options description.
 Authors: preset file made by Ilya Razmanov.
     Icosahedron shape mostly based on example by Paul Bourke,
     edited a bit to improve a bit. A bit improved successfully.
-*/
+ {#008800, 0} */
 
 #declare yes_color = 1;
 

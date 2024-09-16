@@ -6,8 +6,10 @@ Description: Preset file for scene generated with 44zaika.py
     
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
-Authors: preset file made by Ilya Razmanov.
-*/
+Authors: preset file made by Ilya Razmanov,
+    based on "Isosurface Tutorial" by Mike Williams 
+    https://povlab.online/isotutorial/
+ {#008800, 0} */
 
 #declare yes_color = 1;
 

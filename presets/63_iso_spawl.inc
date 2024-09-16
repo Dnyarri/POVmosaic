@@ -6,8 +6,8 @@ Description: Preset file for scene generated with 63zaika.py or 44zaika.py
 
 https://github.com/Dnyarri/POVmosaic
 Read project help.html for options description.
-Authors: preset file made by Ilya Razmanov.
-*/
+Author: Ilya Razmanov.
+ {#008800, 0} */
 
 #declare yes_color = 1;
 
