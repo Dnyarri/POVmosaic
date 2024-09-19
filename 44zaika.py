@@ -40,7 +40,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.9.16.2"
+__version__ = "1.9.18.0"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -72,7 +72,7 @@ sortir.withdraw()
 sourcefilename = filedialog.askopenfilename(
     title='Open source PNG file', filetypes=[('PNG', '.png')], defaultextension=('PNG', '.png')
 )
-if (sourcefilename == '') or (sourcefilename == None):
+if (sourcefilename == '') or (sourcefilename is None):
     sortir.destroy()
     quit()
 
@@ -90,8 +90,7 @@ if (info['bitdepth'] == 16):
     maxcolors = 65535       # Maximal value for 16-bit channel
 
 if 'gamma' in info:
-    gAMA = info['gamma']
-    gamma_note = f'Source PNG gAMA value is {gAMA}'
+    gamma_note = f'Source PNG gAMA value is {info['gamma']}'
 else:
     gamma_note = 'Source PNG gAMA was absent'
 
@@ -104,7 +103,7 @@ resultfilename = filedialog.asksaveasfilename(
     ],
     defaultextension=('POV-Ray scene file', '.pov'),
 )
-if (resultfilename == '') or (resultfilename == None):
+if (resultfilename == '') or (resultfilename is None):
     sortir.destroy()
     quit()
 
@@ -115,40 +114,40 @@ resultfile = open(resultfilename, 'w')
 
 def src(x, y, z):   # {#884400, 16}
     '''
-    Analog of src from FM, force repeate edge instead of out of range.
+    Analog of src from FM, force repeat edge instead of out of range.
     Returns int channel value z for pixel x, y
 
     '''
 
-    cx = int(x); cy = int(y)    # nearest neighbour for float input
+    cx = int(x); cy = int(y)    # nearest neighbor for float input
     cx = max(0, cx); cx = min((X-1), cx)
     cy = max(0, cy); cy = min((Y-1), cy)
 
     # Here is the main magic of turning two x, z into one array position
     position = (cx*Z) + z
-    channelvalue = int(((imagedata[cy])[position]))
+    channelvalue = int((imagedata[cy])[position])
 
     return channelvalue
 # end of src function
 
-def srcY(x, y):   # {#884400, 17}
+def src_lum(x, y):   # {#884400, 17}
     '''
     Returns brightness of pixel x, y
-    
+
     '''
 
-    cx = int(x); cy = int(y)    # nearest neighbour for float input
+    cx = int(x); cy = int(y)    # nearest neighbor for float input
     cx = max(0, cx); cx = min((X-1), cx)
     cy = max(0, cy); cy = min((Y-1), cy)
 
     if (info['planes'] < 3):    # supposedly L and LA
-        Yntensity = src(x, y, 0)
+        yntensity = src(x, y, 0)
     else:                       # supposedly RGB and RGBA
-        Yntensity = int(0.2989*src(x, y, 0) + 0.587 *
+        yntensity = int(0.2989*src(x, y, 0) + 0.587 *
                         src(x, y, 1) + 0.114*src(x, y, 2))
 
-    return Yntensity
-# end of srcY function
+    return yntensity
+# end of src_lum function
 
 # WRITING POV FILE
 
@@ -235,7 +234,10 @@ resultfile.writelines([
     '#declare evenodd_offset = <0.0, 0, 0>;      // Default 0 even lines shift for no brick wall\n',
     '#declare scale_all = <1, 1, 1>;             // Base scale of all thingies. 1=original\n',
     '#declare rotate_all = <0, 0, 0>;            // Base rotation of all thingies. Values in degrees\n',
-    '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\nBy default exported map is five points linear spline, control points are set in the table below,\nfirst column is input, first digits in second column is output for this input.\nNote that by default input=output, i.e. no changes applied to source pixel brightness. */\n\n',
+    '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\n',
+    'By default exported map is five points linear spline, control points are set in the table below,\n',
+    'first column is input, first digits in second column is output for this input.\n',
+    'Note that by default input=output, i.e. no changes applied to source pixel brightness. */\n\n',
     '#declare Curve = function {  // Spline curve construction begins\n',
     '  spline { linear_spline\n',
     '    0.0,   <0.0,   0>\n',
@@ -245,7 +247,7 @@ resultfile.writelines([
     '    1.0,   <1.0,   0>}\n  }  // Construction complete\n',
     '#declare map = function(c) {Curve(c).u}  // Spline curve assigned as map\n',
     '\n/*  -------------------------------------------\n    |  Selecting variants, configuring scene  |\n    -------------------------------------------  */\n\n',
-    '#declare thingie = thingie_8  // Default set to isosurface thingie_8 to give you favourable first impression\n',
+    '#declare thingie = thingie_8  // Default set to isosurface thingie_8 to give you favorable first impression\n',
     '#declare thingie_finish = thingie_finish_1\n',
     '#declare thingie_normal = thingie_normal_1\n',
     '\n//       Per-thingie modifiers\n',
@@ -323,7 +325,7 @@ for y in range(0, Y, 1):
         b = float(src(x, y, 2))/maxcolors
 
         # Something to map something to. By default - brightness, normalized to 0..1
-        c = float(srcY(x, y))/maxcolors
+        c = float(src_lum(x, y))/maxcolors
 
         # alpha to be used for alpha dithering
         a = float(src(x, y, 3))/maxcolors
@@ -343,7 +345,7 @@ for y in range(0, Y, 1):
                 f'      scale(scale_all + (scale_map * <map({c}), map({c}), map({c})>))\n',
                 f'      {even_odd_string_rot}\n',
                 f'      rotate((rotate_map * <map({c}), map({c}), map({c})>) + rotate_all)\n',
-                f'      rotate(rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)-0.5>))\n',
+                '      rotate(rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)-0.5>))\n',
                 f'      {even_odd_string_trn}\n',
                 f'      translate(move_map * <map({c}), map({c}), map({c})>)\n',
                 '      translate(move_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))\n',

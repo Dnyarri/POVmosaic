@@ -43,7 +43,7 @@ __author__ = "Ilya Razmanov"
 __copyright__ = "(c) 2007-2024 Ilya Razmanov"
 __credits__ = "Ilya Razmanov"
 __license__ = "unlicense"
-__version__ = "1.9.16.2"
+__version__ = "1.9.18.0"
 __maintainer__ = "Ilya Razmanov"
 __email__ = "ilyarazmanov@gmail.com"
 __status__ = "Production"
@@ -93,8 +93,7 @@ if (info['bitdepth'] == 16):
     maxcolors = 65535       # Maximal value for 16-bit channel
 
 if 'gamma' in info:
-    gAMA = info['gamma']
-    gamma_note = f'Source PNG gAMA value is {gAMA}'
+    gamma_note = f'Source PNG gAMA value is {info['gamma']}'
 else:
     gamma_note = 'Source PNG gAMA was absent'
 
@@ -107,7 +106,7 @@ resultfilename = filedialog.asksaveasfilename(
     ],
     defaultextension=('POV-Ray scene file', '.pov'),
 )
-if (resultfilename == '') or (sourcefilename == None):
+if (resultfilename == '') or (sourcefilename is None):
     sortir.destroy()
     quit()
 
@@ -118,44 +117,44 @@ resultfile = open(resultfilename, 'w')
 
 def src(x, y, z):   # {#884400, 16}
     '''
-    Analog of src from FM, force repeate edge instead of out of range.
+    Analog of src from FM, force repeat edge instead of out of range.
     Returns int channel value z for pixel x, y
 
     '''
 
-    cx = int(x); cy = int(y)    # nearest neighbour for float input
+    cx = int(x); cy = int(y)    # nearest neighbor for float input
     cx = max(0, cx); cx = min((X-1), cx)
     cy = max(0, cy); cy = min((Y-1), cy)
 
     # Here is the main magic of turning two x, z into one array position
     position = (cx*Z) + z
-    channelvalue = int(((imagedata[cy])[position]))
+    channelvalue = int((imagedata[cy])[position])
 
     return channelvalue
 # end of src function
 
-def srcY(x, y):   # {#884400, 17}
+def src_lum(x, y):   # {#884400, 17}
     '''
     Returns brightness of pixel x, y
-    
+
     '''
 
-    cx = int(x); cy = int(y)    # nearest neighbour for float input
+    cx = int(x); cy = int(y)    # nearest neighbor for float input
     cx = max(0, cx); cx = min((X-1), cx)
     cy = max(0, cy); cy = min((Y-1), cy)
 
     if (info['planes'] < 3):    # supposedly L and LA
-        Yntensity = src(x, y, 0)
+        yntensity = src(x, y, 0)
     else:                       # supposedly RGB and RGBA
-        Yntensity = int(0.2989*src(x, y, 0) + 0.587 *
+        yntensity = int(0.2989*src(x, y, 0) + 0.587 *
                         src(x, y, 1) + 0.114*src(x, y, 2))
 
-    return Yntensity
-# end of srcY function
+    return yntensity
+# end of src_lum function
 
-def srcYL(x, y):   # {#884400, 23}
+def src_lum_blin(x, y):   # {#884400, 23}
     """
-    Analog of srcY above, but returns bilinearly interpolated brightness of pixel x, y
+    Analog of src_lum above, but returns bilinearly interpolated brightness of pixel x, y
 
     """
 
@@ -163,20 +162,20 @@ def srcYL(x, y):   # {#884400, 23}
     fx = max(0,fx); fx = min((X-1),fx)
     fy = max(0,fy); fy = min((Y-1),fy)
 
-    # Neighbour pixels coordinates (square corners x0,y0; x1,y0; x0,y1; x1,y1)
+    # Neighbor pixels coordinates (square corners x0,y0; x1,y0; x0,y1; x1,y1)
     x0 = int(x); x1 = x0 + 1
     y0 = int(y); y1 = y0 + 1
 
     # Reading corners src (see scr above) and interpolating    # {#880000, 6}
     channelvalue = (
-        srcY(x0, y0) * (x1 - fx) * (y1 - fy) +
-        srcY(x0, y1) * (x1 - fx) * (fy - y0) +
-        srcY(x1, y0) * (fx - x0) * (y1 - fy) +
-        srcY(x1, y1) * (fx - x0) * (fy - y0)
+        src_lum(x0, y0) * (x1 - fx) * (y1 - fy) +
+        src_lum(x0, y1) * (x1 - fx) * (fy - y0) +
+        src_lum(x1, y0) * (fx - x0) * (y1 - fy) +
+        src_lum(x1, y1) * (fx - x0) * (fy - y0)
     )
 
     return int(channelvalue)
-# end of srcYL function
+# end of src_lum_blin function
 
 # WRITING POV FILE
 
@@ -228,7 +227,7 @@ resultfile.writelines([
 # --------------------------------
 # Thingie element, then scene
 resultfile.writelines([
-    '\n// Necessary math stuff set as de facto constants to avoid imporing math\n',
+    '\n// Necessary math stuff set as de facto constants to avoid importing math\n',
     '#declare sqrtof3 = 1.7320508075688772935274463415059;   // sqrt(3)\n',
     '#declare revsqrtof3 = 1.0/sqrtof3;                      // 1.0/sqrt(3)\n\n',
     '\n/*  -------------------------\n    |  Predefined variants  |\n    -------------------------  */\n',
@@ -262,7 +261,10 @@ resultfile.writelines([
     '#declare f_val = 0.0;           // Filter value for all thingies\n',
     '#declare t_val = 0.0;           // Transmit value for all thingies\n',
     '#declare evenodd_transform = transform {rotate <0.0, 0.0, 0.0>}  // Odd lines rotate, rarely useful\n',
-    '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\nBy default exported map is five points linear spline, control points are set in the table below,\nfirst column is input, first digits in second column is output for this input.\nNote that by default input=output, i.e. no changes applied to source pixel brightness. */\n\n',
+    '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\n',
+    'By default exported map is five points linear spline, control points are set in the table below,\n',
+    'first column is input, first digits in second column is output for this input.\n',
+    'Note that by default input=output, i.e. no changes applied to source pixel brightness. */\n\n',
     '#declare Curve = function {  // Spline curve construction begins\n',
     '  spline { linear_spline\n',
     '    0.0,   <0.0,   0>\n',
@@ -277,7 +279,7 @@ resultfile.writelines([
     '#declare thingie_normal = thingie_normal_1\n',
     '\n//       Per-thingie modifiers\n',
     f'#declare move_map = <0, 0, 0>;    // To move thingies depending on map. Additive, no constrains on values. Source image size is {max(X, Y)}\n',
-    f'#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Additive, no constrains on values except object overlap on x,y\n',
+    '#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Additive, no constrains on values except object overlap on x,y\n',
     '#declare rotate_map = <0, 0, 0>;  // To rotate thingies depending on map. Values in degrees\n',
     '#declare move_rnd = <0, 0, 0>;    // To move thingies randomly. No constrains on values\n',
     '#declare rotate_rnd = <0, 0, 0>;  // To rotate thingies randomly. Values in degrees\n',
@@ -319,8 +321,7 @@ resultfile.writelines([
 # Internal strings for packing change
 
 '''
-Below is height of triangle with 2*0.5 sides, that is vertical distance
-between two 0.5 radius spheres as defined by thingie.
+Below is height of triangle with 2*0.5 sides, that is vertical distance between two 0.5 radius spheres as defined by thingie.
 sqrt(3) = 1.732... hardcoded to remove math export
 '''
 triangle_height = 0.5 * 1.7320508075688772935274463415059
@@ -357,8 +358,8 @@ for y in range(0, Ycount, 1):
         b = float(src(x, y*triangle_height, 2))/maxcolors
 
         # Something to map something to. By default - brightness, normalized to 0..1
-        # c = float(srcY(x, y*triangle_height))/maxcolors # Nearest neghbour
-        c = float(srcYL(x+even_odd_trans, y*triangle_height))/maxcolors # Bilinear
+        # c = float(src_lum(x, y*triangle_height))/maxcolors # Nearest neighbor
+        c = float(src_lum_blin(x+even_odd_trans, y*triangle_height))/maxcolors # Bilinear
 
         # alpha to be used for alpha dithering
         a = float(src(x, y*triangle_height, 3))/maxcolors
@@ -377,7 +378,7 @@ for y in range(0, Ycount, 1):
                 '      #end\n',
                 f'      scale(<1, 1, 1> + (scale_map * <map({c}), map({c}), map({c})>))\n',
                 f'      rotate(rotate_map * <map({c}), map({c}), map({c})>)\n',
-                f'      rotate(rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)-0.5>))\n',
+                '      rotate(rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)-0.5>))\n',
                 f'      {even_odd_string}\n',
                 f'      translate(move_map * <map({c}), map({c}), map({c})>)\n',
                 '      translate(move_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))\n',
