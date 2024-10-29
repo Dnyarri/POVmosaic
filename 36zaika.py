@@ -20,6 +20,7 @@ History:
 1.9.1.0     Reworked normals, added triangle tile normal.
 1.9.16.2    Added global transform, changed randoms in normal and move from + to +/-,
             changed globals in export to UTF-8, added gamma note etc.
+1.10.29.1   Per thingie texture overlay.
 
 -------------------
 Main site:
@@ -35,7 +36,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2024 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.10.1.0'
+__version__ = '1.10.29.1'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -59,7 +60,7 @@ sortir.withdraw()
 # Main dialog created and hidden
 
 # Open source image, first get name {#6666ff, 4}
-sourcefilename = filedialog.askopenfilename(title='Open source PNG file', filetypes=[('PNG', '.png')], defaultextension=('PNG', '.png'))
+sourcefilename = filedialog.askopenfilename(title='36zaika: Open source PNG file', filetypes=[('PNG', '.png')], defaultextension=('PNG', '.png'))
 if sourcefilename == '':
     sortir.destroy()
     quit()
@@ -84,7 +85,7 @@ else:
 
 # opening result file, first get name  {#6666ff, 14}
 resultfilename = filedialog.asksaveasfilename(
-    title='Save POVRay scene file',
+    title='36zaika: Save POVRay scene file',
     filetypes=[
         ('POV-Ray scene file', '*.pov'),
         ('All Files', '*.*'),
@@ -245,6 +246,8 @@ resultfile.writelines(
         '#declare thingie_normal_4 = normal{spiral1 8 0.5 scallop_wave}\n',
         '#declare thingie_normal_5 = normal{tiling 3 scale <0.5, 5, 0.5> rotate <90, 0, 0>}\n',
         '\n//       Global modifiers for all thingies in the scene\n',
+        '#declare thingie_texture_2 = texture {  // Define transparent texture overlay here\n',
+        '  pigment {gradient z colour_map {[0.0, rgbt <0,0,0,1>] [1.0, rgbt <0,0,0,1>]} scale 0.1 rotate <30, 30, 0>}};\n', # Transparent texture overlay
         '#declare yes_color = 1;         // Whether source per-thingie color is taken or global patten applied\n',
         '// Color-relater settings below work only for "yes_color = 1;"\n',
         '#declare cm = function(k) {k}   // Color transfer function for all channels, all thingies\n',
@@ -365,9 +368,12 @@ for y in range(0, Ycount, 1):
                 [
                     '    object{thingie\n',
                     '      #if (yes_color)\n',
-                    f'        pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
-                    '        finish{thingie_finish}\n',
-                    '        normal{thingie_normal translate(normal_move_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5)) rotate(normal_rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))}\n',
+                    '        texture{\n',
+                    f'          pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
+                    '          finish{thingie_finish}\n',
+                    '          normal{thingie_normal translate(normal_move_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5)) rotate(normal_rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))}',
+                    '        }\n',  # closing base texture
+                    '        texture{thingie_texture_2}\n'  # overlay texture
                     '      #end\n',
                     f'      {flip_string}\n',
                     f'      scale(<1, 1, 1> + (scale_map * <map({c}), map({c}), map({c})>))\n',
