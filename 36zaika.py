@@ -41,9 +41,9 @@ __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
 
-from random import random
+import random
 from time import ctime, time
-from tkinter import BOTH, Tk, filedialog
+from tkinter import BOTH, PhotoImage, Tk, filedialog
 from tkinter.ttk import Progressbar
 
 import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
@@ -53,6 +53,7 @@ sortir = Tk()
 sortir.title('POVRay Mosaic: 36Zaika')
 sortir.geometry(f'500x16+{(sortir.winfo_screenwidth()-500)//2}+{(sortir.winfo_screenheight()-16)//2}')
 sortir.resizable(width=True, height=True)
+sortir.iconphoto(True, PhotoImage(data='P6\n4 4\n255\n'.encode() + random.randbytes(48)))
 progressbar = Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100, length=500)
 progressbar.pack(fill=BOTH, expand=True)
 sortir.overrideredirect(True)
@@ -345,7 +346,7 @@ for y in range(0, Ycount, 1):
         # alpha to be used for alpha dithering
         a = float(src(x, y * triangle_height, 3)) / maxcolors
         # a = 0 is transparent, a = 1.0 is opaque
-        tobe_or_nottobe = a > random()
+        tobe_or_nottobe = a > random.random()
 
         # whether to draw thingie in place of partially transparent pixel or not
         if tobe_or_nottobe:
