@@ -1,6 +1,6 @@
 # POVRay mosaic - Bitmap to 3D solid mosaic converter
 
-Python utilities for conversion of bitmap image (in PNG format) to some sort of solid objects mosaic in [POVRay](https://www.povray.org/) format. Each source image pixel is converted to a 3D object, and objects are packed side by side, forming a grid following [Euclidean tilings](https://en.wikipedia.org/wiki/List_of_regular_polytopes#Euclidean_tilings).
+Python utilities for conversion of bitmap image (in PNG format) to some sort of solid objects mosaic in [POV-Ray](https://www.povray.org/) format. Each source image pixel is converted to a 3D object, and objects are packed side by side, forming a grid following [Euclidean tilings](https://en.wikipedia.org/wiki/List_of_regular_polytopes#Euclidean_tilings).
 
 [![Example of 63zaika export rendering](https://dnyarri.github.io/3z/301.png)](https://dnyarri.github.io/pov3zaika.html)
 
