@@ -56,12 +56,12 @@ from tkinter.ttk import Progressbar
 
 import png  # PNG reading: PyPNG from: https://gitlab.com/drj11/pypng
 
-# Creating dialog {#888888, 9}
+# Creating dialog {#888888, 10}
 sortir = Tk()
 sortir.title('POVRay Mosaic: 63Zaika')
 sortir.geometry(f'500x16+{(sortir.winfo_screenwidth()-500)//2}+{(sortir.winfo_screenheight()-16)//2}')
 sortir.resizable(width=True, height=True)
-sortir.iconphoto(True, PhotoImage(data='P6\n4 4\n255\n'.encode() + random.randbytes(48)))
+sortir.iconphoto(True, PhotoImage(data='P6\n4 4\n255\n'.encode(encoding='ascii') + random.randbytes(48)))
 progressbar = Progressbar(sortir, orient='horizontal', mode='determinate', value=0, maximum=100, length=500)
 progressbar.pack(fill=BOTH, expand=True)
 sortir.overrideredirect(True)
