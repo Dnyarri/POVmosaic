@@ -18,3 +18,17 @@ Authors: preset file made by Ilya Razmanov,
 #include "functions.inc"
 
 #declare thingie = isosurface{function{f_pillow(x,y,z,1)} max_gradient 8 contained_by {box {<-1.5,-1.5,-1.5>, <1.5, 1.5, 1.5>}} scale 0.4}
+
+#if (substr(input_file_name, strlen(input_file_name) - 3, 4) = ".inc")
+  camera{
+    location <1, 1, 1>
+    right x*image_width/image_height
+    up y
+    sky <0, -1, 0>
+    look_at<0.0, 0.0, 0.0>
+  }
+  light_source{<-2, -3, 4>
+    color rgb<1.1, 1.0, 1.0>
+  }
+  object{thingie pigment {color rgb <1, 1, 1>}}
+#end

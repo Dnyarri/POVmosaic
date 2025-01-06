@@ -14,3 +14,17 @@ Author: Ilya Razmanov
 #declare thingie = box{<-0.5, -0.5, -0.5>, <0.5, 0.5, 0.5>
     rotate <45, 45, 0> scale 0.86
   }
+
+#if (substr(input_file_name, strlen(input_file_name) - 3, 4) = ".inc")
+  camera{
+    location <0, 0, 2>
+    right x*image_width/image_height
+    up y
+    sky <0, -1, 0>
+    look_at<0.0, 0.0, 0.0>
+  }
+  light_source{<-2, -3, 4>
+    color rgb<1.1, 1.0, 1.0>
+  }
+  object{thingie pigment {color rgb <1, 1, 1>}}
+#end

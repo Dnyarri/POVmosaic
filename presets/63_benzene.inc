@@ -30,3 +30,17 @@ Author: Ilya Razmanov
     sphere {<-0.5, -0.5*revsqrtof3, 0>, bradius, bstrength}   // 6
   scale <0.6, 0.6, 1.0>
   }
+
+#if (substr(input_file_name, strlen(input_file_name) - 3, 4) = ".inc")
+  camera{
+    location <1, 1, 1>
+    right x*image_width/image_height
+    up y
+    sky <0, -1, 0>
+    look_at<0.0, 0.0, 0.0>
+  }
+  light_source{<-2, -3, 4>
+    color rgb<1.1, 1.0, 1.0>
+  }
+  object{thingie pigment {color rgb <1, 1, 1>}}
+#end
