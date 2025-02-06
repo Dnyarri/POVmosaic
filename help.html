@@ -14,6 +14,7 @@
             color: #000000;
             font-size: 16pt;
             text-align: center;
+            padding: 16pt;
             background-color: rgba(0, 0, 0, 0.3);
             border: thin solid rgba(0, 0, 0, 0.5);
         }
@@ -22,7 +23,8 @@
             color: #000000;
             font-size: 14pt;
             text-align: left;
-            padding: 0px 24pt;
+            padding: 6pt 24pt 3pt;
+            margin: 12pt 0pt 0pt;
             background-color: rgba(0, 0, 0, 0.2);
         }
         p {
@@ -30,6 +32,7 @@
             color: #000000;
             font-size: 12pt;
             text-align: left;
+            padding: 3pt 6pt 6pt;
         }
         .pre {
             font-family: 'Courier New', Courier, monospace;
@@ -52,9 +55,9 @@
     </style>
 </head>
 <body>
-    <h1>Options of POV&nbsp;Mosaic programs</h1>
+    <h1>Options of POV-Ray Mosaic programs</h1>
     <h2>Description</h2>
-    <p><a href='https://github.com/Dnyarri/POVmosaic'><span class='strong'>POVRay&nbsp;Mosaic</span>&nbsp;programs</a> is a set of Python programs for conversion of regular 2D images into a mosaic of solid 3D objects in <a href='https://www.povray.org'>POVRay</a> format. For example, every pixel of original image is converted into a 3D sphere, having the same base color as original pixel, and all set of spheres is inserted into a 3D scene file, containing, beside this sphere mosaic, camera and lights necessary to render the scene.</p>
+    <p><a href='https://github.com/Dnyarri/POVmosaic'><span class='strong'>POV&#8209;Ray&nbsp;Mosaic</span>&nbsp;programs</a> is a set of Python programs for conversion of regular 2D images into a mosaic of solid 3D objects in <a href='https://www.povray.org'>POV&#8209;Ray</a> format. For example, every pixel of original image is converted into a 3D sphere, having the same base color as original pixel, and all set of spheres is inserted into a 3D scene file, containing, beside this sphere mosaic, camera and lights necessary to render the scene.</p>
     <p>In general, any <span class='strong'>POV&nbsp;Mosaic</span> program exports some basic scene, as simple as possible, yet providing a vast reconfiguring option set within the scene .pov file. By editing obtained .pov file you can easily replace base objects and redefine their transforms across the whole scene by changing a couple of text stings.</p>
     <p>Options are summarized and detailed below.</p>
     <h2>Introduction</h2>
@@ -101,9 +104,10 @@
     <p><span class='pre strong'>// #include "preset.inc"</span> Obviously, you can override any setting above by including it into <span class='pre'>"preset.inc"</span> file (include is commented out by default). There are sample preset files in the project, containing descriptions of additional thingie geometry and scene settings. Using external presets simplifies tweaking complex settings when trying different scene variants: instead of editing/undoing/redoing numerous changes in a main scene file, you may simply have a set of presets and switch them with one line.You may even redefine transfer functions via presets, just don't forget to <span class='pre'>#undef</span> global one in preset before <span class='pre'>#declare</span>'ing it locally again (some preset sample contain the example).</p>
     <p>This is the end of description of <span class='strong'>POV&nbsp;Mosaic</span> programs settings you are supposed to know.</p>
     <h2>Addendum: Prerequisites</h2>
-    <p><span class='pre strong'><a href='https://gitlab.com/drj11/pypng'>PyPNG</a></span> compact PNG I/O module download.</p>
     <p><span class='pre strong'><a href='https://www.povray.org/download/'>POVRay for Windows</a></span> official download.</p>
     <p><span class='pre strong'><a href='http://megapov.inetart.net/povrayunofficial_mac/finalpov.html'>POVRay for Mac</a></span> unofficial download.</p>
-    <p style='text-align: center; font-size: 10pt;'>&copy; 2024 <a href="mailto:ilyarazmanov@gmail.com">Ilya Razmanov</a></p>
+    <p><span class='pre strong'><a href='https://gitlab.com/drj11/pypng'>PyPNG</a></span> compact PNG I/O module. Copy included into current POR-Ray Mosaic distribution.</p>
+    <p><span class='pre strong'><a href='https://pypi.org/project/PyPNM/'>PyPNM</a></span> PPM and PGM I/O module. Copy included into current POR-Ray Mosaic distribution.</p>
+    <p style='text-align: center; font-size: 10pt;'>&copy; 2024-2025 <a href="mailto:ilyarazmanov@gmail.com">Ilya Razmanov</a></p>
 </body>
 </html>
