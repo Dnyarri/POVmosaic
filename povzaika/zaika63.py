@@ -4,14 +4,14 @@
 POV-Ray Mosaic, Regular plane partition 6/3.
 ---
 
-Created by: Ilya Razmanov (mailto:ilyarazmanov@gmail.com) aka Ilyich the Toad (mailto:amphisoft@gmail.com)
+Created by: `Ilya Razmanov <mailto:ilyarazmanov@gmail.com>`_ aka `Ilyich the Toad <mailto:amphisoft@gmail.com>`_.
 
 History:
 ---
 
-2007    Initial AmphiSoft POV Sphere Mosaic, using FilterMeister https://filtermeister.com/
+2007    Initial AmphiSoft POV Sphere Mosaic, using `FilterMeister <https://filtermeister.com/>`_
 
-2023    Rewritten to Python. I/O with PyPNG from: https://gitlab.com/drj11/pypng
+2023    Rewritten to Python. PNG import with `PyPNG <https://gitlab.com/drj11/pypng>`_
 
 0.0.04.4    Complete rewriting 4 Apr 2024.
 
@@ -22,11 +22,10 @@ History:
 1.14.1.0    Rewritten as module.
 
 ---
-Main site:
-https://dnyarri.github.io
+Main site: `The Toad's Slimy Mudhole <https://dnyarri.github.io>`_
 
-Project mirrored at:
-https://github.com/Dnyarri/POVmosaic; https://gitflic.ru/project/dnyarri/povmosaic
+Git repositories:
+`Main at Github <https://github.com/Dnyarri/POVmosaic>`_; `Gitflic mirror <https://gitflic.ru/project/dnyarri/povmosaic>`_
 
 """
 
@@ -34,7 +33,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.14.6.18'
+__version__ = '1.15.01.10'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -63,7 +62,7 @@ def zaika63(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
         ║ src functions ║
         ╚═══════════════╝ """
 
-    def src(x: int | float, y: int | float, z: int) -> int | float:
+    def src(x: int | float, y: int | float, z: int) -> int:
         """
         Analog of src from FilterMeister, force repeat edge instead of out of range.
         Returns int channel value z for pixel x, y
@@ -81,7 +80,7 @@ def zaika63(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
 
         return channelvalue
 
-    def src_lum(x, y):
+    def src_lum(x: int | float, y: int | float) -> int:
         """
         Returns brightness of pixel x, y
 
@@ -90,11 +89,11 @@ def zaika63(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
         if Z < 3:  # supposedly L and LA
             yntensity = src(x, y, 0)
         else:  # supposedly RGB and RGBA
-            yntensity = int(0.2989 * src(x, y, 0) + 0.587 * src(x, y, 1) + 0.114 * src(x, y, 2))
+            yntensity = int(0.298936021293775 * src(x, y, 0) + 0.587043074451121 * src(x, y, 1) + 0.114020904255103 * src(x, y, 2))
 
         return yntensity
 
-    def src_lum_blin(x, y):
+    def src_lum_blin(x: float, y: float) -> int:
         """
         Analog of src_lum above, but returns bilinearly interpolated brightness of pixel x, y
 
