@@ -23,7 +23,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.15.01.10'
+__version__ = '1.16.4.8'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -60,20 +60,21 @@ def UIBusy():
     sortir.update()
 
 
-def GetSource():
+def GetSource(event=None):
     """Opening source image and redefining other controls state"""
 
-    global zoom_factor, sourcefilename, preview, preview_data  # some have to be globals for preview to work
-    global maxcolors, image3D  # will be reused by export functions
-    zoom_factor = 1
+    global zoom_factor, zoom_do, zoom_show, sourcefilename, preview, preview_data
+    global X, Y, Z, maxcolors, image3D
+    zoom_factor = 0
     sourcefilename = filedialog.askopenfilename(title='Open image file', filetypes=[('Supported formats', '.png .ppm .pgm .pbm'), ('PNG', '.png'), ('PNM', '.ppm .pgm .pbm')])
     if sourcefilename == '':
         return
 
-    """ ┌───────────────────────────────────────┐
-        │ Loading file, converting data to list │
-        │ NOTE: maxcolors, image3D are GLOBALS! │
-        └───────────────────────────────────────┘ """
+    """ ┌────────────────────────────────────────┐
+        │ Loading file, converting data to list. │
+        │  NOTE: maxcolors, image3D are GLOBALS! │
+        │  This is required for preview to work. │
+        └────────────────────────────────────────┘ """
 
     if Path(sourcefilename).suffix == '.png':
         # Reading image as list
@@ -89,23 +90,49 @@ def GetSource():
     """ ┌─────────────────────────────────────────────────────────────────────────┐
         │ Converting list to bytes of PPM-like structure "preview_data" in memory │
         └─────────────────────────────────────────────────────────────────────────┘ """
-    preview_data = pnmlpnm.list2bin(image3D, maxcolors, True)
+    preview_data = pnmlpnm.list2bin(image3D, maxcolors, show_chessboard=True)
 
     """ ┌────────────────────────────────────────────────┐
         │ Now showing "preview_data" bytes using Tkinter │
         └────────────────────────────────────────────────┘ """
     preview = PhotoImage(data=preview_data)
-    preview = preview.zoom(zoom_factor, zoom_factor)  # "zoom" zooms in, "subsample" zooms out
-    zanyato.config(text='Source', image=preview, compound='top')
 
-    """ ┌──────────────────────────┐
-        │ Updating controls status │
-        └──────────────────────────┘ """
-    label_zoom.config(state='normal')
+    zoom_show = {  # What to show below preview
+        -4: 'Zoom 1:5',
+        -3: 'Zoom 1:4',
+        -2: 'Zoom 1:3',
+        -1: 'Zoom 1:2',
+        0: 'Zoom 1:1',
+        1: 'Zoom 2:1',
+        2: 'Zoom 3:1',
+        3: 'Zoom 4:1',
+        4: 'Zoom 5:1',
+    }
+    zoom_do = {  # What to do to preview
+        -4: preview.subsample(5, 5),
+        -3: preview.subsample(4, 4),
+        -2: preview.subsample(3, 3),
+        -1: preview.subsample(2, 2),
+        0: preview,  # 1:1
+        1: preview.zoom(2, 2),
+        2: preview.zoom(3, 3),
+        3: preview.zoom(4, 4),
+        4: preview.zoom(5, 5),
+    }
+
+    preview = zoom_do[zoom_factor]  # "zoom" zooms in, "subsample" zooms out
+    zanyato.config(text='Source', font=('helvetica', 10), image=preview, compound='top', state='normal')
+    # binding zoom on preview click
+    zanyato.bind('<Button-1>', zoomIn)  # left
+    zanyato.bind('<Alt-Button-1>', zoomOut)  # left
+    zanyato.bind('<Button-2>', zoomOut)  # middle
+    zanyato.bind('<Button-3>', zoomOut)  # right
+    # enabling zoom buttons
     butt_plus.config(state='normal', cursor='hand2')
-    # updating zoom factor display
-    label_zoom.config(text=f'Zoom {zoom_factor}:1')
-    # updating "Export..." status
+    butt_minus.config(state='normal', cursor='hand2')
+    # updating zoom label display
+    label_zoom.config(text=zoom_show[zoom_factor])
+    # enabling "Save as..."
     butt02.config(state='normal', cursor='hand2')
     butt03.config(state='normal', cursor='hand2')
     butt04.config(state='normal', cursor='hand2')
@@ -189,35 +216,33 @@ def SaveAs36():
     UINormal()
 
 
-def zoomIn():
-    """Zoom +"""
+def zoomIn(event=None):
     global zoom_factor, preview
-    zoom_factor = min(zoom_factor + 1, 3)  # max zoom 3
+    zoom_factor = min(zoom_factor + 1, 4)  # max zoom 5
     preview = PhotoImage(data=preview_data)
-    preview = preview.zoom(zoom_factor, zoom_factor)
-    zanyato.config(text='Source', image=preview, compound='top')
+    preview = zoom_do[zoom_factor]
+    zanyato.config(image=preview, compound='top')
     # updating zoom factor display
-    label_zoom.config(text=f'Zoom {zoom_factor}:1')
+    label_zoom.config(text=zoom_show[zoom_factor])
     # reenabling +/- buttons
     butt_minus.config(state='normal', cursor='hand2')
-    if zoom_factor == 3:  # max zoom 3
+    if zoom_factor == 4:  # max zoom 5
         butt_plus.config(state='disabled', cursor='arrow')
     else:
         butt_plus.config(state='normal', cursor='hand2')
 
 
-def zoomOut():
-    """Zoom -"""
+def zoomOut(event=None):
     global zoom_factor, preview
-    zoom_factor = max(zoom_factor - 1, 1)  # min zoom 1
+    zoom_factor = max(zoom_factor - 1, -4)  # min zoom 1/5
     preview = PhotoImage(data=preview_data)
-    preview = preview.zoom(zoom_factor, zoom_factor)
-    zanyato.config(text='Source', image=preview, compound='top')
+    preview = zoom_do[zoom_factor]
+    zanyato.config(image=preview, compound='top')
     # updating zoom factor display
-    label_zoom.config(text=f'Zoom {zoom_factor}:1')
+    label_zoom.config(text=zoom_show[zoom_factor])
     # reenabling +/- buttons
     butt_plus.config(state='normal', cursor='hand2')
-    if zoom_factor == 1:  # min zoom 1
+    if zoom_factor == -4:  # min zoom 1/5
         butt_minus.config(state='disabled', cursor='arrow')
     else:
         butt_minus.config(state='normal', cursor='hand2')
@@ -229,7 +254,7 @@ def zoomOut():
 
 sortir = Tk()
 
-zoom_factor = 1
+zoom_factor = 0
 sortir.iconphoto(True, PhotoImage(data='P6\n2 8\n255\n'.encode(encoding='ascii') + random.randbytes(2 * 8 * 3)))
 
 sortir.title('POV-Ray Mosaic')
@@ -263,7 +288,10 @@ butt04.pack(side='top', padx=4, pady=2, fill='both')
 butt99 = Button(frame_left, text='Exit', font=('helvetica', 14), cursor='hand2', justify='center', command=DisMiss)
 butt99.pack(side='bottom', padx=4, pady=[24, 4], fill='both')
 
-zanyato = Label(frame_right, text='Preview area', font=('helvetica', 10), justify='center', borderwidth=2, relief='groove')
+zanyato = Label(frame_right, text='Preview area'.center(16, ' '), font=('helvetica', 16), justify='center', borderwidth=2, relief='groove', state='disabled')
+zanyato.bind('<Button-1>', GetSource)
+zanyato.bind('<Button-2>', GetSource)
+zanyato.bind('<Button-3>', GetSource)
 zanyato.pack(side='top')
 
 frame_zoom = Frame(frame_right, width=300, borderwidth=2, relief='groove')
@@ -275,7 +303,7 @@ butt_plus.pack(side='left', padx=0, pady=0, fill='both')
 butt_minus = Button(frame_zoom, text='-', font=('courier', 8), width=2, cursor='arrow', justify='center', state='disabled', command=zoomOut)
 butt_minus.pack(side='right', padx=0, pady=0, fill='both')
 
-label_zoom = Label(frame_zoom, text=f'Zoom {zoom_factor}:1', font=('courier', 8), state='disabled')
+label_zoom = Label(frame_zoom, text='Zoom 1:1', font=('courier', 8), state='disabled')
 label_zoom.pack(side='left', anchor='n', padx=2, pady=0, fill='both')
 
 sortir.mainloop()
