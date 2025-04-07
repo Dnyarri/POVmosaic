@@ -23,7 +23,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.16.4.8'
+__version__ = '1.16.6.24'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -56,6 +56,8 @@ def UIBusy():
     for widget in frame_left.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
             widget.config(state='disabled')
+        if widget.winfo_class() == 'Button':
+            widget.config(cursor='hand2')
     info_string.config(text=info_busy['txt'], foreground=info_busy['fg'], background=info_busy['bg'])
     sortir.update()
 
@@ -133,9 +135,7 @@ def GetSource(event=None):
     # updating zoom label display
     label_zoom.config(text=zoom_show[zoom_factor])
     # enabling "Save as..."
-    butt02.config(state='normal', cursor='hand2')
-    butt03.config(state='normal', cursor='hand2')
-    butt04.config(state='normal', cursor='hand2')
+    UINormal()
 
 
 def SaveAs63():

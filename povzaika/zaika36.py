@@ -33,7 +33,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.15.01.10'
+__version__ = '1.16.6.24'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -303,14 +303,11 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             c = float(src_lum_blin(x, y * triangle_height)) / maxcolors  # Bilinear
 
             # alpha to be used for alpha dithering
-            if Z == 4:  # RGBA
-                a = float(src(x, y * triangle_height, 3)) / maxcolors
+            if Z == 4 or Z == 2:
+                a = 1.02 * (float(src(x, y * triangle_height, Z - 1)) / maxcolors) - 0.01
+                # Slightly extending +/- 1%
+                tobe_or_nottobe = a >= random.random()
                 # a = 0 is transparent, a = 1.0 is opaque
-                tobe_or_nottobe = a > random.random()
-            elif Z == 2:  # LA
-                a = float(src(x, y * triangle_height, 1)) / maxcolors
-                # a = 0 is transparent, a = 1.0 is opaque
-                tobe_or_nottobe = a > random.random()
             else:  # No A
                 tobe_or_nottobe = True
 

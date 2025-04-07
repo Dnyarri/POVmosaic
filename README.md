@@ -12,7 +12,7 @@ Current version of POV-Ray Mosaic consist of several parts:
 
 - **povzaika** module, including:
 
-  - **zaika63** - converts every single pixel into 3D object, by default a solid sphere. Spheres are packed into triangle/hexagone grid. Spheres may be easily replaced by other predefined objects, object positions and properties may be mapped to source image brightness and/or randomized, etc.
+  - **zaika63** - converts every single pixel into 3D object, by default a solid sphere. Spheres are packed into triangle/hexagon grid. Spheres may be easily replaced by other predefined objects, object positions and properties may be mapped to source image brightness and/or randomized, etc.
   - **zaika44** - converts every single pixel into 3D object, by default a solid cube. Cubes are packed into square grid. Spheres may be easily replaced by other predefined objects, object positions and properties may be mapped to source image brightness and/or randomized, etc.
   - **zaika36** - converts every single pixel into 3D object, by default a triangular prism. Prisms are packed into triangle grid.
 
