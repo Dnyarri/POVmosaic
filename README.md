@@ -30,12 +30,12 @@ Current version of POV-Ray Mosaic consist of several parts:
 
 Program is equipped with simple GUI for file browsing and selection. Exported scene contains enough basic stuff (globals, light, camera) to be rendered out of the box, and is well structured and commented for further editing. For detail on scene structure and editing refer to help.html included in distribution.
 
-## References
+### Related
 
-1. [POV-Ray Mosaic](https://dnyarri.github.io/povzaika.html) rendered examples and description.
+[Dnyarri website](https://dnyarri.github.io) - other Python freeware by the same author.
 
-2. [github POV-Ray Mosaic](https://github.com/Dnyarri/POVmosaic) repository.
+[POV‑Ray Mosaic page](https://dnyarri.github.io/povzaika.html) with illustrations, explanations etc.
 
-3. [gitflic POV-Ray Mosaic](https://gitflic.ru/project/dnyarri/povmosaic) repository mirror.
+[POV‑Ray Mosaic source at github](https://github.com/Dnyarri/POVmosaic)
 
-4. [Dnyarri website](https://dnyarri.github.io/) - other Python programs by Ilyich the Toad.
+[POV‑Ray Mosaic source at gitflic mirror](https://gitflic.ru/project/dnyarri/povmosaic)
