@@ -11,6 +11,8 @@ History:
 
 1.14.1.0    Single task standalone programs 63zaika, 44zaika and 36zaika replaced with common GUI and zaika63, zaika44 and zaika36 modules correspondingly. Apparently PNM input support added with PyPNM; PNG support reworked to more common.
 
+1.16.20.20  New minimalistic menu-based GUI.
+
 ---
 Main site: `The Toad's Slimy Mudhole <https://dnyarri.github.io>`_
 
@@ -23,29 +25,33 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.16.6.24'
+__version__ = '1.16.20.20'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
 
 import random
 from pathlib import Path
-from tkinter import Button, Frame, Label, PhotoImage, Tk, filedialog
+from tkinter import Button, Frame, Label, Menu, PhotoImage, Tk, filedialog
 
 from povzaika import zaika36, zaika44, zaika63
 from pypng import pnglpng
 from pypnm import pnmlpnm
 
 
-def DisMiss():
+def DisMiss(event=None):
     """Kill dialog and continue"""
-
     sortir.destroy()
+
+
+def ShowMenu(event):
+    """Pop menu up (or sort of drop it down)"""
+    menu01.post(event.x_root, event.y_root)
 
 
 def UINormal():
     """Normal UI state, buttons enabled"""
-    for widget in frame_left.winfo_children():
+    for widget in frame_img.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
             widget.config(state='normal')
     info_string.config(text=info_normal['txt'], foreground=info_normal['fg'], background=info_normal['bg'])
@@ -53,11 +59,9 @@ def UINormal():
 
 def UIBusy():
     """Busy UI state, buttons disabled"""
-    for widget in frame_left.winfo_children():
+    for widget in frame_img.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
             widget.config(state='disabled')
-        if widget.winfo_class() == 'Button':
-            widget.config(cursor='hand2')
     info_string.config(text=info_busy['txt'], foreground=info_busy['fg'], background=info_busy['bg'])
     sortir.update()
 
@@ -65,17 +69,20 @@ def UIBusy():
 def GetSource(event=None):
     """Opening source image and redefining other controls state"""
 
-    global zoom_factor, zoom_do, zoom_show, sourcefilename, preview, preview_data
-    global X, Y, Z, maxcolors, image3D
+    global zoom_factor, zoom_do, zoom_show, preview, preview_data
+    global X, Y, Z, maxcolors, image3D, sourcefilename
     zoom_factor = 0
+
     sourcefilename = filedialog.askopenfilename(title='Open image file', filetypes=[('Supported formats', '.png .ppm .pgm .pbm'), ('PNG', '.png'), ('PNM', '.ppm .pgm .pbm')])
     if sourcefilename == '':
         return
 
+    UIBusy()
+
     """ ┌────────────────────────────────────────┐
         │ Loading file, converting data to list. │
         │  NOTE: maxcolors, image3D are GLOBALS! │
-        │  This is required for preview to work. │
+        │  They are used during export!          │
         └────────────────────────────────────────┘ """
 
     if Path(sourcefilename).suffix == '.png':
@@ -91,7 +98,7 @@ def GetSource(event=None):
 
     """ ┌─────────────────────────────────────────────────────────────────────────┐
         │ Converting list to bytes of PPM-like structure "preview_data" in memory │
-        └─────────────────────────────────────────────────────────────────────────┘ """
+        └────────────────────────────────────────────────────────────────────────-┘ """
     preview_data = pnmlpnm.list2bin(image3D, maxcolors, show_chessboard=True)
 
     """ ┌────────────────────────────────────────────────┐
@@ -110,7 +117,7 @@ def GetSource(event=None):
         3: 'Zoom 4:1',
         4: 'Zoom 5:1',
     }
-    zoom_do = {  # What to do to preview
+    zoom_do = {  # What to do to preview; "zoom" zooms in, "subsample" zooms out
         -4: preview.subsample(5, 5),
         -3: preview.subsample(4, 4),
         -2: preview.subsample(3, 3),
@@ -122,24 +129,29 @@ def GetSource(event=None):
         4: preview.zoom(5, 5),
     }
 
-    preview = zoom_do[zoom_factor]  # "zoom" zooms in, "subsample" zooms out
-    zanyato.config(text='Source', font=('helvetica', 10), image=preview, compound='top', state='normal')
+    preview = zoom_do[zoom_factor]
+    zanyato.config(image=preview, compound='none', justify='center', background=zanyato.master['background'], relief='flat', borderwidth=1)
     # binding zoom on preview click
-    zanyato.bind('<Button-1>', zoomIn)  # left
-    zanyato.bind('<Alt-Button-1>', zoomOut)  # left
-    zanyato.bind('<Button-2>', zoomOut)  # middle
-    zanyato.bind('<Button-3>', zoomOut)  # right
+    zanyato.bind('<Control-Button-1>', zoomIn)  # Ctrl + left click
+    zanyato.bind('<Double-Control-Button-1>', zoomIn)  # Ctrl + left click too fast
+    zanyato.bind('<Alt-Button-1>', zoomOut)  # Alt + left click
+    zanyato.bind('<Double-Alt-Button-1>', zoomOut)  # Alt + left click too fast
+    sortir.bind_all('<MouseWheel>', zoomWheel)  # Wheel
     # enabling zoom buttons
     butt_plus.config(state='normal', cursor='hand2')
     butt_minus.config(state='normal', cursor='hand2')
     # updating zoom label display
     label_zoom.config(text=zoom_show[zoom_factor])
     # enabling "Save as..."
+    menu01.entryconfig('Export 6/3 Mosaic...', state='normal')  # Instead of name numbers from 0 may be used
+    menu01.entryconfig('Export 4/4 Mosaic...', state='normal')
+    menu01.entryconfig('Export 3/6 Mosaic...', state='normal')
+
     UINormal()
 
 
 def SaveAs63():
-    """Once pressed on Export 63"""
+    """Once pressed on Export POV"""
     # Open "Save as..." file
     savefilename = filedialog.asksaveasfilename(
         title='Save POV-Ray file',
@@ -150,11 +162,10 @@ def SaveAs63():
         defaultextension=('POV-Ray scene file', '.pov'),
     )
     if savefilename == '':
-        return
+        return None
 
     """ ┌─────────────────────────────────────────────────────┐
         │ Converting list to POV and saving as "savefilename" │
-        │ using global maxcolors, image3D                     │
         └─────────────────────────────────────────────────────┘ """
 
     UIBusy()
@@ -165,7 +176,7 @@ def SaveAs63():
 
 
 def SaveAs44():
-    """Once pressed on Export 44"""
+    """Once pressed on Export POV"""
     # Open "Save as..." file
     savefilename = filedialog.asksaveasfilename(
         title='Save POV-Ray file',
@@ -176,11 +187,10 @@ def SaveAs44():
         defaultextension=('POV-Ray scene file', '.pov'),
     )
     if savefilename == '':
-        return
+        return None
 
     """ ┌─────────────────────────────────────────────────────┐
         │ Converting list to POV and saving as "savefilename" │
-        │ using global maxcolors, image3D                     │
         └─────────────────────────────────────────────────────┘ """
 
     UIBusy()
@@ -191,7 +201,7 @@ def SaveAs44():
 
 
 def SaveAs36():
-    """Once pressed on Export 36"""
+    """Once pressed on Export POV"""
     # Open "Save as..." file
     savefilename = filedialog.asksaveasfilename(
         title='Save POV-Ray file',
@@ -202,11 +212,10 @@ def SaveAs36():
         defaultextension=('POV-Ray scene file', '.pov'),
     )
     if savefilename == '':
-        return
+        return None
 
     """ ┌─────────────────────────────────────────────────────┐
         │ Converting list to POV and saving as "savefilename" │
-        │ using global maxcolors, image3D                     │
         └─────────────────────────────────────────────────────┘ """
 
     UIBusy()
@@ -221,7 +230,7 @@ def zoomIn(event=None):
     zoom_factor = min(zoom_factor + 1, 4)  # max zoom 5
     preview = PhotoImage(data=preview_data)
     preview = zoom_do[zoom_factor]
-    zanyato.config(image=preview, compound='top')
+    zanyato.config(image=preview, compound='none')
     # updating zoom factor display
     label_zoom.config(text=zoom_show[zoom_factor])
     # reenabling +/- buttons
@@ -237,7 +246,7 @@ def zoomOut(event=None):
     zoom_factor = max(zoom_factor - 1, -4)  # min zoom 1/5
     preview = PhotoImage(data=preview_data)
     preview = zoom_do[zoom_factor]
-    zanyato.config(image=preview, compound='top')
+    zanyato.config(image=preview, compound='none')
     # updating zoom factor display
     label_zoom.config(text=zoom_show[zoom_factor])
     # reenabling +/- buttons
@@ -248,59 +257,74 @@ def zoomOut(event=None):
         butt_minus.config(state='normal', cursor='hand2')
 
 
+def zoomWheel(event):
+    if event.delta < 0:
+        zoomOut()
+    if event.delta > 0:
+        zoomIn()
+
+
 """ ╔═══════════╗
     ║ Main body ║
     ╚═══════════╝ """
 
+# Starting values
+zoom_factor = 0
+sourcefilename = X = Y = Z = maxcolors = None
+
 sortir = Tk()
 
-zoom_factor = 0
 sortir.iconphoto(True, PhotoImage(data='P6\n2 8\n255\n'.encode(encoding='ascii') + random.randbytes(2 * 8 * 3)))
-
 sortir.title('POV-Ray Mosaic')
 sortir.geometry('+200+100')
-sortir.minsize(300, 280)
+sortir.minsize(128, 128)
 
 # Info statuses dictionaries
-info_normal = {'txt': f'POV-Ray Mosaic {__version__}', 'fg': 'grey', 'bg': 'light grey'}
+info_normal = {'txt': f'POV-Ray Mosaic {__version__}', 'fg': 'grey', 'bg': 'grey90'}
 info_busy = {'txt': 'BUSY, PLEASE WAIT', 'fg': 'red', 'bg': 'yellow'}
 
-info_string = Label(sortir, text=info_normal['txt'], font=('courier', 8), foreground=info_normal['fg'], background=info_normal['bg'], relief='groove')
-info_string.pack(side='bottom', padx=0, pady=1, fill='both')
+info_string = Label(sortir, text=info_normal['txt'], font=('courier', 7), foreground=info_normal['fg'], background=info_normal['bg'], relief='groove')
+info_string.pack(side='bottom', padx=0, pady=(2, 0), fill='both')
 
-frame_left = Frame(sortir, borderwidth=2, relief='groove')
-frame_left.pack(side='left', anchor='nw')
-frame_right = Frame(sortir, borderwidth=2, relief='groove')
-frame_right.pack(side='right', anchor='nw')
+menu01 = Menu(sortir, tearoff=False)  # Drop-down
+menu01.add_command(label='Open...', state='normal', accelerator='Ctrl+O', command=GetSource)
+menu01.add_separator()
+menu01.add_command(label='Export 6/3 Mosaic...', state='disabled', command=SaveAs63)
+menu01.add_command(label='Export 4/4 Mosaic...', state='disabled', command=SaveAs44)
+menu01.add_command(label='Export 3/6 Mosaic...', state='disabled', command=SaveAs36)
+menu01.add_separator()
+menu01.add_command(label='Exit', state='normal', accelerator='Ctrl+Q', command=DisMiss)
 
-butt01 = Button(frame_left, text='Open image...'.center(30, ' '), font=('helvetica', 14), cursor='hand2', justify='center', command=GetSource)
-butt01.pack(side='top', padx=4, pady=[4, 12], fill='both')
+sortir.bind('<Button-3>', ShowMenu)
+sortir.bind_all('<Alt-f>', ShowMenu)
+sortir.bind_all('<Control-o>', GetSource)
+sortir.bind_all('<Control-q>', DisMiss)
 
-butt02 = Button(frame_left, text='Export 6/3 mosaic\n(honeycomb)...', font=('helvetica', 14), cursor='arrow', justify='center', state='disabled', command=SaveAs63)
-butt02.pack(side='top', padx=4, pady=2, fill='both')
+frame_img = Frame(sortir, borderwidth=2, relief='groove')
+frame_img.pack(side='top')
 
-butt03 = Button(frame_left, text='Export 4/4 mosaic\n(square)...', font=('helvetica', 14), cursor='arrow', justify='center', state='disabled', command=SaveAs44)
-butt03.pack(side='top', padx=4, pady=2, fill='both')
+zanyato = Label(
+    frame_img,
+    text='Preview area.\n  Double click to open image,\n  Right click or Alt+F for a menu.\nWith image opened,\n  Ctrl+Click to zoom in,\n  Alt+Click to zoom out.',
+    font=('helvetica', 12),
+    justify='left',
+    borderwidth=2,
+    padx=24,
+    pady=24,
+    relief='groove',
+    background='grey90',
+    cursor='arrow',
+)
+zanyato.bind('<Double-Button-1>', GetSource)
+zanyato.pack(side='top', padx=0, pady=(0, 2))
 
-butt04 = Button(frame_left, text='Export 3/6 mosaic\n(triangle)...', font=('helvetica', 14), cursor='arrow', justify='center', state='disabled', command=SaveAs36)
-butt04.pack(side='top', padx=4, pady=2, fill='both')
-
-butt99 = Button(frame_left, text='Exit', font=('helvetica', 14), cursor='hand2', justify='center', command=DisMiss)
-butt99.pack(side='bottom', padx=4, pady=[24, 4], fill='both')
-
-zanyato = Label(frame_right, text='Preview area'.center(16, ' '), font=('helvetica', 16), justify='center', borderwidth=2, relief='groove', state='disabled')
-zanyato.bind('<Button-1>', GetSource)
-zanyato.bind('<Button-2>', GetSource)
-zanyato.bind('<Button-3>', GetSource)
-zanyato.pack(side='top')
-
-frame_zoom = Frame(frame_right, width=300, borderwidth=2, relief='groove')
+frame_zoom = Frame(frame_img, width=300, borderwidth=2, relief='groove')
 frame_zoom.pack(side='bottom')
 
-butt_plus = Button(frame_zoom, text='+', font=('courier', 8), width=2, cursor='arrow', justify='center', state='disabled', command=zoomIn)
+butt_plus = Button(frame_zoom, text='+', font=('courier', 8), width=2, cursor='arrow', justify='center', state='disabled', borderwidth=1, command=zoomIn)
 butt_plus.pack(side='left', padx=0, pady=0, fill='both')
 
-butt_minus = Button(frame_zoom, text='-', font=('courier', 8), width=2, cursor='arrow', justify='center', state='disabled', command=zoomOut)
+butt_minus = Button(frame_zoom, text='-', font=('courier', 8), width=2, cursor='arrow', justify='center', state='disabled', borderwidth=1, command=zoomOut)
 butt_minus.pack(side='right', padx=0, pady=0, fill='both')
 
 label_zoom = Label(frame_zoom, text='Zoom 1:1', font=('courier', 8), state='disabled')
