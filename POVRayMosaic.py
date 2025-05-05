@@ -34,7 +34,7 @@ import random
 from pathlib import Path
 from tkinter import Button, Frame, Label, Menu, PhotoImage, Tk, filedialog
 
-from povzaika import zaika36, zaika44, zaika63
+from export import zaika36, zaika44, zaika63
 from pypng import pnglpng
 from pypnm import pnmlpnm
 
