@@ -32,9 +32,9 @@ Program is equipped with simple GUI for file browsing and selection. Exported sc
 
 ### Related
 
-[Dnyarri website](https://dnyarri.github.io) - other Python freeware by the same author.
+[Dnyarri website - other Python freeware](https://dnyarri.github.io) by the same author.
 
-[POV‑Ray Mosaic page](https://dnyarri.github.io/povzaika.html) with illustrations, explanations etc.
+[POV‑Ray Mosaic page with illustrations](https://dnyarri.github.io/povzaika.html), explanations etc.
 
 [POV‑Ray Mosaic source at github](https://github.com/Dnyarri/POVmosaic)
 
