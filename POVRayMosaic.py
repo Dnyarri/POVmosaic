@@ -25,14 +25,15 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.17.9.11'
+__version__ = '1.18.12.8'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
 
-import random
 from pathlib import Path
+from random import randbytes  # Used for random icon only
 from tkinter import Button, Frame, Label, Menu, PhotoImage, Tk, filedialog
+from tkinter.messagebox import showinfo
 
 from export import zaika36, zaika44, zaika63
 from pypng import pnglpng
@@ -47,6 +48,15 @@ def DisMiss(event=None):
 def ShowMenu(event):
     """Pop menu up (or sort of drop it down)"""
     menu01.post(event.x_root, event.y_root)
+
+
+def ShowInfo(event=None):
+    """Show program and module version"""
+    showinfo(
+        title='Image information',
+        message=f'File: {sourcefilename}',
+        detail=f'Image: X={X}, Y={Y}, Z={Z}, maxcolors={maxcolors}',
+    )
 
 
 def UINormal():
@@ -74,7 +84,7 @@ def GetSource(event=None):
     global info_normal
     zoom_factor = 0
 
-    sourcefilename = filedialog.askopenfilename(title='Open image file', filetypes=[('Supported formats', '.png .ppm .pgm .pbm'), ('PNG', '.png'), ('PNM', '.ppm .pgm .pbm')])
+    sourcefilename = filedialog.askopenfilename(title='Open image file', filetypes=[('Supported formats', '.png .ppm .pgm .pbm'), ('Portable network graphics', '.png'), ('Portable network map', '.ppm .pgm .pbm')])
     if sourcefilename == '':
         return
 
@@ -140,6 +150,7 @@ def GetSource(event=None):
     zanyato.bind('<Alt-Button-1>', zoomOut)  # Alt + left click
     zanyato.bind('<Double-Alt-Button-1>', zoomOut)  # Alt + left click too fast
     sortir.bind_all('<MouseWheel>', zoomWheel)  # Wheel
+    sortir.bind_all('<Control-i>', ShowInfo)
     # enabling zoom buttons
     butt_plus.config(state='normal', cursor='hand2')
     butt_minus.config(state='normal', cursor='hand2')
@@ -149,6 +160,7 @@ def GetSource(event=None):
     menu01.entryconfig('Export 6/3 Mosaic...', state='normal')  # Instead of name numbers from 0 may be used
     menu01.entryconfig('Export 4/4 Mosaic...', state='normal')
     menu01.entryconfig('Export 3/6 Mosaic...', state='normal')
+    menu01.entryconfig('Image Info...', state='normal')
 
     UINormal()
 
@@ -277,7 +289,7 @@ sourcefilename = X = Y = Z = maxcolors = None
 
 sortir = Tk()
 
-sortir.iconphoto(True, PhotoImage(data='P6\n2 8\n255\n'.encode(encoding='ascii') + random.randbytes(2 * 8 * 3)))
+sortir.iconphoto(True, PhotoImage(data='P6\n4 4\n255\n'.encode(encoding='ascii') + randbytes(4 * 4 * 3)))
 sortir.title('POV-Ray Mosaic')
 sortir.geometry('+200+100')
 sortir.minsize(128, 128)
@@ -295,6 +307,8 @@ menu01.add_separator()
 menu01.add_command(label='Export 6/3 Mosaic...', state='disabled', command=SaveAs63)
 menu01.add_command(label='Export 4/4 Mosaic...', state='disabled', command=SaveAs44)
 menu01.add_command(label='Export 3/6 Mosaic...', state='disabled', command=SaveAs36)
+menu01.add_separator()
+menu01.add_command(label='Image Info...', accelerator='Ctrl+I', state='disabled', command=ShowInfo)
 menu01.add_separator()
 menu01.add_command(label='Exit', state='normal', accelerator='Ctrl+Q', command=DisMiss)
 
