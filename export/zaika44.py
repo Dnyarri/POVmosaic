@@ -21,6 +21,8 @@ History:
 
 1.14.1.0    Rewritten as module.
 
+1.19.1.7    Autofocus fixed, some calculations moved to POV-Ray to improve scene legibility, etc.
+
 ---
 Main site: `The Toad's Slimy Mudhole <https://dnyarri.github.io>`_
 
@@ -33,7 +35,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.17.9.11'
+__version__ = '1.19.1.7'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -43,17 +45,16 @@ from time import ctime, time
 
 
 def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str) -> None:
-    """POV Mosaic, Regular plane partition 4/4.
+    """POV-Ray Mosaic, Regular plane partition 4/4.
 
     `image3d` - image as list of lists of lists of int channel values.
 
-    `maxcolors` - maximum value of int in `image3d` list.
+    `maxcolors` - maximum value of int in `image3d` list, either 255 or 65535..
 
-    `resultfilename` - name of POVRay file to export.
+    `resultfilename` - name of POV-Ray file to export.
 
     """
 
-    # Determining list sizes
     Y = len(image3d)
     X = len(image3d[0])
     Z = len(image3d[0][0])
@@ -65,7 +66,7 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
     def src(x: int | float, y: int | float, z: int) -> int:
         """
         Analog of src from FilterMeister, force repeat edge instead of out of range.
-        Returns int channel value z for pixel x, y
+        Returns channel z value for pixel x, y.
 
         """
 
@@ -81,10 +82,7 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
         return channelvalue
 
     def src_lum(x: int | float, y: int | float) -> int:
-        """
-        Returns brightness of pixel x, y
-
-        """
+        """Returns brightness of pixel x, y."""
 
         if Z < 3:  # supposedly L and LA
             yntensity = src(x, y, 0)
@@ -94,10 +92,7 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
         return yntensity
 
     def src_lum_blin(x: float, y: float) -> int:
-        """
-        Analog of src_lum above, but returns bilinearly interpolated brightness of pixel x, y
-
-        """
+        """Analog of src_lum above, but returns bilinearly interpolated brightness of pixel x, y."""
 
         fx = float(x)
         fy = float(y)  # Uses float input coordinates for interpolation
@@ -201,8 +196,7 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             '#declare f_val = 0.0;           // Filter value for all thingies\n',
             '#declare t_val = 0.0;           // Transmit value for all thingies\n',
             '\n#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
-            '#declare evenodd_offset = <0.5, 0, 0>;      // Even lines shift for brick wall\n',
-            '#declare evenodd_offset = <0.0, 0, 0>;      // Default 0 even lines shift for no brick wall\n',
+            '#declare evenodd_offset = <0, 0, 0>;        // Default 0. Change to <0.5, 0, 0> for brick wall\n',
             '#declare scale_all = <1, 1, 1>;             // Base scale of all thingies. 1=original\n',
             '#declare rotate_all = <0, 0, 0>;            // Base rotation of all thingies. Values in degrees\n',
             '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\n',
@@ -222,7 +216,7 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             '#declare thingie_finish = thingie_finish_1;\n',
             '#declare thingie_normal = thingie_normal_1;\n',
             '\n//       Per-thingie modifiers\n',
-            f'#declare move_map = <0, 0, 0>;    // To move thingies depending on map. Additive, no constrains on values. Source image size is {max(X, Y)}\n',
+            f'#declare move_map = <0, 0, 0>;    // To move thingies depending on map. Additive, no constrains on values. Maximum source image size is {max(X, Y)}\n',
             '#declare scale_map = <0, 0, 0>;   // To rescale thingies depending on map. Additive, no constrains on values except object overlap on x,y\n',
             '#declare rotate_map = <0, 0, 0>;  // To rotate thingies depending on map. Values in degrees\n',
             '#declare move_rnd = <0, 0, 0>;    // To move thingies randomly. No constrains on values\n',
@@ -237,7 +231,10 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             '#declare thething_transform = transform {\n  // You can place your global scale, rotate etc. here\n};\n',
             '\n//       Seed random\n',
             f'#declare rnd_1 = seed({int(seconds * 1000000)});\n\n',
-            'background{color rgbft <0, 0, 0, 1, 1>} // Hey, Im just trying to be explicit in here!\n\n',
+            'background{color rgbft <0, 0, 0, 1, 1>} // Hey, I am just trying to be explicit in here!\n\n\n',
+            '/*  -----------------------------------------\n    |  Source image width and height.       |\n    |  Necessary for further calculations.  |\n    -----------------------------------------  */\n\n',
+            f'#declare X = {X};  // Source image width, px\n',
+            f'#declare Y = {Y};  // Source image height, px\n\n',
             # Camera
             '\n/*\n  Camera and light\n\n',
             'NOTE: Coordinate system match Photoshop,\norigin is top left, z points to the viewer.\nsky vector is important!\n\n*/\n\n',
@@ -248,17 +245,17 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             '  right x*image_width/image_height\n',
             '  up y\n',
             '  sky <0, -1, 0>\n',
-            f'  direction <0, 0, vlength(camera_position - <0.0, 0.0, {1.0 / max(X, Y)}>)>  // May alone work for many pictures. Otherwise fiddle with angle below\n',
-            f'  angle 2.0*(degrees(atan2(0.5 * image_width * max({X}/image_width, {Y}/image_height) / {max(X, Y)}, vlength(camera_position - <0.0, 0.0, {1.0 / max(X, Y)}>)))) // Supposed to fit object\n',
+            '  direction <0, 0, vlength(camera_position - <0.0, 0.0, 1.0 / max(X, Y)>)>  // May alone work for many pictures. Otherwise fiddle with angle below\n',
+            '  angle 2.0*(degrees(atan2(0.5 * image_width * max(X/image_width, Y/image_height) / max(X, Y), vlength(camera_position - <0.0, 0.0, 1.0 / max(X, Y)>)))) // Supposed to fit object\n',
             '  look_at<0.0, 0.0, 0.0>\n',
             '}\n\n',
             # Light
             'light_source{0*x\n  color rgb<1.1, 1.0, 1.0>\n//  area_light <1, 0, 0>, <0, 1, 0>, 5, 5 circular orient area_illumination on\n  translate<4, -2, 3>\n}\n\n',
             'light_source{0*x\n  color rgb<0.9, 1.0, 1.0>\n//  area_light <1, 0, 0>, <0, 1, 0>, 5, 5 circular orient area_illumination on\n  translate<-2, -6, 7>\n}\n\n',
             '\n/*  ----------------------------------------------\n    |  Insert preset to override settings above  |\n    ----------------------------------------------  */\n\n',
-            '// #include "preset.inc"    // Set path and name of your file related to scene file\n\n',
+            '// #include "preset.inc"    // Set path and name of your file related to scene file\n\n\n',
             # Main object
-            '\n// Object thething made out of thingies\n',
+            '// Object thething made out of thingies\n\n',
             '#declare thething = union{\n',  # Opening big thething
         ]
     )
@@ -336,8 +333,8 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
     resultfile.writelines(
         [
             '\n  // Object transforms to fit 1, 1, 1 cube at 0, 0, 0 coordinates\n',
-            f'  translate <0.5, 0.5, 0> + <{-0.5 * X}, {-0.5 * Y}, 0>\n',  # centering at scene zero
-            f'  scale<{1.0 / max(X, Y)}, {1.0 / max(X, Y)}, {1.0 / max(X, Y)}>\n',  # fitting
+            '  translate <0.5, 0.5, 0> + <-0.5 * X, -0.5 * Y, 0> - evenodd_offset/2\n',  # centering at scene zero
+            '  scale<1.0 / max(X, Y), 1.0 / max(X, Y), 1.0 / max(X, Y)>\n',  # fitting
             '} // thething closed\n\n'
             '\nobject {thething\n'  # inserting thething
             '  #if (yes_color < 1)\n',
