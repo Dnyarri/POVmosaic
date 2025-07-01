@@ -169,7 +169,7 @@ the PNG image comes from something that uses a similar format
 (for example, 1-bit BMPs, or another PNG file).
 """
 
-__version__ = "0.20231004.0"
+__version__ = "0.20250521.0"
 
 import collections
 import io  # For io.BytesIO
