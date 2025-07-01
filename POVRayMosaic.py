@@ -25,7 +25,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.18.12.8'
+__version__ = '1.19.1.7'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -40,18 +40,18 @@ from pypng import pnglpng
 from pypnm import pnmlpnm
 
 
-def DisMiss(event=None):
+def DisMiss(event=None) -> None:
     """Kill dialog and continue"""
     sortir.destroy()
 
 
-def ShowMenu(event):
+def ShowMenu(event) -> None:
     """Pop menu up (or sort of drop it down)"""
     menu01.post(event.x_root, event.y_root)
 
 
-def ShowInfo(event=None):
-    """Show program and module version"""
+def ShowInfo(event=None) -> None:
+    """Show image information"""
     showinfo(
         title='Image information',
         message=f'File: {sourcefilename}',
@@ -59,7 +59,7 @@ def ShowInfo(event=None):
     )
 
 
-def UINormal():
+def UINormal() -> None:
     """Normal UI state, buttons enabled"""
     for widget in frame_img.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
@@ -67,7 +67,7 @@ def UINormal():
     info_string.config(text=info_normal['txt'], foreground=info_normal['fg'], background=info_normal['bg'])
 
 
-def UIBusy():
+def UIBusy() -> None:
     """Busy UI state, buttons disabled"""
     for widget in frame_img.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
@@ -76,9 +76,8 @@ def UIBusy():
     sortir.update()
 
 
-def GetSource(event=None):
+def GetSource(event=None) -> None:
     """Opening source image and redefining other controls state"""
-
     global zoom_factor, zoom_do, zoom_show, preview, preview_data
     global X, Y, Z, maxcolors, image3D, sourcefilename
     global info_normal
@@ -165,9 +164,8 @@ def GetSource(event=None):
     UINormal()
 
 
-def SaveAs63():
-    """Once pressed on Export POV"""
-    # Open "Save as..." file
+def SaveAs63() -> None:
+    """Once pressed on Export 6/3 Mosaic..."""
     savefilename = filedialog.asksaveasfilename(
         title='Save POV-Ray file',
         filetypes=[
@@ -190,9 +188,8 @@ def SaveAs63():
     UINormal()
 
 
-def SaveAs44():
-    """Once pressed on Export POV"""
-    # Open "Save as..." file
+def SaveAs44() -> None:
+    """Once pressed on Export 4/4 Mosaic..."""
     savefilename = filedialog.asksaveasfilename(
         title='Save POV-Ray file',
         filetypes=[
@@ -215,9 +212,8 @@ def SaveAs44():
     UINormal()
 
 
-def SaveAs36():
-    """Once pressed on Export POV"""
-    # Open "Save as..." file
+def SaveAs36() -> None:
+    """Once pressed on Export 3/6 Mosaic..."""
     savefilename = filedialog.asksaveasfilename(
         title='Save POV-Ray file',
         filetypes=[
@@ -240,7 +236,8 @@ def SaveAs36():
     UINormal()
 
 
-def zoomIn(event=None):
+def zoomIn(event=None) -> None:
+    """Zooming preview in"""
     global zoom_factor, preview
     zoom_factor = min(zoom_factor + 1, 4)  # max zoom 5
     preview = PhotoImage(data=preview_data)
@@ -256,7 +253,8 @@ def zoomIn(event=None):
         butt_plus.config(state='normal', cursor='hand2')
 
 
-def zoomOut(event=None):
+def zoomOut(event=None) -> None:
+    """Zooming preview out"""
     global zoom_factor, preview
     zoom_factor = max(zoom_factor - 1, -4)  # min zoom 1/5
     preview = PhotoImage(data=preview_data)
@@ -272,7 +270,8 @@ def zoomOut(event=None):
         butt_minus.config(state='normal', cursor='hand2')
 
 
-def zoomWheel(event):
+def zoomWheel(event) -> None:
+    """Starting zoomIn or zoomOut by mouse wheel"""
     if event.delta < 0:
         zoomOut()
     if event.delta > 0:
@@ -283,7 +282,6 @@ def zoomWheel(event):
     ║ Main body ║
     ╚═══════════╝ """
 
-# Starting values
 zoom_factor = 0
 sourcefilename = X = Y = Z = maxcolors = None
 
