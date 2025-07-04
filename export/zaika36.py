@@ -35,7 +35,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.19.1.7'
+__version__ = '1.19.4.12'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -213,17 +213,17 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             '\n//       Per-thingie normal modifiers\n',
             '#declare normal_move_rnd = <0, 0, 0>;    // Random move of normal map. No constrains on values\n',
             '#declare normal_rotate_rnd = <0, 0, 0>;  // Random rotate of normal map. Values in degrees\n',
-            '\n/*  --------------------------------------------------\n    |  Some properties for whole thething and scene  |\n    --------------------------------------------------  */\n\n',
-            '//       Common interior for the whole thething, fade_distance set to thingie size before scale_map etc.\n',
-            f'#declare thething_interior = interior {{ior 2.0 fade_power 1.5 fade_distance 1.0*{1.0 / max(X, Y)} fade_color <0.0, 0.5, 1.0>}};\n',
-            '//       Common transform for the whole thething, placed here just to avoid scrolling\n',
-            '#declare thething_transform = transform {\n  // You can place your global scale, rotate etc. here\n};\n',
             '\n//       Seed random\n',
             f'#declare rnd_1 = seed({int(seconds * 1000000)});\n\n',
             'background{color rgbft <0, 0, 0, 1, 1>} // Hey, I am just trying to be explicit in here!\n\n\n',
             '/*  -----------------------------------------\n    |  Source image width and height.       |\n    |  Necessary for further calculations.  |\n    -----------------------------------------  */\n\n',
             f'#declare X = {X};  // Source image width, px\n',
             f'#declare Y = {Y};  // Source image height, px\n\n',
+            '\n/*  --------------------------------------------------\n    |  Some properties for whole thething and scene  |\n    --------------------------------------------------  */\n\n',
+            '//       Common interior for the whole thething, fade_distance set to thingie size before scale_map etc.\n',
+            '#declare thething_interior = interior {ior 2.5 fade_power 1.5 fade_distance (1.0 / max(X, Y)) fade_color <0.0, 0.5, 1.0>};\n',
+            '//       Common transform for the whole thething, placed here just to avoid scrolling\n',
+            '#declare thething_transform = transform {\n  // You can place your global scale, rotate etc. here\n};\n',
             # Camera
             '\n/*\n  Camera and light\n\n',
             'NOTE: Coordinate system match Photoshop,\norigin is top left, z points to the viewer.\nsky vector is important!\n\n*/\n\n',
