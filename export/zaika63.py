@@ -23,7 +23,7 @@ History:
 
 1.19.1.7    Autofocus fixed, some calculations moved to POV-Ray to improve scene legibility, etc.
 
-1.19.5.7   Filter and transmit turned from constants to function. WARNING: old presets may need editing!
+1.19.5.19   Filter and transmit turned from constants to function. WARNING: old presets may need editing!
 
 ---
 Main site: `The Toad's Slimy Mudhole <https://dnyarri.github.io>`_
@@ -37,7 +37,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.19.5.7'
+__version__ = '1.19.5.19'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -197,9 +197,10 @@ def zaika63(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             '  pigment {gradient z colour_map {[0.0, rgbt <0,0,0,1>] [1.0, rgbt <0,0,0,1>]} scale 0.1 rotate <30, 30, 0>}};\n\n',  # Transparent texture overlay
             '#declare yes_color = 1;         // Whether source per-thingie color is taken or global patten applied\n',
             '// Color-relater settings below work only for "yes_color = 1;"\n',
-            '#declare cm = function(Luma) {Luma};   // Color transfer function for RGB channels, all thingies\n',
-            '#declare f_val = function(Alpha) {0.0};   // Filter value for all thingies. 0 means opaque.\n',
-            '#declare t_val = function(Alpha) {0.0};   // Transmit value for all thingies. Note that for Alpha = transparency you need inversion (1 - Alpha)!\n',
+            # Color, filter and transmit functions
+            '#declare cm = function(Channel) {Channel};   // Color transfer function for RGB channels, all thingies\n',
+            '#declare f_val = function(Luma, Alpha) {0.0};  // Filter value for all thingies. 0 means opaque.\n',
+            '#declare t_val = function(Luma, Alpha) {0.0};  // Transmit value for all thingies. Note that for Alpha = transparency you need inversion (1 - Alpha)!\n',
             '\n#declare evenodd_transform = transform { };  // You may put odd lines transform here, rarely useful\n',
             # Map
             '\n/*       Map function\nMaps are transfer functions control value (i.e. source pixel brightness) is passed through.\n',
@@ -322,7 +323,7 @@ def zaika63(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
                         '    object{thingie\n',
                         '      #if (yes_color)\n',
                         '        texture{\n',
-                        f'          pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val({a}), t_val({a})>}}\n',
+                        f'          pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val({c}, {a}), t_val({c}, {a})>}}\n',
                         '          finish{thingie_finish}\n',
                         '          normal{thingie_normal translate(normal_move_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5)) rotate(normal_rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))}',
                         '        }\n',  # closing base texture
