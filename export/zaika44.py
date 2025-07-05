@@ -23,6 +23,8 @@ History:
 
 1.19.1.7    Autofocus fixed, some calculations moved to POV-Ray to improve scene legibility, etc.
 
+1.19.5.7   Filter and transmit turned from constants to function. WARNING: old presets may need editing!
+
 ---
 Main site: `The Toad's Slimy Mudhole <https://dnyarri.github.io>`_
 
@@ -35,7 +37,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.19.4.12'
+__version__ = '1.19.5.7'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -192,9 +194,9 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             '  pigment {gradient z colour_map {[0.0, rgbt <0,0,0,1>] [1.0, rgbt <0,0,0,1>]} scale 0.1 rotate <30, 30, 0>}};\n\n',  # Transparent texture overlay
             '#declare yes_color = 1;         // Whether source per-thingie color is taken or global patten applied\n',
             '// Color-relater settings below work only for "yes_color = 1;"\n',
-            '#declare cm = function(k) {k};  // Color transfer function for all channels, all thingies\n',
-            '#declare f_val = 0.0;           // Filter value for all thingies\n',
-            '#declare t_val = 0.0;           // Transmit value for all thingies\n',
+            '#declare cm = function(Luma) {Luma};   // Color transfer function for RGB channels, all thingies\n',
+            '#declare f_val = function(Alpha) {0.0};   // Filter value for all thingies. 0 means opaque.\n',
+            '#declare t_val = function(Alpha) {0.0};   // Transmit value for all thingies. Note that for Alpha = transparency you need inversion (1 - Alpha)!\n',
             '\n#declare evenodd_rotate = <0.0, 0.0, 0.0>;  // Odd lines rotate, rarely useful\n',
             '#declare evenodd_offset = <0, 0, 0>;        // Default 0. Change to <0.5, 0, 0> for brick wall\n',
             '#declare scale_all = <1, 1, 1>;             // Base scale of all thingies. 1=original\n',
@@ -294,11 +296,13 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             c = float(src_lum(x, y)) / maxcolors
 
             # alpha to be used for alpha dithering
-            if Z == 4 or Z == 2:
-                a = 1.02 * (float(src(x, y, Z - 1)) / maxcolors) - 0.01  # Slightly extending +/- 1%
-                # a = 0 is transparent, a = 1.0 is opaque
+            if Z == 4 or Z == 2: # RGBA or LA
+                a = 1.02 * (float(src(x, y, Z - 1)) / maxcolors) - 0.01
+                # Slightly extending +/- 1%
                 tobe_or_nottobe = a >= random.random()
-            else:  # No A
+                # a = 0 is transparent, a = 1.0 is opaque
+            else:  # No alpha
+                a = 1.0
                 tobe_or_nottobe = True
 
             # whether to draw thingie in place of partially transparent pixel or not
@@ -309,7 +313,7 @@ def zaika44(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
                         '    object{thingie\n',
                         '      #if (yes_color)\n',
                         '        texture{\n',
-                        f'          pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val, t_val>}}\n',
+                        f'          pigment{{rgbft<cm({r}), cm({g}), cm({b}), f_val({a}), t_val({a})>}}\n',
                         '          finish{thingie_finish}\n',
                         '          normal{thingie_normal translate(normal_move_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5)) rotate(normal_rotate_rnd * (<rand(rnd_1), rand(rnd_1), rand(rnd_1)>-0.5))}',
                         '        }\n',  # closing base texture
