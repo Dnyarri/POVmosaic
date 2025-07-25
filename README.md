@@ -1,6 +1,6 @@
 # POV-Ray Mosaic - Bitmap to 3D solid mosaic converter
 
-Python utilities for conversion of bitmap image (in PNG format) to some sort of solid objects mosaic in [POV-Ray](https://www.povray.org/) format. Each source image pixel is converted to a 3D object, and objects are packed side by side, forming a grid following [Euclidean tilings](https://en.wikipedia.org/wiki/List_of_regular_polytopes#Euclidean_tilings).
+Python utilities for conversion of bitmap image (in PNG or PPM format) to some sort of solid objects mosaic in [POV-Ray](https://www.povray.org/) format. Each source image pixel is converted to a 3D object, and objects are packed side by side, forming a grid following [Euclidean tilings](https://en.wikipedia.org/wiki/List_of_regular_polytopes#Euclidean_tilings).
 
 [![Example of 63zaika export rendering](https://dnyarri.github.io/3z/301.png "Example of 6/3 POV-Ray Mosaic export rendering")](https://dnyarri.github.io/pov3zaika.html)
 
@@ -20,11 +20,12 @@ Current version of POV-Ray Mosaic consist of several parts:
 
 [![Example of 44zaika export rendering](https://dnyarri.github.io/4z/406.png "Example of 4/4 POV-Ray Mosaic export rendering")](https://dnyarri.github.io/pov4zaika.html)
 
-## Dependencies
+## Prerequisite and Dependencies
 
-1. [PyPNG](https://gitlab.com/drj11/pypng). Copy included into current ScaleNx distribution.
-2. [PyPNM](https://pypi.org/project/PyPNM/). Copy included into current ScaleNx distribution.
-3. Tkinter. Included into standard CPython distribution.
+1. [Python](https://www.python.org/) 3.10 or above.
+2. [PyPNG](https://gitlab.com/drj11/pypng). Copy included into current POV-Ray Mosaic distribution.
+3. [PyPNM](https://pypi.org/project/PyPNM/). Copy included into current POV-Ray Mosaic distribution.
+4. Tkinter. Normally included into standard CPython distribution.
 
 ## Usage
 
