@@ -37,7 +37,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.19.5.19'
+__version__ = '1.19.25.9'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -72,12 +72,8 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
 
         """
 
-        cx = int(x)
-        cy = int(y)  # nearest neighbor for float input
-        cx = max(0, cx)
-        cx = min((X - 1), cx)
-        cy = max(0, cy)
-        cy = min((Y - 1), cy)
+        cx = min((X - 1), max(0, int(x)))
+        cy = min((Y - 1), max(0, int(y)))
 
         channelvalue = image3d[cy][cx][z]
 
@@ -116,8 +112,8 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
 
     resultfile = open(resultfilename, 'w')
 
-    seconds = time()
-    localtime = ctime(seconds)  # will be used for randomization and for debug info
+    seconds = time()  # will be used for randomization
+    localtime = ctime(seconds)  # used for debug info
 
     """ ┌────────────┐
         │ POV header │
@@ -298,7 +294,7 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
             c = float(src_lum_blin(x, y * triangle_height)) / maxcolors  # Bilinear
 
             # alpha to be used for alpha dithering
-            if Z == 4 or Z == 2: # RGBA or LA
+            if Z == 4 or Z == 2:  # RGBA or LA
                 a = 1.02 * (float(src(x, y * triangle_height, Z - 1)) / maxcolors) - 0.01
                 # Slightly extending +/- 1%
                 tobe_or_nottobe = a >= random.random()
