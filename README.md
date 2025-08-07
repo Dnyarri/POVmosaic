@@ -8,13 +8,13 @@ Python utilities for conversion of bitmap image (in PNG or PPM format) to some s
 
 Current version of POV-Ray Mosaic consist of several parts:
 
-- **POVRayMosaic** - Main program GUI, joining all components together;
+- [**POVRayMosaic.py**](https://github.com/Dnyarri/POVmosaic/blob/main/POVRayMosaic.py) - Main program GUI, joining all components together;
 
 - **povzaika** module, including:
 
-  - **zaika63** - converts every single pixel into 3D object, by default a solid sphere. Spheres are packed into triangle/hexagon grid. Spheres may be easily replaced by other predefined objects, object positions and properties may be mapped to source image brightness and/or randomized, etc.
-  - **zaika44** - converts every single pixel into 3D object, by default a solid cube. Cubes are packed into square grid. Spheres may be easily replaced by other predefined objects, object positions and properties may be mapped to source image brightness and/or randomized, etc.
-  - **zaika36** - converts every single pixel into 3D object, by default a triangular prism. Prisms are packed into triangle grid.
+  - [**zaika63.py**](https://github.com/Dnyarri/POVmosaic/blob/main/export/zaika63.py) - converts every single pixel into 3D object, by default a solid sphere. Spheres are packed into triangle/hexagon grid. Spheres may be easily replaced by other predefined objects, object positions and properties may be mapped to source image brightness and/or randomized, etc.
+  - [**zaika44.py**](https://github.com/Dnyarri/POVmosaic/blob/main/export/zaika44.py) - converts every single pixel into 3D object, by default a solid cube. Cubes are packed into square grid. Spheres may be easily replaced by other predefined objects, object positions and properties may be mapped to source image brightness and/or randomized, etc.
+  - [**zaika36.py**](https://github.com/Dnyarri/POVmosaic/blob/main/export/zaika36.py) - converts every single pixel into 3D object, by default a triangular prism. Prisms are packed into triangle grid.
 
 - **pypng** and **pypnm** modules contain components providing PNG and PPM image files reading, correspondingly.
 
@@ -29,7 +29,7 @@ Current version of POV-Ray Mosaic consist of several parts:
 
 ## Usage
 
-Program is equipped with simple GUI for file browsing and selection. Exported scene contains enough basic stuff (globals, light, camera) to be rendered out of the box, and is well structured and commented for further editing. For detail on scene structure and editing refer to *help.html* included in current distribution.
+Program is equipped with simple GUI for file browsing and selection. Exported scene contains enough basic stuff (globals, light, camera) to be rendered out of the box, and is well structured and commented for further editing. For detail on scene structure and editing refer to [*help.html*](https://github.com/Dnyarri/POVmosaic/blob/main/help.html) included in current distribution.
 
 ### Related
 
