@@ -25,7 +25,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.20.20.1'
+__version__ = '1.21.2.2'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -70,8 +70,9 @@ def UINormal() -> None:
 
     for widget in frame_img.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
-            widget.config(state='normal')
+            widget['state'] = 'normal'
     info_string.config(text=info_normal['txt'], foreground=info_normal['fg'], background=info_normal['bg'])
+    sortir.update()
 
 
 def UIBusy() -> None:
@@ -79,7 +80,7 @@ def UIBusy() -> None:
 
     for widget in frame_img.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
-            widget.config(state='disabled')
+            widget['state'] = 'disabled'
     info_string.config(text=info_busy['txt'], foreground=info_busy['fg'], background=info_busy['bg'])
     sortir.update()
 
@@ -151,7 +152,7 @@ def GetSource(event=None) -> None:
     }
 
     preview = zoom_do[zoom_factor]
-    zanyato.config(image=preview, compound='none', justify='center', background=zanyato.master['background'], relief='flat', borderwidth=1)
+    zanyato.config(image=preview, compound='none', background=zanyato.master['background'], relief='flat', borderwidth=1)
     # ↓ binding zoom on preview click
     zanyato.bind('<Control-Button-1>', zoomIn)  # Ctrl + left click
     zanyato.bind('<Double-Control-Button-1>', zoomIn)  # Ctrl + left click too fast
@@ -170,6 +171,7 @@ def GetSource(event=None) -> None:
     menu01.entryconfig('Export 3/6 Mosaic...', state='normal')
     menu01.entryconfig('Image Info...', state='normal')
     UINormal()
+    sortir.geometry(f'+{(sortir.winfo_screenwidth() - sortir.winfo_width()) // 2}+{(sortir.winfo_screenheight() - sortir.winfo_height()) // 2 - 32}')
 
 
 def SaveAs63() -> None:
@@ -326,7 +328,7 @@ sortir.bind_all('<Control-o>', GetSource)
 sortir.bind_all('<Control-q>', DisMiss)
 
 frame_img = Frame(sortir, borderwidth=2, relief='groove')
-frame_img.pack(side='top')
+frame_img.pack(side='top', anchor='center', expand=True)
 
 zanyato = Label(
     frame_img,
@@ -347,10 +349,10 @@ zanyato.pack(side='top', padx=0, pady=(0, 2))
 frame_zoom = Frame(frame_img, width=300, borderwidth=2, relief='groove')
 frame_zoom.pack(side='bottom')
 
-butt_plus = Button(frame_zoom, text='+', font=('courier', 8), width=2, cursor='arrow', justify='center', state='disabled', borderwidth=1, command=zoomIn)
+butt_plus = Button(frame_zoom, text='+', font=('courier', 8), width=2, cursor='arrow', state='disabled', borderwidth=1, command=zoomIn)
 butt_plus.pack(side='left', padx=0, pady=0, fill='both')
 
-butt_minus = Button(frame_zoom, text='-', font=('courier', 8), width=2, cursor='arrow', justify='center', state='disabled', borderwidth=1, command=zoomOut)
+butt_minus = Button(frame_zoom, text='-', font=('courier', 8), width=2, cursor='arrow', state='disabled', borderwidth=1, command=zoomOut)
 butt_minus.pack(side='right', padx=0, pady=0, fill='both')
 
 label_zoom = Label(frame_zoom, text='Zoom 1:1', font=('courier', 8), state='disabled')
