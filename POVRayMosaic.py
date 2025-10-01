@@ -25,7 +25,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.21.2.2'
+__version__ = '1.22.01.09'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -186,7 +186,7 @@ def SaveAs63() -> None:
             ('All Files', '*.*'),
         ],
         defaultextension='.pov',
-        initialfile=Path(sourcefilename).stem + '_63.pov',
+        initialfile=Path(sourcefilename).stem + '_Mosaic_63.pov',
     )
     if savefilename == '':
         return None
@@ -210,7 +210,7 @@ def SaveAs44() -> None:
             ('All Files', '*.*'),
         ],
         defaultextension='.pov',
-        initialfile=Path(sourcefilename).stem + '_44.pov',
+        initialfile=Path(sourcefilename).stem + '_Mosaic_44.pov',
     )
     if savefilename == '':
         return None
@@ -234,7 +234,7 @@ def SaveAs36() -> None:
             ('All Files', '*.*'),
         ],
         defaultextension='.pov',
-        initialfile=Path(sourcefilename).stem + '_36.pov',
+        initialfile=Path(sourcefilename).stem + '_Mosaic_36.pov',
     )
     if savefilename == '':
         return None
