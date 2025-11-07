@@ -25,7 +25,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.22.01.09'
+__version__ = '1.23.7.8'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -107,11 +107,11 @@ def GetSource(event=None) -> None:
         │  They are used during export!          │
         └────────────────────────────────────────┘ """
 
-    if Path(sourcefilename).suffix == '.png':
+    if Path(sourcefilename).suffix.lower() == '.png':
         # ↓ Reading image as list
         X, Y, Z, maxcolors, image3D, info = pnglpng.png2list(sourcefilename)
 
-    elif Path(sourcefilename).suffix in ('.ppm', '.pgm', '.pbm', '.pnm'):
+    elif Path(sourcefilename).suffix.lower() in ('.ppm', '.pgm', '.pbm', '.pnm'):
         # ↓ Reading image as list
         X, Y, Z, maxcolors, image3D = pnmlpnm.pnm2list(sourcefilename)
 
