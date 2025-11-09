@@ -1,23 +1,43 @@
 #!/usr/bin/env python3
 
 """
-POV-Ray Mosaic - Program for conversion of image into mosaic of solid 3D objects in POV-Ray format
----
+===============
+POV-Ray Mosaic
+===============
+----------------------------------------------------------------------------------
+Program for conversion of image into mosaic of solid 3D objects in POV-Ray format
+----------------------------------------------------------------------------------
 
-Created by: `Ilya Razmanov <mailto:ilyarazmanov@gmail.com>`_ aka `Ilyich the Toad <mailto:amphisoft@gmail.com>`_.
+Created by: `Ilya Razmanov <mailto:ilyarazmanov@gmail.com>`_
+aka `Ilyich the Toad <mailto:amphisoft@gmail.com>`_.
+
+Input:
+-------
+
+PNG, PPM, PGM.
+
+Output:
+--------
+
+POV-Ray.
 
 History:
----
+---------
 
 1.14.1.0    Single task standalone programs 63zaika, 44zaika and 36zaika replaced with common GUI and zaika63, zaika44 and zaika36 modules correspondingly. Apparently PNM input support added with PyPNM; PNG support reworked to more common.
 
 1.16.20.20  New minimalistic menu-based GUI.
 
 ---
-Main site: `The Toad's Slimy Mudhole <https://dnyarri.github.io>`_
+Main site: `The Toad's Slimy Mudhole`_ - more Python freeware developed by Ilyich the Toad.
 
-Git repositories:
-`Main at Github <https://github.com/Dnyarri/POVmosaic>`_; `Gitflic mirror <https://gitflic.ru/project/dnyarri/povmosaic>`_
+POV-Ray Mosaic Git repositories `@Github`_ and `@Gitflic`_.
+
+.. _The Toad's Slimy Mudhole: https://dnyarri.github.io
+
+.. _@Github: https://github.com/Dnyarri/POVmosaic
+
+.. _@Gitflic: https://gitflic.ru/project/dnyarri/povmosaic
 
 """
 
@@ -25,7 +45,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.23.7.8'
+__version__ = '1.23.9.19'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -167,16 +187,16 @@ def GetSource(event=None) -> None:
     # ↓ updating zoom label display
     label_zoom.config(text=zoom_show[zoom_factor])
     # ↓ enabling "Save as..."
-    menu01.entryconfig('Export 6/3 Mosaic...', state='normal')  # Instead of name numbers from 0 may be used
-    menu01.entryconfig('Export 4/4 Mosaic...', state='normal')
-    menu01.entryconfig('Export 3/6 Mosaic...', state='normal')
+    menu01.entryconfig('Export 6³ Mosaic...', state='normal')  # Instead of name numbers from 0 may be used
+    menu01.entryconfig('Export 4⁴ Mosaic...', state='normal')
+    menu01.entryconfig('Export 3⁶ Mosaic...', state='normal')
     menu01.entryconfig('Image Info...', state='normal')
     UINormal()
     sortir.geometry(f'+{(sortir.winfo_screenwidth() - sortir.winfo_width()) // 2}+{(sortir.winfo_screenheight() - sortir.winfo_height()) // 2 - 32}')
 
 
 def SaveAs63() -> None:
-    """Once pressed on Export 6/3 Mosaic..."""
+    """Once pressed on Export 6³ Mosaic..."""
 
     global sourcefilename
     savefilename = filedialog.asksaveasfilename(
@@ -200,7 +220,7 @@ def SaveAs63() -> None:
 
 
 def SaveAs44() -> None:
-    """Once pressed on Export 4/4 Mosaic..."""
+    """Once pressed on Export 4⁴ Mosaic..."""
 
     global sourcefilename
     savefilename = filedialog.asksaveasfilename(
@@ -224,7 +244,7 @@ def SaveAs44() -> None:
 
 
 def SaveAs36() -> None:
-    """Once pressed on Export 3/6 Mosaic..."""
+    """Once pressed on Export 3⁶ Mosaic..."""
 
     global sourcefilename
     savefilename = filedialog.asksaveasfilename(
@@ -317,9 +337,9 @@ info_string.pack(side='bottom', padx=0, pady=(2, 0), fill='both')
 menu01 = Menu(sortir, tearoff=False)  # Drop-down
 menu01.add_command(label='Open...', state='normal', accelerator='Ctrl+O', command=GetSource)
 menu01.add_separator()
-menu01.add_command(label='Export 6/3 Mosaic...', state='disabled', command=SaveAs63)
-menu01.add_command(label='Export 4/4 Mosaic...', state='disabled', command=SaveAs44)
-menu01.add_command(label='Export 3/6 Mosaic...', state='disabled', command=SaveAs36)
+menu01.add_command(label='Export 6³ Mosaic...', state='disabled', command=SaveAs63)
+menu01.add_command(label='Export 4⁴ Mosaic...', state='disabled', command=SaveAs44)
+menu01.add_command(label='Export 3⁶ Mosaic...', state='disabled', command=SaveAs36)
 menu01.add_separator()
 menu01.add_command(label='Image Info...', accelerator='Ctrl+I', state='disabled', command=ShowInfo)
 menu01.add_separator()

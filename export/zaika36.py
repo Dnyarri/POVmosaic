@@ -1,17 +1,61 @@
 #!/usr/bin/env python3
 
 """
-POV-Ray Mosaic, Regular plane partition 3/6.
----
+==================
+POV-Ray Mosaic 3⁶
+==================
 
-Created by: `Ilya Razmanov <mailto:ilyarazmanov@gmail.com>`_ aka `Ilyich the Toad <mailto:amphisoft@gmail.com>`_.
+--------------------------------------------
+Converting 2D images into 3D objects mosaic.
+--------------------------------------------
+
+Module for converting bitmap images into `3⁶`_ mosaic of 3D objects in `POV-Ray`_ format.
+
+Exported 3D scene contain base mosaic 3D elements (prisms, etc.)
+packed as *triangular* Euclidean tiling, colored after original image pixel
+with corresponding coordinates.
+
+Usage:
+------
+
+**`zaika36.zaika36(image3D, maxcolors, resultfilename)`**
+
+where:
+
+- `image3d`: image as list of lists of lists of int channel values;
+- `maxcolors`: maximum value of int in `image3d` list;
+- `resultfilename`: name of POV-Ray file to export.
+
+References:
+------------
+
+1. Persistence of Vision Raytracer: `POV-Ray`_ site.
+2. `3⁶`_ Euclidean tiling at Wiki.
+3. `The Toad's Slimy Mudhole`_ - more Python freeware developed by Ilyich the Toad.
+4. `POV-Ray Mosaic`_ general information.
+5. `POV-Ray Mosaic 3⁶`_ illustrated.
+6. POV-Ray Mosaic Git repositories: main `@Github`_ and mirror `@Gitflic`_.
+
+.. _POV-Ray: https://www.povray.org/
+
+.. _3⁶: https://en.wikipedia.org/wiki/Triangular_tiling
+
+.. _The Toad's Slimy Mudhole: https://dnyarri.github.io
+
+.. _@Github: https://github.com/Dnyarri/POVmosaic
+
+.. _@Gitflic: https://gitflic.ru/project/dnyarri/povmosaic
+
+.. _POV-Ray Mosaic: https://dnyarri.github.io/povzaika.html
+
+.. _POV-Ray Mosaic 3⁶: https://dnyarri.github.io/pov36zaika.html
 
 History:
----
+--------
 
-2007    Initial AmphiSoft POV Sphere Mosaic, using `FilterMeister <https://filtermeister.com/>`_
+2007 AD     Initial AmphiSoft POV Sphere Mosaic, using `FilterMeister <https://filtermeister.com/>`_.
 
-2023    Rewritten to Python. PNG import with `PyPNG <https://gitlab.com/drj11/pypng>`_
+2023 AD     Rewritten to Python. PNG import with `PyPNG <https://gitlab.com/drj11/pypng>`_.
 
 0.0.04.04   Complete rewriting 4 Apr 2024.
 
@@ -23,15 +67,10 @@ History:
 
 1.19.1.7    Autofocus fixed, some calculations moved to POV-Ray to improve scene legibility, etc.
 
-1.19.5.19   Filter and transmit turned from constants to function. WARNING: old presets may need editing!
+1.19.5.19   Filter and transmit turned from constants to function.
+WARNING: old presets may need editing!
 
 1.22.01.09  Writing acceleration due to improved buffering.
-
----
-Main site: `The Toad's Slimy Mudhole <https://dnyarri.github.io>`_
-
-Git repositories:
-`Main at Github <https://github.com/Dnyarri/POVmosaic>`_; `Gitflic mirror <https://gitflic.ru/project/dnyarri/povmosaic>`_
 
 """
 
@@ -39,7 +78,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.22.01.09'
+__version__ = '1.23.9.19'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -49,7 +88,7 @@ from time import strftime, time
 
 
 def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str) -> None:
-    """POV-Ray Mosaic, Regular plane partition 3/6.
+    """POV-Ray Mosaic, Regular plane partition 3⁶.
 
     `image3d` - image as list of lists of lists of int channel values.
 
