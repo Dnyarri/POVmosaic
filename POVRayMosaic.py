@@ -31,9 +31,13 @@ History:
 ---
 Main site: `The Toad's Slimy Mudhole`_ - more Python freeware developed by Ilyich the Toad.
 
+`POV-Ray Mosaic`_ page with info and renderings.
+
 POV-Ray Mosaic Git repositories `@Github`_ and `@Gitflic`_.
 
 .. _The Toad's Slimy Mudhole: https://dnyarri.github.io
+
+.. _POV-Ray Mosaic: https://dnyarri.github.io/povzaika.html
 
 .. _@Github: https://github.com/Dnyarri/POVmosaic
 
@@ -45,7 +49,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.23.9.19'
+__version__ = '1.23.13.13'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'

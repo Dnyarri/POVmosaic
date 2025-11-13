@@ -9,31 +9,36 @@ POV-Ray Mosaic 3⁶
 Converting 2D images into 3D objects mosaic.
 --------------------------------------------
 
-Module for converting bitmap images into `3⁶`_ mosaic of 3D objects in `POV-Ray`_ format.
+Module for converting bitmap images into triangular `3⁶`_ mosaic
+of 3D objects in `POV-Ray`_ format.
 
 Exported 3D scene contain base mosaic 3D elements (prisms, etc.)
-packed as *triangular* Euclidean tiling, colored after original image pixel
+packed as *triangular Euclidean tiling*,
+colored after original image pixel
 with corresponding coordinates.
 
-Usage:
-------
+Usage
+-----
 
-**`zaika36.zaika36(image3D, maxcolors, resultfilename)`**
+::
+
+    zaika36.zaika36(image3d, maxcolors, resultfilename)
 
 where:
 
-- `image3d`: image as list of lists of lists of int channel values;
-- `maxcolors`: maximum value of int in `image3d` list;
-- `resultfilename`: name of POV-Ray file to export.
+:image3d: input image as list of lists of lists of int channel values;
+:maxcolors: maximum of channel value in ``image3d`` list (int),
+    255 for 8 bit and 65535 for 16 bit input;
+:resultfilename: name of POV-Ray file to export.
 
 References:
-------------
+-----------
 
 1. Persistence of Vision Raytracer: `POV-Ray`_ site.
 2. `3⁶`_ Euclidean tiling at Wiki.
 3. `The Toad's Slimy Mudhole`_ - more Python freeware developed by Ilyich the Toad.
-4. `POV-Ray Mosaic`_ general information.
-5. `POV-Ray Mosaic 3⁶`_ illustrated.
+4. `POV-Ray Mosaic`_ in general.
+5. `POV-Ray Mosaic 3⁶`_ in particular.
 6. POV-Ray Mosaic Git repositories: main `@Github`_ and mirror `@Gitflic`_.
 
 .. _POV-Ray: https://www.povray.org/
@@ -50,35 +55,23 @@ References:
 
 .. _POV-Ray Mosaic 3⁶: https://dnyarri.github.io/pov36zaika.html
 
-History:
---------
-
-2007 AD     Initial AmphiSoft POV Sphere Mosaic, using `FilterMeister <https://filtermeister.com/>`_.
-
-2023 AD     Rewritten to Python. PNG import with `PyPNG <https://gitlab.com/drj11/pypng>`_.
-
-0.0.04.04   Complete rewriting 4 Apr 2024.
-
-1.7.22.12   36zaika added to POV-Ray Mosaic.
-
-1.11.01.1   Last release as standalone 1 Nov 2024.
-
-1.14.1.0    Rewritten as module.
-
-1.19.1.7    Autofocus fixed, some calculations moved to POV-Ray to improve scene legibility, etc.
-
-1.19.5.19   Filter and transmit turned from constants to function.
-WARNING: old presets may need editing!
-
-1.22.01.09  Writing acceleration due to improved buffering.
-
 """
+
+# History:
+# --------
+# 1.7.22.12 36zaika added to POV-Ray Mosaic.
+# 1.11.1.1  Last release as standalone 1 Nov 2024.
+# 1.14.1.0  Rewritten as module.
+# 1.19.1.7  Autofocus fixed, some calculations moved to POV-Ray to improve scene legibility, etc.
+# 1.19.5.19 Filter and transmit turned from constants to function.
+#   WARNING: old presets may need editing!
+# 1.22.1.9  Writing acceleration due to improved buffering.
 
 __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2007-2025 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.23.9.19'
+__version__ = '1.23.13.13'
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -90,11 +83,9 @@ from time import strftime, time
 def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str) -> None:
     """POV-Ray Mosaic, Regular plane partition 3⁶.
 
-    `image3d` - image as list of lists of lists of int channel values.
-
-    `maxcolors` - maximum value of channel int in `image3d` list, either 255 or 65535.
-
-    `resultfilename` - name of POV-Ray file to export.
+    :image3d: image as list of lists of lists of int channel values.
+    :maxcolors: maximum value of int in ``image3d`` list, either 255 or 65535.
+    :resultfilename: name of POV-Ray file to export.
 
     """
 
@@ -396,6 +387,8 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
     resultfile.close()
 
     return None
+
+
 # ↑ zaika36 finished
 
 # ↓ Dummy stub for standalone execution attempt
