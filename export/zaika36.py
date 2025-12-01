@@ -83,7 +83,6 @@ from time import strftime, time
 def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str) -> None:
     """POV-Ray Mosaic, Regular plane partition 3⁶.
 
-        .. function:: zaika36(image3d, maxcolors, resultfilename)
         :param image3d: image as list of lists of lists of int channel values;
         :type image3d: list[list[list[int]]
         :param int maxcolors: maximum of channel value in ``image3d`` list (int),
