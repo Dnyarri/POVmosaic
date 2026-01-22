@@ -36,7 +36,7 @@ Program is equipped with simple GUI for file browsing and selection. Exported sc
 
 ### Related
 
-[Dnyarri website - other Python freeware](https://dnyarri.github.io "The Toad's Slimy Mudhole") by the same author.
+[Dnyarri website - other Python freeware](https://dnyarri.github.io "The Toad's Slimy Mudhole - Python freeware for POV-Ray and other 3D, Scale2x, Scale3x, Scale2xSFX, Scale2xSFX, PPM and PGM image support, bilinear and barycentric image interpolation, and batch processing") by the same author.
 
 [POV‑Ray Mosaic general information](https://dnyarri.github.io/povzaika.html "POV‑Ray Mosaic general and updates info"), explanations etc.;
 
@@ -44,6 +44,6 @@ Program is equipped with simple GUI for file browsing and selection. Exported sc
 - [POV-Ray Mosaic 4⁴ examples](https://dnyarri.github.io/pov4zaika.html "POV-Ray Mosaic 4⁴ renderings and scene options explanation")
 - [POV-Ray Mosaic 3⁶ examples](https://dnyarri.github.io/pov36zaika.html "POV-Ray Mosaic 3⁶ renderings and scene options explanation")
 
-[POV‑Ray Mosaic source at Github](https://github.com/Dnyarri/POVmosaic)
+[POV‑Ray Mosaic source at Github](https://github.com/Dnyarri/POVmosaic "POV‑Ray Mosaic source at Github")
 
-[POV‑Ray Mosaic source at Gitflic mirror](https://gitflic.ru/project/dnyarri/povmosaic)
+[POV‑Ray Mosaic source at Gitflic mirror](https://gitflic.ru/project/dnyarri/povmosaic "POV‑Ray Mosaic source at Gitflic mirror")
