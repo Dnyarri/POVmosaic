@@ -36,7 +36,7 @@ Program is equipped with simple GUI for file browsing and selection. Exported sc
 
 ### Related
 
-[Dnyarri website - other Python freeware](https://dnyarri.github.io "The Toad's Slimy Mudhole - Python freeware for POV-Ray and other 3D, Scale2x, Scale3x, Scale2xSFX, Scale2xSFX, PPM and PGM image support, bilinear and barycentric image interpolation, and batch processing") by the same author.
+[Dnyarri website - more Python freeware for image processing, 3D, and batch automation](https://dnyarri.github.io "The Toad's Slimy Mudhole - Python freeware for POV-Ray and other 3D, Scale2x, Scale3x, Scale2xSFX, Scale3xSFX, PPM and PGM image support, bilinear and barycentric image interpolation, and batch processing") by the same author.
 
 [POV‑Ray Mosaic general information](https://dnyarri.github.io/povzaika.html "POV‑Ray Mosaic general and updates info"), explanations etc.;
 
