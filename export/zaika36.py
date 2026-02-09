@@ -64,14 +64,15 @@ References:
 # 1.14.1.0  Rewritten as module.
 # 1.19.1.7  Autofocus fixed, some calculations moved to POV-Ray to improve scene legibility, etc.
 # 1.19.5.19 Filter and transmit turned from constants to function.
-#   WARNING: old presets may need editing!
+#               WARNING: old presets may need editing!
 # 1.22.1.9  Writing acceleration due to improved buffering.
+# 1.26.6.6  General cleanup, improved docstring, many functions moved to private.
 
 __author__ = 'Ilya Razmanov'
-__copyright__ = '(c) 2007-2025 Ilya Razmanov'
+__copyright__ = '(c) 2007-2026 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.23.13.13'
+__version__ = '1.26.6.6'  # 6 Feb 2026
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -83,24 +84,24 @@ from time import strftime, time
 def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str) -> None:
     """POV-Ray Mosaic, Regular plane partition 3⁶.
 
-        :param image3d: image as list of lists of lists of int channel values;
-        :type image3d: list[list[list[int]]
-        :param int maxcolors: maximum of channel value in ``image3d`` list (int),
-    255 for 8 bit and 65535 for 16 bit input;
-        :param str resultfilename: name of POV file to export.
+    :param image3d: image as list of lists of lists of int channel values;
+    :type image3d: list[list[list[int]]
+    :param int maxcolors: maximum of channel value in ``image3d`` (int),
+        255 for 8 bit and 65535 for 16 bit input;
+    :param str resultfilename: name of POV file to export.
 
     """
 
-    Y = len(image3d)
-    X = len(image3d[0])
-    Z = len(image3d[0][0])
+    # ↓ Determining image size
+    Y, X, Z = (len(image3d), len(image3d[0]), len(image3d[0][0]))
 
     """ ╔═══════════════╗
         ║ src functions ║
         ╚═══════════════╝ """
 
-    def src(x: int | float, y: int | float, z: int) -> int:
-        """Analog of src from FilterMeister, force repeat edge instead of out of range.
+    def _src(x: int | float, y: int | float, z: int) -> int:
+        """Analog of src from FilterMeister, force repeat edge
+        instead of out of range.
         Returns channel z value for pixel x, y."""
 
         cx = min((X - 1), max(0, int(x)))
@@ -110,18 +111,18 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
 
         return channelvalue
 
-    def src_lum(x: int | float, y: int | float) -> int:
+    def _src_lum(x: int | float, y: int | float) -> int:
         """Returns brightness of pixel x, y."""
 
         if Z < 3:  # supposedly L and LA
-            yntensity = src(x, y, 0)
+            yntensity = _src(x, y, 0)
         else:  # supposedly RGB and RGBA
-            yntensity = int(0.298936021293775 * src(x, y, 0) + 0.587043074451121 * src(x, y, 1) + 0.114020904255103 * src(x, y, 2))
+            yntensity = int(0.298936021293775 * _src(x, y, 0) + 0.587043074451121 * _src(x, y, 1) + 0.114020904255103 * _src(x, y, 2))
 
         return yntensity
 
-    def src_lum_blin(x: float, y: float) -> int:
-        """Analog of src_lum above, but returns bilinearly interpolated brightness of pixel x, y."""
+    def _src_lum_blin(x: float, y: float) -> int:
+        """Analog of _src_lum above, but returns bilinearly interpolated brightness of pixel x, y."""
 
         fx = float(x)
         fy = float(y)  # Uses float input coordinates for interpolation
@@ -132,8 +133,8 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
         y0 = int(y)
         y1 = y0 + 1
 
-        # ↓ Reading corners src_lum (see scr_lum above) and interpolating
-        channelvalue = src_lum(x0, y0) * (x1 - fx) * (y1 - fy) + src_lum(x0, y1) * (x1 - fx) * (fy - y0) + src_lum(x1, y0) * (fx - x0) * (y1 - fy) + src_lum(x1, y1) * (fx - x0) * (fy - y0)
+        # ↓ Reading corners _src_lum (see scr_lum above) and interpolating
+        channelvalue = _src_lum(x0, y0) * (x1 - fx) * (y1 - fy) + _src_lum(x0, y1) * (x1 - fx) * (fy - y0) + _src_lum(x1, y0) * (fx - x0) * (y1 - fy) + _src_lum(x1, y1) * (fx - x0) * (fy - y0)
 
         return int(channelvalue)
 
@@ -314,21 +315,21 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
 
             if Z > 2:
                 # ↓ RGB(A) source, colors normalized to 0..1
-                r = float(src(x, y * triangle_height, 0)) / maxcolors
-                g = float(src(x, y * triangle_height, 1)) / maxcolors
-                b = float(src(x, y * triangle_height, 2)) / maxcolors
+                r = _src(x, y * triangle_height, 0) / maxcolors
+                g = _src(x, y * triangle_height, 1) / maxcolors
+                b = _src(x, y * triangle_height, 2) / maxcolors
             else:
                 # ↓ L(A) source, r, g, b set to normalized grey value
-                r = g = b = float(src(x, y * triangle_height, 0)) / maxcolors
+                r = g = b = _src(x, y * triangle_height, 0) / maxcolors
 
             # ↓ Something to map something to. By default - brightness, normalized to 0..1
-            # c = float(src_lum(x, y*triangle_height))/maxcolors # Nearest neighbor
-            c = float(src_lum_blin(x, y * triangle_height)) / maxcolors  # Bilinear
+            # c = _src_lum(x, y*triangle_height) / maxcolors # Nearest neighbor
+            c = _src_lum_blin(x, y * triangle_height) / maxcolors  # Bilinear
 
             # ↓ Alpha to be used for alpha dithering
             if Z == 4 or Z == 2:  # RGBA or LA
-                a = 1.02 * (float(src(x, y * triangle_height, Z - 1)) / maxcolors) - 0.01
-                # Slightly extending +/- 1%
+                # ↓ Slightly extending alpha +/- 1%
+                a = 1.02 * (_src(x, y * triangle_height, Z - 1) / maxcolors) - 0.01
                 tobe_or_nottobe = a >= random.random()
                 # a = 0 is transparent, a = 1.0 is opaque
             else:  # No alpha
@@ -390,8 +391,6 @@ def zaika36(image3d: list[list[list[int]]], maxcolors: int, resultfilename: str)
 
     return None
 
-
-# ↑ zaika36 finished
 
 # ↓ Dummy stub for standalone execution attempt
 if __name__ == '__main__':

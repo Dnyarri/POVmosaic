@@ -4,36 +4,31 @@
 ===============
 POV-Ray Mosaic
 ===============
-----------------------------------------------------------------------------------
-Program for conversion of image into mosaic of solid 3D objects in POV-Ray format
-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------
+Converting 2D images into mosaic of solid 3D objects in POV-Ray format.
+-----------------------------------------------------------------------
 
-Created by: `Ilya Razmanov <mailto:ilyarazmanov@gmail.com>`_
-aka `Ilyich the Toad <mailto:amphisoft@gmail.com>`_.
+Input: PNG, PPM, PGM.
 
-Input:
--------
-
-PNG, PPM, PGM.
-
-Output:
---------
-
-POV-Ray.
+Output: POV-Ray.
 
 History:
----------
+--------
 
-1.14.1.0    Single task standalone programs 63zaika, 44zaika and 36zaika replaced with common GUI and zaika63, zaika44 and zaika36 modules correspondingly. Apparently PNM input support added with PyPNM; PNG support reworked to more common.
+1.14.1.0    Single task standalone programs 63zaika, 44zaika and 36zaika
+replaced with common GUI and zaika63, zaika44 and zaika36 modules correspondingly.
+Apparently PNM input support added with PyPNM; PNG support reworked to more common.
 
 1.16.20.20  New minimalistic menu-based GUI.
+
+1.26.6.6    Small yet numerous usability improvements.
 
 ---
 Main site: `The Toad's Slimy Mudhole`_ - more Python freeware developed by Ilyich the Toad.
 
 `POV-Ray Mosaic`_ page with info and renderings.
 
-POV-Ray Mosaic Git repositories `@Github`_ and `@Gitflic`_.
+POV-Ray Mosaic Git repositories `@Github`_ and `@Gitflic`_
 
 .. _The Toad's Slimy Mudhole: https://dnyarri.github.io
 
@@ -46,10 +41,10 @@ POV-Ray Mosaic Git repositories `@Github`_ and `@Gitflic`_.
 """
 
 __author__ = 'Ilya Razmanov'
-__copyright__ = '(c) 2025 Ilya Razmanov'
+__copyright__ = '(c) 2025-2026 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.23.13.13'
+__version__ = '1.26.6.6'  # 6 Feb 2026
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -60,25 +55,26 @@ from time import ctime
 from tkinter import Button, Frame, Label, Menu, PhotoImage, Tk, filedialog
 from tkinter.messagebox import showinfo
 
-from export import zaika36, zaika44, zaika63
 from pypng import pnglpng
 from pypnm import pnmlpnm
 
+from export import zaika36, zaika44, zaika63
+
 
 def DisMiss(event=None) -> None:
-    """Kill dialog and continue"""
+    """Kill dialog and continue."""
 
     sortir.destroy()
 
 
 def ShowMenu(event) -> None:
-    """Pop menu up (or sort of drop it down)"""
+    """Pop menu up (or sort of drop it down)."""
 
     menu01.post(event.x_root, event.y_root)
 
 
 def ShowInfo(event=None) -> None:
-    """Show image information"""
+    """Show image information."""
 
     file_size = Path(sourcefilename).stat().st_size
     file_size_str = f'{file_size / 1048576:.2f} Mb' if (file_size > 1048576) else f'{file_size / 1024:.2f} Kb' if (file_size > 1024) else f'{file_size} bytes'
@@ -90,7 +86,7 @@ def ShowInfo(event=None) -> None:
 
 
 def UINormal() -> None:
-    """Normal UI state, buttons enabled"""
+    """Normal UI state, buttons enabled."""
 
     for widget in frame_img.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
@@ -100,7 +96,7 @@ def UINormal() -> None:
 
 
 def UIBusy() -> None:
-    """Busy UI state, buttons disabled"""
+    """Busy UI state, buttons disabled."""
 
     for widget in frame_img.winfo_children():
         if widget.winfo_class() in ('Label', 'Button'):
@@ -110,15 +106,18 @@ def UIBusy() -> None:
 
 
 def GetSource(event=None) -> None:
-    """Open source image and redefine other controls state"""
+    """Open source image and redefine other controls state."""
 
     global zoom_factor, zoom_do, zoom_show, preview, preview_data
-    global X, Y, Z, maxcolors, image3D, sourcefilename
+    global sourcefilename, X, Y, Z, maxcolors, image3D
     global info_normal
+
     zoom_factor = 0
 
+    old_sourcefilename = sourcefilename  # Temporary saving info in case of "Open.." cancel
     sourcefilename = filedialog.askopenfilename(title='Open image file', filetypes=[('Supported formats', '.png .ppm .pgm .pbm .pnm'), ('Portable network graphics', '.png'), ('Portable any map', '.ppm .pgm .pbm .pnm')])
     if sourcefilename == '':
+        sourcefilename = old_sourcefilename
         return
 
     info_normal = {'txt': f'{Path(sourcefilename).name}', 'fg': 'grey', 'bg': 'grey90'}
@@ -214,10 +213,6 @@ def SaveAs63() -> None:
     )
     if savefilename == '':
         return None
-
-    """ ┌─────────────────────────────────────────────────────┐
-        │ Converting list to POV and saving as "savefilename" │
-        └─────────────────────────────────────────────────────┘ """
     UIBusy()
     zaika63.zaika63(image3D, maxcolors, savefilename)
     UINormal()
@@ -238,10 +233,6 @@ def SaveAs44() -> None:
     )
     if savefilename == '':
         return None
-
-    """ ┌─────────────────────────────────────────────────────┐
-        │ Converting list to POV and saving as "savefilename" │
-        └─────────────────────────────────────────────────────┘ """
     UIBusy()
     zaika44.zaika44(image3D, maxcolors, savefilename)
     UINormal()
@@ -262,17 +253,13 @@ def SaveAs36() -> None:
     )
     if savefilename == '':
         return None
-
-    """ ┌─────────────────────────────────────────────────────┐
-        │ Converting list to POV and saving as "savefilename" │
-        └─────────────────────────────────────────────────────┘ """
     UIBusy()
     zaika36.zaika36(image3D, maxcolors, savefilename)
     UINormal()
 
 
 def zoomIn(event=None) -> None:
-    """Zoom preview in"""
+    """Zoom preview in."""
 
     global zoom_factor, preview
     zoom_factor = min(zoom_factor + 1, 4)  # max zoom 5
@@ -291,7 +278,7 @@ def zoomIn(event=None) -> None:
 
 
 def zoomOut(event=None) -> None:
-    """Zoom preview out"""
+    """Zoom preview out."""
 
     global zoom_factor, preview
     zoom_factor = max(zoom_factor - 1, -4)  # min zoom 1/5
@@ -310,7 +297,7 @@ def zoomOut(event=None) -> None:
 
 
 def zoomWheel(event) -> None:
-    """zoomIn or zoomOut by mouse wheel"""
+    """zoomIn or zoomOut by mouse wheel."""
 
     if event.delta < 0:
         zoomOut()
@@ -326,10 +313,8 @@ zoom_factor = 0
 sourcefilename = X = Y = Z = maxcolors = None
 
 sortir = Tk()
-
 sortir.title('POV-Ray Mosaic')
-sortir.iconphoto(True, PhotoImage(data='P6\n4 4\n255\n'.encode(encoding='ascii') + randbytes(4 * 4 * 3)))
-sortir.minsize(128, 128)
+sortir.iconphoto(True, PhotoImage(data=b''.join(('P6\n4 4\n255\n'.encode(encoding='ascii'), randbytes(4 * 4 * 3)))))
 
 # ↓ Info statuses dictionaries
 info_normal = {'txt': f'POV-Ray Mosaic {__version__}', 'fg': 'grey', 'bg': 'grey90'}
@@ -388,5 +373,5 @@ label_zoom.pack(side='left', anchor='n', padx=2, pady=0, fill='both')
 # ↓ Center window horizontally, +100 vertically
 sortir.update()
 sortir.geometry(f'+{(sortir.winfo_screenwidth() - sortir.winfo_width()) // 2}+100')
-
+sortir.minsize(frame_img.winfo_width(), 100)
 sortir.mainloop()
