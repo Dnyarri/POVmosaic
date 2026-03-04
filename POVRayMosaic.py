@@ -21,7 +21,7 @@ Apparently PNM input support added with PyPNM; PNG support reworked to more comm
 
 1.16.20.20  New minimalistic menu-based GUI.
 
-1.26.6.6    Small yet numerous usability improvements.
+1.27.4.22   Keep having usability improvements.
 
 ---
 Main site: `The Toad's Slimy Mudhole`_ - more Python freeware developed by Ilyich the Toad.
@@ -44,7 +44,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025-2026 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.26.6.6'  # 6 Feb 2026
+__version__ = '1.27.4.22'  # 4 Mar 2026
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -180,8 +180,11 @@ def GetSource(event=None) -> None:
     # ↓ binding zoom on preview click
     zanyato.bind('<Control-Button-1>', zoomIn)  # Ctrl + left click
     zanyato.bind('<Double-Control-Button-1>', zoomIn)  # Ctrl + left click too fast
+    zanyato.bind('<Control-+>', zoomIn)
+    zanyato.bind('<Control-=>', zoomIn)
     zanyato.bind('<Alt-Button-1>', zoomOut)  # Alt + left click
     zanyato.bind('<Double-Alt-Button-1>', zoomOut)  # Alt + left click too fast
+    zanyato.bind('<Control-minus>', zoomOut)
     sortir.bind_all('<MouseWheel>', zoomWheel)  # Wheel
     sortir.bind_all('<Control-i>', ShowInfo)
     # ↓ enabling zoom buttons
@@ -196,6 +199,7 @@ def GetSource(event=None) -> None:
     menu01.entryconfig('Image Info...', state='normal')
     UINormal()
     sortir.geometry(f'+{(sortir.winfo_screenwidth() - sortir.winfo_width()) // 2}+{(sortir.winfo_screenheight() - sortir.winfo_height()) // 2 - 32}')
+    zanyato.focus_set()
 
 
 def SaveAs63() -> None:
@@ -338,13 +342,16 @@ sortir.bind('<Button-3>', ShowMenu)
 sortir.bind_all('<Alt-f>', ShowMenu)
 sortir.bind_all('<Control-o>', GetSource)
 sortir.bind_all('<Control-q>', DisMiss)
+sortir.bind_all('<Control-Q>', DisMiss)
+sortir.bind_all('<Control-w>', DisMiss)
+sortir.bind_all('<Control-W>', DisMiss)
 
 frame_img = Frame(sortir, borderwidth=2, relief='groove')
 frame_img.pack(side='top', anchor='center', expand=True)
 
 zanyato = Label(
     frame_img,
-    text='Preview area.\n  Double click to open image,\n  Right click or Alt+F for a menu.\nWith image opened,\n  Ctrl+Click to zoom in,\n  Alt+Click to zoom out.',
+    text='Preview area.\n  Double click to open image,\n  Right click or Alt+F for a menu.\nWith image opened,\n  Ctrl+Click to zoom in,\n  Alt+Click to zoom out,\n  Wheel to zoom.',
     font=('helvetica', 12),
     justify='left',
     borderwidth=2,
