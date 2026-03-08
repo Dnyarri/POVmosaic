@@ -44,7 +44,7 @@ __author__ = 'Ilya Razmanov'
 __copyright__ = '(c) 2025-2026 Ilya Razmanov'
 __credits__ = 'Ilya Razmanov'
 __license__ = 'unlicense'
-__version__ = '1.27.4.22'  # 4 Mar 2026
+__version__ = '1.27.8.20'  # 8 Mar 2026
 __maintainer__ = 'Ilya Razmanov'
 __email__ = 'ilyarazmanov@gmail.com'
 __status__ = 'Production'
@@ -55,8 +55,8 @@ from time import ctime
 from tkinter import Button, Frame, Label, Menu, PhotoImage, Tk, filedialog
 from tkinter.messagebox import showinfo
 
-from pypng import pnglpng
-from pypnm import pnmlpnm
+from pypng import png2list
+from pypnm import pnm2list, list2bin
 
 from export import zaika36, zaika44, zaika63
 
@@ -132,11 +132,11 @@ def GetSource(event=None) -> None:
 
     if Path(sourcefilename).suffix.lower() == '.png':
         # ↓ Reading image as list
-        X, Y, Z, maxcolors, image3D, info = pnglpng.png2list(sourcefilename)
+        X, Y, Z, maxcolors, image3D, info = png2list(sourcefilename)
 
     elif Path(sourcefilename).suffix.lower() in ('.ppm', '.pgm', '.pbm', '.pnm'):
         # ↓ Reading image as list
-        X, Y, Z, maxcolors, image3D = pnmlpnm.pnm2list(sourcefilename)
+        X, Y, Z, maxcolors, image3D = pnm2list(sourcefilename)
 
     else:
         raise ValueError('Extension not recognized')
@@ -144,7 +144,7 @@ def GetSource(event=None) -> None:
     """ ┌─────────────────────────────────────────────────────────────────────────┐
         │ Converting list to bytes of PPM-like structure "preview_data" in memory │
         └────────────────────────────────────────────────────────────────────────-┘ """
-    preview_data = pnmlpnm.list2bin(image3D, maxcolors, show_chessboard=True)
+    preview_data = list2bin(image3D, maxcolors, show_chessboard=True)
 
     """ ┌────────────────────────────────────────────────┐
         │ Now showing "preview_data" bytes using Tkinter │
