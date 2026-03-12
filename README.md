@@ -16,7 +16,11 @@ Current version of POV-Ray Mosaic consist of several parts:
   - [**zaika44.py**](https://github.com/Dnyarri/POVmosaic/blob/main/export/zaika44.py) - converts every single pixel into 3D object, by default an isosurface looking like cube with rounded corners (well, it would be logical to use cube by default but cubes are flat and boring). Cubes are packed into square grid. Cubes may be easily replaced by other predefined objects, object positions and properties may be mapped to source image brightness and/or randomized, etc.
   - [**zaika36.py**](https://github.com/Dnyarri/POVmosaic/blob/main/export/zaika36.py) - converts every single pixel into 3D object, by default a triangular prism. Prisms are packed into triangle grid.
 
-- **pypng** and **pypnm** modules contain components providing PNG and PPM image files reading, correspondingly. PyPNM is also used for source image preview on screen.
+- **pypng** and **pypnm** folders comprise:
+
+  - [PyPNM module, providing image data preview, as well as PPM ang PGM files support](https://dnyarri.github.io/pypnm.html "Pure Python PNM image support module");
+
+  - [PyPNG module, providing PNG files support](https://gitlab.com/drj11/pypng "Pure Python PNG format module").
 
 [![Example of 44zaika export rendering](https://dnyarri.github.io/4z/406.png "Example of 4/4 POV-Ray Mosaic export rendering")](https://dnyarri.github.io/pov4zaika.html)
 
@@ -26,9 +30,6 @@ Current version of POV-Ray Mosaic consist of several parts:
 2. [PyPNG](https://gitlab.com/drj11/pypng "PyPNG module for reading and writing PNG image files"). Copy included into current POV-Ray Mosaic distribution.
 3. [PyPNM](https://pypi.org/project/PyPNM/ "PyPNM module for displaying pictures and reading and writing PNM image files"). Copy included into current POV-Ray Mosaic distribution.
 4. Tkinter. Normally included into standard CPython distribution.
-
-> [!NOTE]
-> Since POVRayMosaic 1.21.2.2 PyPNM version included into distribution updated to [PyPNM "Victory 2" main](https://github.com/Dnyarri/PyPNM "Pure Python module for displaying pictures and reading and writing PNM image files"), intended to be used with Python 3.11 and above. The only actual limitation is that this version does not contain a workaround for displaying 16 bpc images, necessary for old Tkinter included into old CPython distributions. If you want bringing old Tkinter compatibility back, download [PyPNM extended compatibility version](https://github.com/Dnyarri/PyPNM/tree/py34 "Pure Python module for displaying pictures and reading and writing PNM image files, Python 3.4 compatible") and downgrade PyPNM manually.
 
 ## Usage
 
